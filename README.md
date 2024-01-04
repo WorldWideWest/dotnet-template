@@ -13,7 +13,8 @@ TBD:
 - Adding project references between the projects (following the [CLEAN](https://blog.cleancoder.com/uncle-bob/2012/08/13/the-clean-architecture.html) architecture projec reference guide) 
 - Adding a Powershell script to support this on Windows
 
-## Running the app in Debug mode
+## Tooling
+### Running the app in Debug mode
 
 To mimic a deployment environment we added support for docker compose and debugging on it, simply we are running `dotnet watch run` inside our container so that every change gets replicated in the container. 
 
@@ -34,3 +35,15 @@ docker-compose -f compose/docker-compose.debug.arm.yml up --build && docker-comp
 
 TBD:
 - Compose file for AMD64 architecture
+
+### Configure code formatter for .net
+
+Go into the console and install the `csharper` package globally:
+```bash
+dotnet tool install --global csharpier
+```
+
+Then install the following [extension](https://marketplace.visualstudio.com/items?itemName=emeraldwalk.RunOnSave) from VS Code store. 
+
+This will enable you to format your code on save.
+
