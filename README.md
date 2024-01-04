@@ -45,5 +45,19 @@ dotnet tool install --global csharpier
 
 Then install the following [extension](https://marketplace.visualstudio.com/items?itemName=emeraldwalk.RunOnSave) from VS Code store. 
 
-This will enable you to format your code on save.
+This will enable you to format your code on save. Inside the `.vscode/settings.json` you have this configuration which will run the command on save which formatts all `.cs` files:
+```json
+{
+    "emeraldwalk.runonsave": {
+      "commands": [
+        {
+          "match": "\\.cs$",
+          "isAsync": true,
+          "cmd": "dotnet csharpier ."
+        }
+      ]
+    }
+  }
+  
+```
 
