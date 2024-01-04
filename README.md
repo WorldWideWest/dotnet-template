@@ -57,7 +57,6 @@ This will enable you to format your code on save. Inside the `.vscode/settings.j
         }
       ]
     }
-  }
-  
+}
 ```
 

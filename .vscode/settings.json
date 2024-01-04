@@ -1,12 +1,12 @@
 {
-    "emeraldwalk.runonsave": {
-      "commands": [
-        {
-          "match": "\\.cs$",
-          "isAsync": true,
-          "cmd": "dotnet csharpier ."
-        }
-      ]
-    }
+  "emeraldwalk.runonsave": {
+    "commands": [
+      {
+        "match": "\\.cs$",
+        "isAsync": true,
+        "cmd": "dotnet csharpier ."
+      }
+    ]
   }
+}
   
