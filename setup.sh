@@ -2,12 +2,18 @@
 
 Solution='./Template.sln'
 SolutionName='Template'
-if [ ! -d "$Solution" ]
-then
-    # More about creating a solution here https://docs.microsoft.com/en-us/dotnet/core/tools/dotnet-sln?source=recommendations
-    dotnet new sln --name $SolutionName # initializing the solution
 
+function initializeSolution()
+{
+    # More about creating a solution here https://docs.microsoft.com/en-us/dotnet/core/tools/dotnet-sln?source=recommendations
+    
+    dotnet new sln --name $SolutionName
+}
+
+function createProjects()
+{
     # Read more about the project types here https://docs.microsoft.com/en-us/dotnet/core/tools/dotnet-new?tabs=netcore22#arguments
+    
     echo -e "\e[36mCreating the project [$SolutionName.Api]\e[0m"
     dotnet new webapi -n $SolutionName.Api -o ./src/$SolutionName.Api
 
@@ -19,14 +25,11 @@ then
 
     echo -e "\e[36mCreating the project [$SolutionName.Services]\e[0m"
     dotnet new classlib -n $SolutionName.Infrastructure -o ./src/$SolutionName.Infrastructure
+}
 
-    # echo -e "\e[36mCreating the project [$SolutionName.Application.UnitTests]\e[0m"
-    # dotnet new xunit -n $SolutionName.Application.UnitTests -o ./tests/$SolutionName.Application.UnitTests
-
-    # echo -e "\e[36mCreating the project [$SolutionName.Infrastructure.UnitTests]\e[0m"
-    # dotnet new xunit -n $SolutionName.Infrastructure.UnitTests -o ./tests/$SolutionName.Infrastructure.UnitTests
-
-    # Connecting the projects to the solution https://docs.microsoft.com/en-us/dotnet/core/tools/dotnet-sln?source=recommendations#add
+function connectProjectsToSolution()
+{
+    # More info here https://docs.microsoft.com/en-us/dotnet/core/tools/dotnet-sln?source=recommendations#add
     echo -e "\e[36mAdded [$SolutionName.Api] to [$SolutionName] solution\e[0m"
     dotnet sln $SolutionName.sln add ./src/$SolutionName.Api/$SolutionName.Api.csproj
 
@@ -39,10 +42,30 @@ then
     echo -e "\e[36mAdded [$SolutionName.Infrastructure] to [$SolutionName] solution\e[0m"
     dotnet sln $SolutionName.sln add ./src/$SolutionName.Infrastructure/$SolutionName.Infrastructure.csproj
 
-    # echo -e "\e[36mAdded [$SolutionName.Application.UnitTests] to [$SolutionName] solution\e[0m"
-    # dotnet sln $SolutionName.sln add ./tests/$SolutionName.Application.UnitTests
+}
 
-    # echo -e "\e[36mAdded [$SolutionName.Application.UnitTests] to [$SolutionName] solution\e[0m"
-    # dotnet sln $SolutionName.sln add ./tests/$SolutionName.Infrastructure.UnitTests
+function addReferencesBetweenProjects()
+{
+    # Read more about it here https://learn.microsoft.com/en-us/dotnet/core/tools/dotnet-add-reference
 
+    echo -e "\e[36mAdded [$SolutionName.Api] project references\e[0m"
+    dotnet add ./src/$SolutionName.Api/$SolutionName.Api.csrpoj reference ./src/$SolutionName.Domain/$SolutionName.Domain.csrpoj
+    dotnet add ./src/$SolutionName.Api/$SolutionName.Api.csrpoj reference ./src/$SolutionName.Application/$SolutionName.Application.csrpoj
+    dotnet add ./src/$SolutionName.Api/$SolutionName.Api.csrpoj reference ./src/$SolutionName.Infrastructure/$SolutionName.Infrastructure.csrpoj
+
+    echo -e "\e[36mAdded [$SolutionName.Infrastructure] project references\e[0m"
+    dotnet add ./src/$SolutionName.Infrastructure/$SolutionName.Infrastructure.csrpoj reference ./src/$SolutionName.Application/$SolutionName.Application.csrpoj
+
+    echo -e "\e[36mAdded [$SolutionName.Application] project references\e[0m"
+    dotnet add ./src/$SolutionName.Application/$SolutionName.Application.csrpoj reference ./src/$SolutionName.Domain/$SolutionName.Domain.csrpoj
+}
+
+if [ ! -f "$Solution" ]; then
+    initializeSolution
+fi
+
+if [ ! -d "src" ]; then
+    createProjects
+    connectProjectsToSolution
+    addReferencesBetweenProjects
 fi

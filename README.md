@@ -10,7 +10,6 @@ chmod +x ./setup.sh
 ./setup.sh
 ```
 TBD:
-- Adding project references between the projects (following the [CLEAN](https://blog.cleancoder.com/uncle-bob/2012/08/13/the-clean-architecture.html) architecture projec reference guide) 
 - Adding a Powershell script to support this on Windows
 
 ## Tooling
