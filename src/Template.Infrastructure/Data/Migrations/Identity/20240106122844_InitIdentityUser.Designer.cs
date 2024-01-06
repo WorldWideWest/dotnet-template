@@ -12,7 +12,7 @@ using Template.Infrastructure.Data;
 namespace Template.Infrastructure.Data.Migrations.Identity
 {
     [DbContext(typeof(IdentityDbContext))]
-    [Migration("20240106101649_InitIdentityUser")]
+    [Migration("20240106122844_InitIdentityUser")]
     partial class InitIdentityUser
     {
         /// <inheritdoc />
