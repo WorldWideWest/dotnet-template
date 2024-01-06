@@ -22,7 +22,7 @@ public class ExternalClient
     public required string InternalSecret { get; set; }
     public required string ExternalClientId { get; set; }
     public required string ExternalClientSecret { get; set; }
-    public string RedirectUri { get; set; }
-    public string PostLogoutRedirectUri { get; set; }
-    public string AllowedCorsOrigin { get; set; }
+    public required string RedirectUri { get; set; }
+    public required string PostLogoutRedirectUri { get; set; }
+    public required string AllowedCorsOrigin { get; set; }
 }
