@@ -1,5 +1,6 @@
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Template.Domain.Common.Models;
 using Template.Infrastructure.Identity.Configurations;
 using Template.Infrastructure.IdentityServer.Configurations;
 
@@ -12,6 +13,8 @@ public static class DependencyInjection
         IConfiguration configuration
     )
     {
+        services.Configure<AppConfig>(configuration.GetSection("AppConfig"));
+
         services.ConfigureIdentity(configuration);
         services.ConfigureIdentityServer(configuration);
 

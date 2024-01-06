@@ -7,9 +7,13 @@ public class AppConfig
 
 public class IdentityServerConfig
 {
+    public IdentityServerClients Clients { get; set; }
+}
+
+public class IdentityServerClients
+{
     public InternalClient Web { get; set; }
     public InternalClient Mobile { get; set; }
-    public ExternalClient Google { get; set; }
 }
 
 public class InternalClient

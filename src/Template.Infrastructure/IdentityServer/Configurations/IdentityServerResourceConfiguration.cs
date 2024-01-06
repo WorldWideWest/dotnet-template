@@ -103,7 +103,7 @@ public class IdentityServerResourceConfiguration
                 },
                 ClientSecrets = new List<Secret>
                 {
-                    new Secret(configuration.IdentityServerConfig.Web.Secret.Sha256()),
+                    new Secret(configuration.IdentityServerConfig.Clients.Web.Secret.Sha256()),
                 },
                 AllowOfflineAccess = true,
                 RefreshTokenUsage = TokenUsage.OneTimeOnly,
@@ -124,41 +124,10 @@ public class IdentityServerResourceConfiguration
                 },
                 ClientSecrets = new List<Secret>
                 {
-                    new Secret(configuration.IdentityServerConfig.Mobile.Secret.Sha256()),
+                    new Secret(configuration.IdentityServerConfig.Clients.Mobile.Secret.Sha256()),
                 },
                 AllowOfflineAccess = true,
                 RefreshTokenUsage = TokenUsage.OneTimeOnly,
-                Enabled = true,
-            },
-            new()
-            {
-                ClientId = DomainIdentityServerConstants.ClientId.GoogleWeb,
-                ClientName = DomainIdentityServerConstants.ClientName.GoogleWeb,
-                AllowedGrantTypes = GrantTypes.Code,
-                RequirePkce = true,
-                RequireClientSecret = false,
-                RedirectUris = { configuration.IdentityServerConfig.Google.RedirectUri },
-                PostLogoutRedirectUris =
-                {
-                    configuration.IdentityServerConfig.Google.PostLogoutRedirectUri
-                },
-                AllowedScopes =
-                {
-                    DomainIdentityServerConstants.ApiScope.Read,
-                    DomainIdentityServerConstants.ApiScope.Write,
-                    DomainIdentityServerConstants.ApiScope.Update,
-                    DomainIdentityServerConstants.ApiScope.Delete,
-                    IdentityServerConstants.StandardScopes.OpenId,
-                    IdentityServerConstants.StandardScopes.Profile,
-                    IdentityServerConstants.StandardScopes.Email
-                },
-                AllowOfflineAccess = true,
-                RefreshTokenUsage = TokenUsage.OneTimeOnly,
-                IdentityProviderRestrictions = new List<string> { "Google" },
-                AllowedCorsOrigins =
-                {
-                    configuration.IdentityServerConfig.Google.AllowedCorsOrigin
-                },
                 Enabled = true,
             }
         };
