@@ -1,4 +1,3 @@
-using Duende.IdentityServer;
 using Duende.IdentityServer.Models;
 using IdentityModel;
 using Template.Domain.Common.Models;
