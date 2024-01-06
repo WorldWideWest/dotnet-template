@@ -1,3 +1,5 @@
+using Template.Api;
+using Template.Api.Configurations;
 using Template.Application;
 using Template.Infrastructure;
 using Template.Infrastructure.IdentityServer.Configurations;
@@ -12,17 +14,15 @@ builder
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-builder.Services.AddInfrastructure(builder.Configuration).AddApplication();
+builder.Services.AddApi().AddInfrastructure(builder.Configuration).AddApplication();
 
 var app = builder.Build();
 
 if (app.Environment.IsDevelopment())
 {
-    app.UseSwagger();
-    app.UseSwaggerUI();
-
     await IdentityServerMigrationConfiguration.ApplyMigrationsAsync(app);
     app.UseDeveloperExceptionPage();
+    app.UseSwaggerConfiguration();
 }
 
 app.UseHttpsRedirection();
