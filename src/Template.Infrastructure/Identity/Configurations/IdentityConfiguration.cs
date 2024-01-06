@@ -15,7 +15,15 @@ public static class IdentityConfiguration
     )
     {
         var connectionString = configuration.GetConnectionString("DefaultConnection");
-        var defaultAseembly = typeof(IdentityConfiguration).Assembly.FullName;
+        var migrationAssembly = typeof(IdentityConfiguration).Assembly.FullName;
+
+        services.AddDbContext<IdentityDbContext>(options =>
+        {
+            options.UseSqlServer(
+                connectionString,
+                sql => sql.MigrationsAssembly(migrationAssembly)
+            );
+        });
 
         services
             .AddIdentity<User, IdentityRole>(options =>
