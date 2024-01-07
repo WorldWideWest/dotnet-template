@@ -5,6 +5,7 @@ using Template.Application.Email.Interfaces;
 using Template.Domain.Common.Models;
 using Template.Domain.Email.Enums;
 using Template.Domain.Email.Models;
+using Template.Domain.Identity.Entites;
 
 namespace Template.Infrastructure.Email.Services;
 
@@ -49,11 +50,31 @@ public class EmailService(
             var content = ClassifiedEmail.GetEmailContent(classifiedEmail);
             var message = new EmailMessage(_options.EmailServiceConfig.Sender, email, content);
 
-            await client.SendAsync(Azure.WaitUntil.Completed, message);
+            await client.SendAsync(Azure.WaitUntil.Completed, message).ConfigureAwait(false);
         }
         catch (Exception ex)
         {
             _logger.LogError(ex, ex.Message, nameof(SendAsync));
+            throw;
+        }
+    }
+
+    public Dictionary<string, string> GenerateEmailConfirmationParameters(User user, string token)
+    {
+        try
+        {
+            return new Dictionary<string, string>()
+            {
+                { "fullName", $"{user.FirstName} {user.LastName}" },
+                {
+                    "url",
+                    $"{_options.FrontendConfig.Url}/confirm-email?email={user.Email}&token={token}"
+                }
+            };
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, ex.Message, nameof(GenerateEmailConfirmationParameters));
             throw;
         }
     }

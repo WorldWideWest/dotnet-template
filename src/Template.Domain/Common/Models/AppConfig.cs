@@ -4,6 +4,7 @@ public class AppConfig
 {
     public IdentityServerConfig IdentityServerConfig { get; set; }
     public EmailServiceConfig EmailServiceConfig { get; set; }
+    public FrontendConfig FrontendConfig { get; set; }
 }
 
 public class IdentityServerConfig
@@ -36,4 +37,9 @@ public class EmailServiceConfig
 {
     public required string ConnectionString { get; set; }
     public required string Sender { get; set; }
+}
+
+public class FrontendConfig
+{
+    public string Url { get; set; }
 }

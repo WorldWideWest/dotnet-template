@@ -24,7 +24,7 @@ public static class DependencyInjection
         services.ConfigureIdentity(configuration);
         services.ConfigureIdentityServer(configuration);
 
-        services.AddScoped<IIdentityService, Identityservice>();
+        services.AddScoped<IIdentityService, IdentityService>();
         services.AddScoped<IEmailService, EmailService>();
         services.AddTransient<IValidationFactory, ValidationFactory>();
 
