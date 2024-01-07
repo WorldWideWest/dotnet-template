@@ -44,10 +44,9 @@ public static class IdentityConfiguration
             .AddEntityFrameworkStores<IdentityDbContext>()
             .AddDefaultTokenProviders();
 
-        services.ConfigureApplicationCookie(options =>
+        services.Configure<DataProtectionTokenProviderOptions>(options =>
         {
-            options.ExpireTimeSpan = TimeSpan.FromDays(2);
-            options.SlidingExpiration = true;
+            options.TokenLifespan = TimeSpan.FromDays(2);
         });
 
         return services;

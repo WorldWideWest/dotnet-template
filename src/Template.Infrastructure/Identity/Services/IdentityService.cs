@@ -1,7 +1,10 @@
+using System.Security.Claims;
 using System.Text;
+using IdentityModel;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Logging;
 using Template.Application.Identity.Commands.CreateUser;
+using Template.Application.Identity.Commands.VerifyEmail;
 using Template.Application.Identity.Common;
 using Template.Application.Identity.Interfaces;
 using Template.Domain.Common.Models;
@@ -86,6 +89,43 @@ public sealed class IdentityService(
         catch (Exception ex)
         {
             _logger.LogError(ex, ex.Message, nameof(FindUserAsync));
+            throw;
+        }
+    }
+
+    public async Task<Result<object>> VerifyEmailAsync(VerifyEmailDto request)
+    {
+        try
+        {
+            var token = Encoding.UTF8.GetString(Convert.FromBase64String(request.Token));
+
+            var result = await _userManager
+                .ConfirmEmailAsync(request.User, token)
+                .ConfigureAwait(false);
+
+            if (!result.Succeeded)
+                return Result<object>.Failed(result.Errors.ToArray());
+
+            var claimsResult = await _userManager
+                .AddClaimsAsync(
+                    request.User,
+                    new Claim[]
+                    {
+                        new Claim(JwtClaimTypes.Email, request.User.Email),
+                        new Claim(JwtClaimTypes.GivenName, request.User.FirstName),
+                        new Claim(JwtClaimTypes.FamilyName, request.User.LastName)
+                    }
+                )
+                .ConfigureAwait(false);
+
+            if (!claimsResult.Succeeded)
+                return Result<object>.Failed(claimsResult.Errors.ToArray());
+
+            return Result<object>.Success();
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, ex.Message, nameof(VerifyEmailAsync));
             throw;
         }
     }
