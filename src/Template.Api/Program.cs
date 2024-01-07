@@ -11,9 +11,6 @@ builder
     .AddJsonFile($"appsettings.{builder.Environment.EnvironmentName}.json", optional: false)
     .AddEnvironmentVariables();
 
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
-
 builder.Services.AddApi().AddInfrastructure(builder.Configuration).AddApplication();
 
 var app = builder.Build();
