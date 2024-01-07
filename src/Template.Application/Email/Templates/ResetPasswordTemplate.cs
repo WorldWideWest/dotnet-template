@@ -5,7 +5,7 @@ using Template.Domain.Email.Models;
 
 namespace Template.Application.Email.Templates;
 
-public class ForgotPasswordTemplate : IEmailClassifier
+public class ResetPasswordTemplate : IEmailClassifier
 {
     public bool Classified(EmailType type) => EmailType.PasswordReset == type;
 
