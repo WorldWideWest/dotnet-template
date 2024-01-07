@@ -3,6 +3,7 @@ namespace Template.Domain.Common.Models;
 public class AppConfig
 {
     public IdentityServerConfig IdentityServerConfig { get; set; }
+    public EmailServiceConfig EmailServiceConfig { get; set; }
 }
 
 public class IdentityServerConfig
@@ -29,4 +30,10 @@ public class ExternalClient
     public required string RedirectUri { get; set; }
     public required string PostLogoutRedirectUri { get; set; }
     public required string AllowedCorsOrigin { get; set; }
+}
+
+public class EmailServiceConfig
+{
+    public required string ConnectionString { get; set; }
+    public required string Sender { get; set; }
 }
