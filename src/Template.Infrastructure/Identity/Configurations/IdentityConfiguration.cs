@@ -17,6 +17,10 @@ public static class IdentityConfiguration
         var connectionString = configuration.GetConnectionString("DefaultConnection");
         var migrationAssembly = typeof(IdentityConfiguration).Assembly.FullName;
 
+        services.AddAuthorization();
+
+        services.AddAuthorization();
+
         services.AddDbContext<IdentityDbContext>(options =>
         {
             options.UseSqlServer(

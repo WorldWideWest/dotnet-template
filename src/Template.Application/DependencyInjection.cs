@@ -21,6 +21,11 @@ public static class DependencyInjection
         });
 
         services.AddValidatorsFromAssembly(assembly);
+        services.AddMediatR(options =>
+        {
+            options.RegisterServicesFromAssembly(assembly);
+        });
+
         return services;
     }
 }

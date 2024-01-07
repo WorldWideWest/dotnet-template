@@ -4,7 +4,7 @@ using Template.Domain.Identity.Constants.Regex;
 
 namespace Template.Application.Identity.Commands.CreateUser;
 
-public class CreateUserValidator : AbstractValidator<CreateUserDto>
+public class CreateUserValidator : AbstractValidator<RegisterUserCommand>
 {
     public CreateUserValidator()
     {
