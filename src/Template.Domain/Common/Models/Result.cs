@@ -1,3 +1,4 @@
+using FluentValidation.Results;
 using Microsoft.AspNetCore.Identity;
 
 namespace Template.Domain.Common.Models;
@@ -69,6 +70,25 @@ public class Result<T>
     {
         var mappedErrors = errors.Select(
             x => new Error { Code = x.Code, Description = x.Description }
+        );
+
+        var result = new Result<T>() { Succeeded = false };
+
+        if (mappedErrors is not null)
+            result._errors.AddRange(mappedErrors);
+
+        return result;
+    }
+
+    /// <summary>
+    /// Mapping from ValidationFailure (from FluentValidation) error to BaseError and retuning the Result with the mapped errors
+    /// </summary>
+    /// <param name="errors"></param>
+    /// <returns>Result of type <typeparamref name="T"/></returns>
+    public static Result<T> Failed(params ValidationFailure[] errors)
+    {
+        var mappedErrors = errors.Select(
+            x => new Error { Code = x.ErrorCode, Description = x.ErrorMessage }
         );
 
         var result = new Result<T>() { Succeeded = false };
