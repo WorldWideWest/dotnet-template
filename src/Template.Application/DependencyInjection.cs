@@ -1,3 +1,4 @@
+using FluentValidation;
 using Microsoft.Extensions.DependencyInjection;
 using Template.Application.Email.Interfaces;
 using Template.Application.Email.Templates;
@@ -8,6 +9,8 @@ public static class DependencyInjection
 {
     public static IServiceCollection AddApplication(this IServiceCollection services)
     {
+        var assembly = typeof(DependencyInjection).Assembly;
+
         services.AddSingleton<List<IEmailClassifier>>(_ =>
         {
             return new List<IEmailClassifier>()
@@ -17,6 +20,7 @@ public static class DependencyInjection
             };
         });
 
+        services.AddValidatorsFromAssembly(assembly);
         return services;
     }
 }
