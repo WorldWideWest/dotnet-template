@@ -3,6 +3,7 @@ using System.Text;
 using IdentityModel;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Logging;
+using Template.Application.Identity.Commands.ChangePassword;
 using Template.Application.Identity.Commands.CreateUser;
 using Template.Application.Identity.Commands.ResetPassword;
 using Template.Application.Identity.Commands.VerifyEmail;
@@ -174,6 +175,40 @@ public sealed class IdentityService(
         catch (Exception ex)
         {
             _logger.LogError(ex, ex.Message, nameof(ResetPasswordAsync));
+            throw;
+        }
+    }
+
+    public async Task<Result<object>> ChangePasswordAsync(ChangePasswordDto request)
+    {
+        try
+        {
+            var searchResult = await FindUserAsync(new(request.Email));
+            if (searchResult.Succeeded)
+                return Result<object>.Failed(searchResult.Errors.ToArray());
+
+            var isOldPasswordCorrect = await _userManager
+                .CheckPasswordAsync(searchResult.Body, request.OldPassword)
+                .ConfigureAwait(false);
+
+            if (!isOldPasswordCorrect)
+                return Result<object>.Failed(
+                    ErrorCode.ERR_PASSWORD,
+                    ErrorMessage.PASSWORD_NOT_MATCHING
+                );
+
+            var user = searchResult.Body;
+            user.PasswordHash = _passwordHasher.HashPassword(user, request.NewPassword);
+
+            var result = await _userManager.UpdateAsync(user).ConfigureAwait(false);
+            if (!result.Succeeded)
+                return Result<object>.Failed(result.Errors.ToArray());
+
+            return Result<object>.Success();
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, ex.Message, nameof(ChangePasswordAsync));
             throw;
         }
     }
