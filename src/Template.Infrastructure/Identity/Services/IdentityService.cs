@@ -158,7 +158,7 @@ public sealed class IdentityService(
         try
         {
             var searchResult = await FindUserAsync(new(request.Email));
-            if (searchResult.Succeeded)
+            if (!searchResult.Succeeded)
                 return Result<object>.Failed(searchResult.Errors.ToArray());
 
             var token = Encoding.UTF8.GetString(Convert.FromBase64String(request.Token));
@@ -184,7 +184,7 @@ public sealed class IdentityService(
         try
         {
             var searchResult = await FindUserAsync(new(request.Email));
-            if (searchResult.Succeeded)
+            if (!searchResult.Succeeded)
                 return Result<object>.Failed(searchResult.Errors.ToArray());
 
             var isOldPasswordCorrect = await _userManager
