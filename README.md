@@ -29,7 +29,7 @@ docker-compose -f compose/docker-compose.debug.arm.yml down
 
 And to make it convinient run:
 ```bash
-docker-compose -f compose/docker-compose.debug.arm.yml up --build && docker-compose -f compose/docker-compose.debug.arm.yml down
+docker-compose -f compose/docker-compose.debug.arm.yml down && docker-compose -f compose/docker-compose.debug.arm.yml up --build
 ```
 
 TBD:

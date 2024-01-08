@@ -47,7 +47,8 @@ services:
       "dotnet", 
       "watch", 
       "run", 
-      -p, 
+      -v,
+      "--project", 
       "/app/src/Template.Api/Template.Api.csproj", 
       "--urls", 
       "http://*:80",
@@ -60,6 +61,12 @@ services:
       - ../:/app
       - /app/src/Template.Api/obj/
       - /app/src/Template.Api/bin/
+      - /app/src/Template.Domain/obj/
+      - /app/src/Template.Domain/bin/
+      - /app/src/Template.Infrastructure/obj/
+      - /app/src/Template.Infrastructure/bin/
+      - /app/src/Template.Application/obj/
+      - /app/src/Template.Application/bin/
 
 volumes:
   sqlserver_data:

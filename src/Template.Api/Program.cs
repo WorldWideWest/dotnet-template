@@ -1,21 +1,35 @@
+using Template.Api;
+using Template.Api.Configurations;
 using Template.Application;
 using Template.Infrastructure;
+using Template.Infrastructure.IdentityServer.Configurations;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+builder
+    .Configuration.SetBasePath(builder.Environment.ContentRootPath)
+    .AddJsonFile($"appsettings.{builder.Environment.EnvironmentName}.json", optional: false)
+    .AddEnvironmentVariables();
 
-builder.Services.AddInfrastructure().AddApplication();
+builder.Services.AddApi().AddInfrastructure(builder.Configuration).AddApplication();
 
 var app = builder.Build();
 
 if (app.Environment.IsDevelopment())
 {
-    app.UseSwagger();
-    app.UseSwaggerUI();
+    await IdentityServerMigrationConfiguration.ApplyMigrationsAsync(app);
+    app.UseDeveloperExceptionPage();
+    app.UseSwaggerConfiguration();
 }
 
 app.UseHttpsRedirection();
+
+app.UseIdentityServer();
+
+app.UseAuthentication();
+
+app.UseAuthorization();
+
+app.MapControllers();
 
 app.Run();
