@@ -1,6 +1,6 @@
 namespace Template.Domain.Common.Constants.Errors;
 
-public static class Message
+public static class ErrorMessage
 {
     public static string PropertyError(string property) => $"{property} is not valid";
 

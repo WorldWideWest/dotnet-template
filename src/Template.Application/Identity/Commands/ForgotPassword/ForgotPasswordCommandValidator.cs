@@ -11,13 +11,13 @@ public class ForgotPasswordCommandValidator : AbstractValidator<ForgotPasswordCo
         RuleFor(user => user.Email)
             .Cascade(CascadeMode.Continue)
             .NotEmpty()
-            .WithErrorCode(Code.PropertyError("EMAIL"))
-            .WithMessage(Message.PropertyEmpty("Email"))
+            .WithErrorCode(ErrorCode.PropertyError("EMAIL"))
+            .WithMessage(ErrorMessage.PropertyEmpty("Email"))
             .NotNull()
-            .WithErrorCode(Code.PropertyError("EMAIL"))
-            .WithMessage(Message.PropertyEmpty("Email"))
+            .WithErrorCode(ErrorCode.PropertyError("EMAIL"))
+            .WithMessage(ErrorMessage.PropertyEmpty("Email"))
             .Matches(Pattern.Email)
-            .WithErrorCode(Code.PropertyError("EMAIL"))
-            .WithMessage(Message.PropertyError("Email"));
+            .WithErrorCode(ErrorCode.PropertyError("EMAIL"))
+            .WithMessage(ErrorMessage.PropertyError("Email"));
     }
 }

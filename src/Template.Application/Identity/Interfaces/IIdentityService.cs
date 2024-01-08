@@ -1,4 +1,5 @@
 using Template.Application.Identity.Commands.CreateUser;
+using Template.Application.Identity.Commands.ResetPassword;
 using Template.Application.Identity.Commands.VerifyEmail;
 using Template.Application.Identity.Common;
 using Template.Domain.Common.Models;
@@ -13,4 +14,5 @@ public interface IIdentityService
     Task<Result<string>> GenerateEmailVerificationTokenAsync(string email);
     Task<Result<object>> VerifyEmailAsync(VerifyEmailDto request);
     Task<Result<string>> GenerateResetPasswordTokenAsync(string email);
+    Task<Result<object>> ResetPasswordAsync(ResetPasswordDto request);
 }

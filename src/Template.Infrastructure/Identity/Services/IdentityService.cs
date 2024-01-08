@@ -4,6 +4,7 @@ using IdentityModel;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Logging;
 using Template.Application.Identity.Commands.CreateUser;
+using Template.Application.Identity.Commands.ResetPassword;
 using Template.Application.Identity.Commands.VerifyEmail;
 using Template.Application.Identity.Common;
 using Template.Application.Identity.Interfaces;
@@ -91,10 +92,14 @@ public sealed class IdentityService(
     {
         try
         {
+            var searchResult = await FindUserAsync(new(request.Email));
+            if (!searchResult.Succeeded)
+                return Result<object>.Failed(searchResult.Errors.ToArray());
+
             var token = Encoding.UTF8.GetString(Convert.FromBase64String(request.Token));
 
             var result = await _userManager
-                .ConfirmEmailAsync(request.User, token)
+                .ConfirmEmailAsync(searchResult.Body, token)
                 .ConfigureAwait(false);
 
             if (!result.Succeeded)
@@ -102,12 +107,12 @@ public sealed class IdentityService(
 
             var claimsResult = await _userManager
                 .AddClaimsAsync(
-                    request.User,
+                    searchResult.Body,
                     new Claim[]
                     {
-                        new Claim(JwtClaimTypes.Email, request.User.Email),
-                        new Claim(JwtClaimTypes.GivenName, request.User.FirstName),
-                        new Claim(JwtClaimTypes.FamilyName, request.User.LastName)
+                        new Claim(JwtClaimTypes.Email, searchResult.Body.Email),
+                        new Claim(JwtClaimTypes.GivenName, searchResult.Body.FirstName),
+                        new Claim(JwtClaimTypes.FamilyName, searchResult.Body.LastName)
                     }
                 )
                 .ConfigureAwait(false);
@@ -143,6 +148,32 @@ public sealed class IdentityService(
         catch (Exception ex)
         {
             _logger.LogError(ex, ex.Message, nameof(GenerateResetPasswordTokenAsync));
+            throw;
+        }
+    }
+
+    public async Task<Result<object>> ResetPasswordAsync(ResetPasswordDto request)
+    {
+        try
+        {
+            var searchResult = await FindUserAsync(new(request.Email));
+            if (searchResult.Succeeded)
+                return Result<object>.Failed(searchResult.Errors.ToArray());
+
+            var token = Encoding.UTF8.GetString(Convert.FromBase64String(request.Token));
+
+            var result = await _userManager
+                .ResetPasswordAsync(searchResult.Body, token, request.Password)
+                .ConfigureAwait(false);
+
+            if (!result.Succeeded)
+                return Result<object>.Failed(result.Errors.ToArray());
+
+            return Result<object>.Success();
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, ex.Message, nameof(ResetPasswordAsync));
             throw;
         }
     }

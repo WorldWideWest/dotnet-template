@@ -4,20 +4,20 @@ using Template.Application.Identity.Interfaces;
 using Template.Application.Validation.Interfaces;
 using Template.Domain.Common.Models;
 
-namespace Template.Application.Identity.Commands.VerifyEmail;
+namespace Template.Application.Identity.Commands.ResetPassword;
 
-public class VerifyEmailCommandHandler(
-    ILogger<VerifyEmailCommandHandler> logger,
+public class ResetPasswordCommandHandler(
+    ILogger<ResetPasswordCommandHandler> logger,
     IIdentityService identityService,
     IValidationFactory validationFactory
-) : IRequestHandler<VerifyEmailCommand, Result<object>>
+) : IRequestHandler<ResetPasswordCommand, Result<object>>
 {
-    private readonly ILogger<VerifyEmailCommandHandler> _logger = logger;
+    private readonly ILogger<ResetPasswordCommandHandler> _logger = logger;
     private readonly IIdentityService _identityService = identityService;
     private readonly IValidationFactory _validationFactory = validationFactory;
 
     public async Task<Result<object>> Handle(
-        VerifyEmailCommand request,
+        ResetPasswordCommand request,
         CancellationToken cancellationToken
     )
     {
@@ -31,7 +31,7 @@ public class VerifyEmailCommandHandler(
             if (!searchResult.Succeeded)
                 return Result<object>.Failed(searchResult.Errors.ToArray());
 
-            var result = await _identityService.VerifyEmailAsync(request.ToDto());
+            var result = await _identityService.ResetPasswordAsync(request.ToDto());
             if (!result.Succeeded)
                 return result;
 

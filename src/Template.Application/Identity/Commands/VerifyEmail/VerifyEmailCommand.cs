@@ -9,4 +9,4 @@ public record VerifyEmailCommand(string Email, string Token) : IRequest<Result<o
     public VerifyEmailDto ToDto() => new(Email, Token);
 };
 
-public record VerifyEmailDto(string Email, string Token, User User = null);
+public record VerifyEmailDto(string Email, string Token);
