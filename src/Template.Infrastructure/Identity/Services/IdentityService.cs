@@ -123,4 +123,27 @@ public sealed class IdentityService(
             throw;
         }
     }
+
+    public async Task<Result<string>> GenerateResetPasswordTokenAsync(string email)
+    {
+        try
+        {
+            var searchResult = await FindUserAsync(new(email));
+            if (!searchResult.Succeeded)
+                return Result<string>.Failed(searchResult.Errors.ToArray());
+
+            var token = await _userManager
+                .GeneratePasswordResetTokenAsync(searchResult.Body)
+                .ConfigureAwait(false);
+
+            var result = Convert.ToBase64String(Encoding.UTF8.GetBytes(token));
+
+            return Result<string>.Success(result);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, ex.Message, nameof(GenerateResetPasswordTokenAsync));
+            throw;
+        }
+    }
 }

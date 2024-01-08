@@ -7,7 +7,7 @@ namespace Template.Application.Email.Templates;
 
 public class ResetPasswordTemplate : IEmailClassifier
 {
-    public bool Classified(EmailType type) => EmailType.PasswordReset == type;
+    public bool Classified(EmailType type) => EmailType.ResetPassword == type;
 
     public ClassifiedEmail GetEmail(IDictionary<string, string> bodyParameters)
     {

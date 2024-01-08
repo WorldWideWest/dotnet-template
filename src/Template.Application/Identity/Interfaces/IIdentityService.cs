@@ -12,4 +12,5 @@ public interface IIdentityService
     Task<Result<object>> CreateUserAsync(CreateUserDto request);
     Task<Result<string>> GenerateEmailVerificationTokenAsync(string email);
     Task<Result<object>> VerifyEmailAsync(VerifyEmailDto request);
+    Task<Result<string>> GenerateResetPasswordTokenAsync(string email);
 }

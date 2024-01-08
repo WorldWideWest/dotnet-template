@@ -9,4 +9,5 @@ public interface IEmailService
     Task SendAsync(EmailType type, string email, Dictionary<string, string> paramters);
     ClassifiedEmail Classify(EmailType type, Dictionary<string, string> paramters);
     Dictionary<string, string> GenerateEmailConfirmationParameters(User user, string token);
+    Dictionary<string, string> GenerateResetPasswordParameters(User user, string token);
 }

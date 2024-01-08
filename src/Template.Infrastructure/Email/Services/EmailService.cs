@@ -78,4 +78,24 @@ public class EmailService(
             throw;
         }
     }
+
+    public Dictionary<string, string> GenerateResetPasswordParameters(User user, string token)
+    {
+        try
+        {
+            return new Dictionary<string, string>()
+            {
+                { "fullName", $"{user.FirstName} {user.LastName}" },
+                {
+                    "url",
+                    $"{_options.FrontendConfig.Url}/reset-password?email={user.Email}&token={token}"
+                }
+            };
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, ex.Message, nameof(GenerateResetPasswordParameters));
+            throw;
+        }
+    }
 }
