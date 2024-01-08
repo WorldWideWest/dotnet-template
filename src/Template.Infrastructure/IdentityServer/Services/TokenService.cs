@@ -44,7 +44,9 @@ public sealed class TokenService(
             if (result.IsError)
                 return Result<TokenResultDto>.Failed(ErrorCode.ERR_TOKEN, disco.Error);
 
-            return Result<TokenResultDto>.Success();
+            return Result<TokenResultDto>.Success(
+                new(result.AccessToken, result.ExpiresIn, result.RefreshToken)
+            );
         }
         catch (Exception ex)
         {
