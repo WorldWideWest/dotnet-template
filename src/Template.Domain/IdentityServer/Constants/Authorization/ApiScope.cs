@@ -7,4 +7,7 @@ public static class ApiScope
     public const string Update = $"{ApiResource.Template}.update";
     public const string Delete = $"{ApiResource.Template}.delete";
     public const string Test = $"{ApiResource.Template}.test";
+
+    public static IEnumerable<string> SupportedApiScopes =>
+        new List<string> { Read, Write, Update, Delete };
 }
