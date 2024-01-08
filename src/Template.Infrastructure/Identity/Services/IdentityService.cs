@@ -212,4 +212,27 @@ public sealed class IdentityService(
             throw;
         }
     }
+
+    public async Task<Result<object>> DeleteUserAsync(FindUserDto request)
+    {
+        try
+        {
+            var userSearchResult = await FindUserAsync(new(request.Email));
+            if (!userSearchResult.Succeeded)
+                return Result<object>.Failed(userSearchResult.Errors.ToArray());
+
+            var user = userSearchResult.Body;
+
+            var result = await _userManager.DeleteAsync(user).ConfigureAwait(false);
+            if (!result.Succeeded)
+                return Result<object>.Failed(result.Errors.ToArray());
+
+            return Result<object>.Success();
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, ex.Message, nameof(DeleteUserAsync));
+            throw;
+        }
+    }
 }
