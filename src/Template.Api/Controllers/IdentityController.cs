@@ -1,5 +1,6 @@
 using System.Security.Claims;
 using MediatR;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Template.Application.Identity.Commands.ChangePassword;
@@ -10,6 +11,7 @@ using Template.Application.Identity.Commands.ResendConfirmationEmail;
 using Template.Application.Identity.Commands.ResetPassword;
 using Template.Application.Identity.Commands.VerifyEmail;
 using Template.Domain.Common.Models;
+using Template.Domain.Identity.Constants.Authorization;
 
 namespace Template.Api.Controllers;
 
@@ -137,7 +139,10 @@ public class IdentityController(ILogger<IdentityController> logger, IMediator me
         }
     }
 
-    [Authorize]
+    [Authorize(
+        AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme,
+        Policy = Policy.Update
+    )]
     [HttpPut("password/change")]
     [ProducesResponseType(typeof(Result<object>), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(Result<object>), StatusCodes.Status400BadRequest)]
@@ -162,7 +167,10 @@ public class IdentityController(ILogger<IdentityController> logger, IMediator me
         }
     }
 
-    [Authorize]
+    [Authorize(
+        AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme,
+        Policy = Policy.Delete
+    )]
     [HttpDelete("user/delete")]
     [ProducesResponseType(typeof(Result<object>), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(Result<object>), StatusCodes.Status400BadRequest)]
