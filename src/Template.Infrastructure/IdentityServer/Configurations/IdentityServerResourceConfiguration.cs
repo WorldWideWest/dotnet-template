@@ -1,7 +1,7 @@
 using Duende.IdentityServer.Models;
 using IdentityModel;
 using Template.Domain.Common.Models;
-using DomainIdentityServerConstants = Template.Domain.IdentityServer.Constants;
+using DomainIdentityServerConstants = Template.Domain.IdentityServer.Constants.Authorization;
 
 namespace Template.Infrastructure.IdentityServer.Configurations;
 

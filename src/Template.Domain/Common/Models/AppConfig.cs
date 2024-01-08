@@ -10,6 +10,7 @@ public class AppConfig
 public class IdentityServerConfig
 {
     public IdentityServerClients Clients { get; set; }
+    public required string Authority { get; set; }
 }
 
 public class IdentityServerClients

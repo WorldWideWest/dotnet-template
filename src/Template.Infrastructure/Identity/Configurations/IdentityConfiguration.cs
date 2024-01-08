@@ -1,8 +1,12 @@
+using IdentityModel;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Template.Domain.Identity.Constants.Authorization;
 using Template.Domain.Identity.Entites;
+using Template.Domain.IdentityServer.Constants.Authorization;
 using Template.Infrastructure.Data;
 
 namespace Template.Infrastructure.Identity.Configurations;
@@ -17,9 +21,54 @@ public static class IdentityConfiguration
         var connectionString = configuration.GetConnectionString("DefaultConnection");
         var migrationAssembly = typeof(IdentityConfiguration).Assembly.FullName;
 
-        services.AddAuthorization();
+        services
+            .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+            .AddJwtBearer(
+                JwtBearerDefaults.AuthenticationScheme,
+                options =>
+                {
+                    options.RequireHttpsMetadata = false;
+                }
+            );
 
-        services.AddAuthorization();
+        services.AddAuthorization(options =>
+        {
+            options.AddPolicy(
+                Policy.Read,
+                policy =>
+                {
+                    policy.RequireAuthenticatedUser();
+                    policy.RequireClaim(JwtClaimTypes.Scope, ApiScope.Read);
+                }
+            );
+
+            options.AddPolicy(
+                Policy.Write,
+                policy =>
+                {
+                    policy.RequireAuthenticatedUser();
+                    policy.RequireClaim(JwtClaimTypes.Scope, ApiScope.Write);
+                }
+            );
+
+            options.AddPolicy(
+                Policy.Update,
+                policy =>
+                {
+                    policy.RequireAuthenticatedUser();
+                    policy.RequireClaim(JwtClaimTypes.Scope, ApiScope.Update);
+                }
+            );
+
+            options.AddPolicy(
+                Policy.Delete,
+                policy =>
+                {
+                    policy.RequireAuthenticatedUser();
+                    policy.RequireClaim(JwtClaimTypes.Scope, ApiScope.Delete);
+                }
+            );
+        });
 
         services.AddDbContext<IdentityDbContext>(options =>
         {
