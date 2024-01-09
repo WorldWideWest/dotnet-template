@@ -5,20 +5,20 @@ using Template.Application.IdentityServer.Interfaces;
 using Template.Application.Validation.Interfaces;
 using Template.Domain.Common.Models;
 
-namespace Template.Application.IdentityServer.Commands.AccessToken;
+namespace Template.Application.IdentityServer.Commands.RefreshToken;
 
-public class AccessTokenCommandHandler(
-    ILogger<AccessTokenCommandHandler> logger,
+public class RefreshTokenCommandHandler(
+    ILogger<RefreshTokenCommandHandler> logger,
     ITokenService tokenService,
     IValidationFactory validationFactory
-) : IRequestHandler<AccessTokenCommand, Result<TokenResultDto>>
+) : IRequestHandler<RefreshTokenCommand, Result<TokenResultDto>>
 {
-    private readonly ILogger<AccessTokenCommandHandler> _logger = logger;
+    private readonly ILogger<RefreshTokenCommandHandler> _logger = logger;
     private readonly ITokenService _tokenService = tokenService;
     private readonly IValidationFactory _validationFactory = validationFactory;
 
     public async Task<Result<TokenResultDto>> Handle(
-        AccessTokenCommand request,
+        RefreshTokenCommand request,
         CancellationToken cancellationToken
     )
     {
@@ -28,7 +28,7 @@ public class AccessTokenCommandHandler(
             if (!validationResult.Succeeded)
                 return Result<TokenResultDto>.Failed(validationResult.Errors.ToArray());
 
-            return await _tokenService.RequestAccessTokenAsync(request.ToDto());
+            return await _tokenService.RequestAccessTokenFromRefreshTokenAsync(request.ToDto());
         }
         catch (Exception ex)
         {
