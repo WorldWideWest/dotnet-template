@@ -3,6 +3,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Template.Application.IdentityServer.Commands.AccessToken;
 using Template.Application.IdentityServer.Commands.RefreshToken;
+using Template.Application.IdentityServer.Commands.RevokeToken;
 using Template.Application.IdentityServer.Common;
 using Template.Application.IdentityServer.Interfaces;
 using Template.Domain.Common.Models;
@@ -89,6 +90,38 @@ public sealed class TokenService(
         catch (Exception ex)
         {
             _logger.LogError(ex, ex.Message, nameof(RequestAccessTokenFromRefreshTokenAsync));
+            throw;
+        }
+    }
+
+    public async Task<Result<object>> RevokeTokenAsync(RevokeTokenDto request)
+    {
+        try
+        {
+            var client = _httpClientFactory.CreateClient();
+
+            var disco = await GetDiscoveryCacheAsync();
+            if (!disco.IsError)
+                return Result<object>.Failed(ErrorCode.ERR_TOKEN, disco.Error);
+
+            var result = await client.RevokeTokenAsync(
+                new TokenRevocationRequest
+                {
+                    Address = disco.TokenEndpoint,
+                    ClientId = request.ClientId,
+                    ClientSecret = request.ClientSecret,
+                    Token = request.AccessToken
+                }
+            );
+
+            if (result.IsError)
+                return Result<object>.Failed(ErrorCode.ERR_TOKEN, disco.Error);
+
+            return Result<object>.Success();
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, ex.Message, nameof(RevokeTokenAsync));
             throw;
         }
     }
