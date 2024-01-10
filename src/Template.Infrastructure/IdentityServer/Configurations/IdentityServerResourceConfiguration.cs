@@ -126,6 +126,8 @@ public class IdentityServerResourceConfiguration
                 ClientId = DomainIdentityServerConstants.ClientId.Mobile,
                 ClientName = DomainIdentityServerConstants.ClientName.Mobile,
                 AllowedGrantTypes = GrantTypes.ResourceOwnerPassword,
+                AlwaysSendClientClaims = true,
+                AlwaysIncludeUserClaimsInIdToken = true,
                 RequireClientSecret = true,
                 AllowedScopes =
                 {
