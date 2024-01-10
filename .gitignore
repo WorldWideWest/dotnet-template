@@ -5,6 +5,9 @@ project.lock.json
 *.pyc
 nupkg/
 
+# cert & key files
+compose/nginx/certs
+compose/nginx/keys
 
 # Rider
 .idea/

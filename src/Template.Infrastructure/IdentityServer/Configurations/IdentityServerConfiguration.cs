@@ -1,7 +1,10 @@
+using IdentityModel.Client;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Template.Domain.Common.Models;
 using Template.Domain.Identity.Entites;
+using Template.Infrastructure.IdentityServer.Services;
 
 namespace Template.Infrastructure.IdentityServer.Configurations;
 
@@ -14,6 +17,7 @@ public static class IdentityServerConfiguration
     {
         var connectionString = configuration.GetConnectionString("DefaultConnection");
         var migrationAssembly = typeof(IdentityServerConfiguration).Assembly.FullName;
+        var settings = configuration.GetSection("AppConfig").Get<AppConfig>();
 
         services
             .AddIdentityServer(options =>
@@ -46,7 +50,18 @@ public static class IdentityServerConfiguration
                     );
                 options.EnableTokenCleanup = true;
             })
+            .AddProfileService<ProfileService>()
             .AddAspNetIdentity<User>();
+
+        services.AddSingleton<IDiscoveryCache>(cache =>
+        {
+            var factory = cache.GetRequiredService<IHttpClientFactory>();
+
+            return new DiscoveryCache(
+                settings.IdentityServerConfig.Authority,
+                () => factory.CreateClient()
+            );
+        });
 
         return services;
     }

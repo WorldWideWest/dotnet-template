@@ -41,8 +41,8 @@ services:
     restart: unless-stopped
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
-    ports:
-      - 8000:80
+    expose:
+      - 5000
     command: [
       "dotnet", 
       "watch", 
@@ -51,7 +51,7 @@ services:
       "--project", 
       "/app/src/Template.Api/Template.Api.csproj", 
       "--urls", 
-      "http://*:80",
+      "http://*:5000",
       "--non-interactive"
       ]
     depends_on:
@@ -67,6 +67,19 @@ services:
       - /app/src/Template.Infrastructure/bin/
       - /app/src/Template.Application/obj/
       - /app/src/Template.Application/bin/
+
+  nginx:
+    image: nginx:latest
+    container_name: nginx
+    ports:
+      - 80:80
+      - 443:443
+    depends_on:
+      - api
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./nginx/certs/:/etc/ssl/certs/
+      - ./nginx/keys/:/etc/ssl/private/
 
 volumes:
   sqlserver_data:
