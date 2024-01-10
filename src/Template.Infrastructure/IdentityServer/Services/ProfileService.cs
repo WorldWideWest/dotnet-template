@@ -25,10 +25,6 @@ public class ProfileService(ILogger<ProfileService> logger, UserManager<User> us
             var requestedClaimTypes = context.RequestedClaimTypes;
 
             var claims = await _userManager.GetClaimsAsync(user).ConfigureAwait(false);
-            // var requestedClaims = claims.Where(x => requestedClaimTypes.Contains(x.Type));
-
-            // if (requestedClaims.Any())
-            // context.IssuedClaims.AddRange(requestedClaims);
 
             context.AddRequestedClaims(claims);
         }
