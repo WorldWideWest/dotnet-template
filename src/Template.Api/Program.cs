@@ -24,11 +24,11 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
+app.UseIdentityServer();
+
 app.UseAuthentication();
 
 app.UseAuthorization();
-
-app.UseIdentityServer();
 
 app.MapControllers();
 

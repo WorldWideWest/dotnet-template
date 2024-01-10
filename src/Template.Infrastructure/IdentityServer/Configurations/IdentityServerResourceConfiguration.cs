@@ -75,7 +75,13 @@ public class IdentityServerResourceConfiguration
                     DomainIdentityServerConstants.ApiScope.Update,
                     DomainIdentityServerConstants.ApiScope.Delete,
                 },
-                UserClaims = new List<string> { JwtClaimTypes.Email }
+                UserClaims = new List<string>
+                {
+                    JwtClaimTypes.Email,
+                    JwtClaimTypes.GivenName,
+                    JwtClaimTypes.FamilyName,
+                    JwtClaimTypes.Profile,
+                }
             }
         };
 
