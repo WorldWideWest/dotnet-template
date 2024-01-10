@@ -56,16 +56,16 @@ public class AccessTokenCommandValidator : AbstractValidator<AccessTokenCommand>
             .WithErrorCode(ErrorCode.PropertyError("PASSWORD"))
             .WithMessage(ErrorMessage.PropertyEmpty("Password"));
 
-        RuleFor(request => request.Scope)
-            .Cascade(CascadeMode.Continue)
-            .NotEmpty()
-            .WithErrorCode(ErrorCode.PropertyError("API_SCOPES"))
-            .WithMessage(ErrorMessage.PropertyEmpty("Api Scopes"))
-            .NotNull()
-            .WithErrorCode(ErrorCode.PropertyError("API_SCOPES"))
-            .WithMessage(ErrorMessage.PropertyEmpty("Api Scopes"))
-            .AreScopesSupported()
-            .WithErrorCode(ErrorCode.PropertyError("API_SCOPES"))
-            .WithMessage(ErrorMessage.PropertyEmpty("Api Scopes"));
+        // RuleFor(request => request.Scope)
+        //     .Cascade(CascadeMode.Continue)
+        //     .NotEmpty()
+        //     .WithErrorCode(ErrorCode.PropertyError("API_SCOPES"))
+        //     .WithMessage(ErrorMessage.PropertyEmpty("Api Scopes"))
+        //     .NotNull()
+        //     .WithErrorCode(ErrorCode.PropertyError("API_SCOPES"))
+        //     .WithMessage(ErrorMessage.PropertyEmpty("Api Scopes"))
+        //     .AreScopesSupported()
+        //     .WithErrorCode(ErrorCode.PropertyError("API_SCOPES"))
+        //     .WithMessage(ErrorMessage.PropertyEmpty("Api Scopes"));
     }
 }

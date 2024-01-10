@@ -28,7 +28,7 @@ public sealed class TokenService(
             var client = _httpClientFactory.CreateClient();
 
             var disco = await GetDiscoveryCacheAsync();
-            if (!disco.IsError)
+            if (disco.IsError)
                 return Result<TokenResultDto>.Failed(ErrorCode.ERR_TOKEN, disco.Error);
 
             var result = await client.RequestPasswordTokenAsync(
@@ -57,16 +57,14 @@ public sealed class TokenService(
         }
     }
 
-    public async Task<Result<TokenResultDto>> RequestAccessTokenFromRefreshTokenAsync(
-        RefreshTokenDto request
-    )
+    public async Task<Result<TokenResultDto>> RefreshTokenAsync(RefreshTokenDto request)
     {
         try
         {
             var client = _httpClientFactory.CreateClient();
 
             var disco = await GetDiscoveryCacheAsync();
-            if (!disco.IsError)
+            if (disco.IsError)
                 return Result<TokenResultDto>.Failed(ErrorCode.ERR_TOKEN, disco.Error);
 
             var result = await client.RequestRefreshTokenAsync(
@@ -89,7 +87,7 @@ public sealed class TokenService(
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, ex.Message, nameof(RequestAccessTokenFromRefreshTokenAsync));
+            _logger.LogError(ex, ex.Message, nameof(RefreshTokenAsync));
             throw;
         }
     }

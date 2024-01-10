@@ -72,14 +72,14 @@ services:
     image: nginx:latest
     container_name: nginx
     ports:
-      - 8000:80
-      - 8001:443
+      - 80:80
+      - 443:443
     depends_on:
       - api
     volumes:
-      - ../src/compose/nginx/nginx.conf:/etc/nginx/conf.d/default.conf:ro
-      - ../src/compose/nginx/certs/:/etc/ssl/certs/
-      - ../src/compose/nginx/keys/:/etc/ssl/private/
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./nginx/certs/:/etc/ssl/certs/
+      - ./nginx/keys/:/etc/ssl/private/
 
 volumes:
   sqlserver_data:

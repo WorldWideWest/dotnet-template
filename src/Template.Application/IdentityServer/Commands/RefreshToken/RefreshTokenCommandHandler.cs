@@ -28,7 +28,7 @@ public class RefreshTokenCommandHandler(
             if (!validationResult.Succeeded)
                 return Result<TokenResultDto>.Failed(validationResult.Errors.ToArray());
 
-            return await _tokenService.RequestAccessTokenFromRefreshTokenAsync(request.ToDto());
+            return await _tokenService.RefreshTokenAsync(request.ToDto());
         }
         catch (Exception ex)
         {

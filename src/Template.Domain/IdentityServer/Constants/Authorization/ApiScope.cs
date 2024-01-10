@@ -1,3 +1,5 @@
+using Duende.IdentityServer;
+
 namespace Template.Domain.IdentityServer.Constants.Authorization;
 
 public static class ApiScope
@@ -9,5 +11,16 @@ public static class ApiScope
     public const string Test = $"{ApiResource.Template}.test";
 
     public static IEnumerable<string> SupportedApiScopes =>
-        new List<string> { Read, Write, Update, Delete };
+        new List<string>
+        {
+            Read,
+            Write,
+            Update,
+            Delete,
+            IdentityServerConstants.StandardScopes.OfflineAccess,
+            IdentityServerConstants.StandardScopes.OpenId,
+            IdentityServerConstants.StandardScopes.Profile,
+            IdentityServerConstants.StandardScopes.Email,
+            "template_profile"
+        };
 }

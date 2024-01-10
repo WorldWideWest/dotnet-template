@@ -4,6 +4,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Template.Domain.Common.Models;
 using Template.Domain.Identity.Entites;
+using Template.Infrastructure.IdentityServer.Services;
 
 namespace Template.Infrastructure.IdentityServer.Configurations;
 
@@ -49,6 +50,7 @@ public static class IdentityServerConfiguration
                     );
                 options.EnableTokenCleanup = true;
             })
+            .AddProfileService<ProfileService>()
             .AddAspNetIdentity<User>();
 
         services.AddSingleton<IDiscoveryCache>(cache =>

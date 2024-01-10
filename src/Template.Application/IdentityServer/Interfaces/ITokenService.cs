@@ -9,6 +9,6 @@ namespace Template.Application.IdentityServer.Interfaces;
 public interface ITokenService
 {
     Task<Result<TokenResultDto>> RequestAccessTokenAsync(AccessTokenDto request);
-    Task<Result<TokenResultDto>> RequestAccessTokenFromRefreshTokenAsync(RefreshTokenDto request);
+    Task<Result<TokenResultDto>> RefreshTokenAsync(RefreshTokenDto request);
     Task<Result<object>> RevokeTokenAsync(RevokeTokenDto request);
 }

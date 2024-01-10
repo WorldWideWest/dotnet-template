@@ -1,3 +1,4 @@
+using Duende.IdentityServer;
 using Duende.IdentityServer.Models;
 using IdentityModel;
 using Template.Domain.Common.Models;
@@ -93,12 +94,18 @@ public class IdentityServerResourceConfiguration
                 ClientName = DomainIdentityServerConstants.ClientName.Web,
                 AllowedGrantTypes = GrantTypes.ResourceOwnerPassword,
                 RequireClientSecret = true,
+                AlwaysSendClientClaims = true,
+                AlwaysIncludeUserClaimsInIdToken = true,
                 AllowedScopes =
                 {
                     DomainIdentityServerConstants.ApiScope.Read,
                     DomainIdentityServerConstants.ApiScope.Write,
                     DomainIdentityServerConstants.ApiScope.Update,
                     DomainIdentityServerConstants.ApiScope.Delete,
+                    IdentityServerConstants.StandardScopes.Profile,
+                    IdentityServerConstants.StandardScopes.OpenId,
+                    IdentityServerConstants.StandardScopes.OfflineAccess,
+                    IdentityServerConstants.StandardScopes.Email,
                 },
                 ClientSecrets = new List<Secret>
                 {
@@ -120,6 +127,10 @@ public class IdentityServerResourceConfiguration
                     DomainIdentityServerConstants.ApiScope.Write,
                     DomainIdentityServerConstants.ApiScope.Update,
                     DomainIdentityServerConstants.ApiScope.Delete,
+                    IdentityServerConstants.StandardScopes.Profile,
+                    IdentityServerConstants.StandardScopes.OpenId,
+                    IdentityServerConstants.StandardScopes.OfflineAccess,
+                    IdentityServerConstants.StandardScopes.Email,
                 },
                 ClientSecrets = new List<Secret>
                 {
@@ -141,6 +152,6 @@ public class IdentityServerResourceConfiguration
         {
             new IdentityResources.OpenId(),
             new IdentityResources.Profile(),
-            new IdentityResources.Email(),
+            new IdentityResources.Email()
         };
 }
