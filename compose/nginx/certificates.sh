@@ -5,11 +5,11 @@ mkdir -p certs
 
 openssl genpkey \
     -algorithm RSA \
-    -out keys/localhost.key
+    -out keys/identity.provider.com.key
 
 openssl req \
-    -new -x509 -key keys/localhost.key \
-    -out certs/localhost.crt \
+    -new -x509 -key keys/identity.provider.com.key \
+    -out certs/identity.provider.com.crt \
     -days 365 \
-    -subj "/CN=localhost" \
-    -addext "subjectAltName=DNS:localhost"
+    -subj "/CN=identity.provider.com" \
+    -addext "subjectAltName=DNS:identity.provider.com"

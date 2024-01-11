@@ -22,7 +22,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerConfiguration();
 }
 
-app.UseHttpsRedirection();
+app.UseForwardedHeadersConfiguration();
 
 app.UseIdentityServer();
 

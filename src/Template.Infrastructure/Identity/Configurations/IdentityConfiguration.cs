@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Template.Domain.Common.Models;
 using Template.Domain.Identity.Constants.Authorization;
 using Template.Domain.Identity.Entites;
 using Template.Domain.IdentityServer.Constants.Authorization;
@@ -20,6 +21,7 @@ public static class IdentityConfiguration
     {
         var connectionString = configuration.GetConnectionString("DefaultConnection");
         var migrationAssembly = typeof(IdentityConfiguration).Assembly.FullName;
+        var settings = configuration.GetSection("AppConfig").Get<AppConfig>();
 
         services
             .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
@@ -28,6 +30,8 @@ public static class IdentityConfiguration
                 options =>
                 {
                     options.RequireHttpsMetadata = false;
+                    options.Audience = "Template";
+                    options.Authority = settings.IdentityServerConfig.Authority;
                 }
             );
 

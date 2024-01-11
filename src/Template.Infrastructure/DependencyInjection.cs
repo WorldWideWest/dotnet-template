@@ -2,14 +2,12 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Template.Application.Email.Interfaces;
 using Template.Application.Identity.Interfaces;
-using Template.Application.IdentityServer.Interfaces;
 using Template.Application.Validation.Interfaces;
 using Template.Domain.Common.Models;
 using Template.Infrastructure.Email.Services;
 using Template.Infrastructure.Identity.Configurations;
 using Template.Infrastructure.Identity.Services;
 using Template.Infrastructure.IdentityServer.Configurations;
-using Template.Infrastructure.IdentityServer.Services;
 using Template.Infrastructure.Validation.Services;
 
 namespace Template.Infrastructure;
@@ -28,7 +26,6 @@ public static class DependencyInjection
 
         services.AddScoped<IIdentityService, IdentityService>();
         services.AddScoped<IEmailService, EmailService>();
-        services.AddScoped<ITokenService, TokenService>();
         services.AddTransient<IValidationFactory, ValidationFactory>();
 
         return services;
