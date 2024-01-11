@@ -22,17 +22,17 @@ To mimic a deployment environment we added support for docker compose and debugg
 
 To use this functionality just run the following command:
 ```bash
-docker-compose -f compose/docker-compose.debug.arm.yml up --build
+docker-compose -f ./docker-compose.debug.arm.yml up --build
 ```
 
 To down the containers run the command below
 ```bash
-docker-compose -f compose/docker-compose.debug.arm.yml down
+docker-compose -f ./docker-compose.debug.arm.yml down
 ```
 
 And to make it convinient run:
 ```bash
-docker-compose -f compose/docker-compose.debug.arm.yml down && docker-compose -f compose/docker-compose.debug.arm.yml up --build
+docker-compose -f ./docker-compose.debug.arm.yml down && docker-compose -f compose/docker-compose.debug.arm.yml up --build
 ```
 
 TBD:

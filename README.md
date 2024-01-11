@@ -2,12 +2,17 @@
 
 
 ## General info
+This is a .NET Template that includes the implementation of [AspNetCore Identity](https://learn.microsoft.com/en-us/aspnet/core/security/authentication/identity?view=aspnetcore-8.0&tabs=visual-studio) and [Duende IdentityServer](https://duendesoftware.com/products/identityserver) so that you can expand on it and build your own applications with it, or use it as an authorization server. 
 
+The project contains integration test to check the functionality of the implementation and a local Compose environment for developing your app in a containerised environment.
+
+The Solution is structured using the CLEAN Architecture Pattern.
+
+As the time goes we will add support to other things, like debugging in a containerised environment for amd64 architecture, scripts for generating the projects, solutions and certificates on Windows.
 ## Setup
 Initializing Blank Solution with all of it's projects
 ```bash
-chmod +x ./setup.sh
-./setup.sh
+chmod +x ./setup.sh && ./setup.sh
 ```
 TBD:
 - Adding a Powershell script to support this on Windows
