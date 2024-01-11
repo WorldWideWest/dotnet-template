@@ -12,8 +12,7 @@ Dependencies:
 Generate SSL certificates so `nginx` can consume them:
 ```bash
 # cwd nginx
-chmod +x ./certificates.sh
-./certificates.sh
+chmod +x ./certificates.sh && ./certificates.sh
 ```
 TBD:
 - PowerShell script for generating certificates on Windows

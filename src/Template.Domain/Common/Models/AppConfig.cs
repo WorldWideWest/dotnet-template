@@ -11,6 +11,7 @@ public class IdentityServerConfig
 {
     public IdentityServerClients Clients { get; set; }
     public required string Authority { get; set; }
+    public required string IssuerUri { get; set; }
 }
 
 public class IdentityServerClients

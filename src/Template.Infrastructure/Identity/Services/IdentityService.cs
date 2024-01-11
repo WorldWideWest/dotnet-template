@@ -109,12 +109,11 @@ public sealed class IdentityService(
             var claimsResult = await _userManager
                 .AddClaimsAsync(
                     searchResult.Body,
-                    new Claim[]
-                    {
+                    [
                         new Claim(JwtClaimTypes.Email, searchResult.Body.Email),
                         new Claim(JwtClaimTypes.GivenName, searchResult.Body.FirstName),
                         new Claim(JwtClaimTypes.FamilyName, searchResult.Body.LastName)
-                    }
+                    ]
                 )
                 .ConfigureAwait(false);
 

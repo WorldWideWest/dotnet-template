@@ -11,23 +11,4 @@ public static class TokenRequestValidationExtension
     {
         return ruleBuilder.Must(x => GrantType.SupportedGrantTypes.Contains(x));
     }
-
-    public static IRuleBuilderOptions<T, string> AreScopesSupported<T>(
-        this IRuleBuilder<T, string> ruleBuilder
-    )
-    {
-        return ruleBuilder.Must(
-            (rootObject, scope, context) =>
-            {
-                var scopes = scope.Split(" ");
-
-                if (!scopes.Any())
-                    return false;
-
-                var isValid = scopes.All(x => ApiScope.SupportedApiScopes.Contains(x));
-
-                return isValid;
-            }
-        );
-    }
 }

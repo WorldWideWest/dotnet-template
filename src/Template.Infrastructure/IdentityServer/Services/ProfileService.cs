@@ -1,8 +1,6 @@
-using System.Security.Claims;
 using Duende.IdentityServer.Extensions;
 using Duende.IdentityServer.Models;
 using Duende.IdentityServer.Services;
-using IdentityModel;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Logging;
 using Template.Domain.Identity.Entites;
@@ -21,8 +19,6 @@ public class ProfileService(ILogger<ProfileService> logger, UserManager<User> us
         {
             var sub = context.Subject.GetSubjectId();
             var user = await _userManager.FindByIdAsync(sub).ConfigureAwait(false);
-
-            var requestedClaimTypes = context.RequestedClaimTypes;
 
             var claims = await _userManager.GetClaimsAsync(user).ConfigureAwait(false);
 

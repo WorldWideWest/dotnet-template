@@ -1,4 +1,3 @@
-using IdentityModel.Client;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -27,11 +26,9 @@ public static class IdentityServerConfiguration
                 options.Events.RaiseFailureEvents = true;
                 options.Events.RaiseSuccessEvents = true;
 
-                options.UserInteraction.LoginUrl = "/api/Identity/external/login";
-                options.UserInteraction.LogoutUrl = "/api/Identity/external/logout";
-
                 options.Authentication.CookieLifetime = TimeSpan.FromDays(30);
                 options.Authentication.CookieSlidingExpiration = true;
+                options.IssuerUri = settings.IdentityServerConfig.IssuerUri;
             })
             .AddConfigurationStore(options =>
             {
@@ -48,20 +45,11 @@ public static class IdentityServerConfiguration
                         connectionString,
                         sql => sql.MigrationsAssembly(migrationAssembly)
                     );
+
                 options.EnableTokenCleanup = true;
             })
             .AddProfileService<ProfileService>()
             .AddAspNetIdentity<User>();
-
-        services.AddSingleton<IDiscoveryCache>(cache =>
-        {
-            var factory = cache.GetRequiredService<IHttpClientFactory>();
-
-            return new DiscoveryCache(
-                settings.IdentityServerConfig.Authority,
-                () => factory.CreateClient()
-            );
-        });
 
         return services;
     }
