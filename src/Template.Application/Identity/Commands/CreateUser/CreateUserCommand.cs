@@ -4,7 +4,7 @@ using Template.Domain.Identity.Entites;
 
 namespace Template.Application.Identity.Commands.CreateUser;
 
-public record RegisterUserCommand(string FirstName, string LastName, string Email, string Password)
+public record CreateUserCommand(string FirstName, string LastName, string Email, string Password)
     : IRequest<Result<object>>
 {
     public CreateUserDto ToDto() => new(FirstName, LastName, Email, Password);

@@ -13,7 +13,7 @@ public class CreateUserCommandHandler(
     IIdentityService identityService,
     IValidationFactory validationFactory,
     IEmailService emailService
-) : IRequestHandler<RegisterUserCommand, Result<object>>
+) : IRequestHandler<CreateUserCommand, Result<object>>
 {
     private readonly ILogger<CreateUserCommandHandler> _logger = logger;
     private readonly IIdentityService _identityService = identityService;
@@ -21,7 +21,7 @@ public class CreateUserCommandHandler(
     private readonly IEmailService _emailService = emailService;
 
     public async Task<Result<object>> Handle(
-        RegisterUserCommand request,
+        CreateUserCommand request,
         CancellationToken cancellationToken
     )
     {

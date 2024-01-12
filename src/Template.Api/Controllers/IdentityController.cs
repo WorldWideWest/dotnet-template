@@ -29,7 +29,7 @@ public class IdentityController(ILogger<IdentityController> logger, IMediator me
     [ProducesResponseType(typeof(Result<object>), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(Result<object>), StatusCodes.Status400BadRequest)]
     public async Task<ActionResult<Result<object>>> CreateUserAsnyc(
-        [FromBody] RegisterUserCommand request
+        [FromBody] CreateUserCommand request
     )
     {
         try
