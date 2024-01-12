@@ -1,6 +1,6 @@
 #!/bin/bash
 
-solution="./Template.sln"
+solutionPath="./Template.sln"
 solutionName="Template"
 
 function initializesolution()
@@ -83,12 +83,12 @@ function addReferencesBetweenProjects()
         ./src/$solutionName.Application/$solutionName.Application.csproj
 
     echo -e "\e[36mAdded [$solutionName.Application] project references\e[0m"
-    
+
     dotnet add ./src/$solutionName.Application/$solutionName.Application.csproj reference \
         ./src/$solutionName.Domain/$solutionName.Domain.csproj
 }
 
-if [ ! -f "$solution" ]; then
+if [ ! -f "$solutionPath" ]; then
     initializesolution
 fi
 

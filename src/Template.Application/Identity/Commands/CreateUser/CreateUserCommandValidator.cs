@@ -4,9 +4,9 @@ using Template.Domain.Identity.Constants.Regex;
 
 namespace Template.Application.Identity.Commands.CreateUser;
 
-public class CreateUserValidator : AbstractValidator<RegisterUserCommand>
+public class CreateUserCommandValidator : AbstractValidator<CreateUserCommand>
 {
-    public CreateUserValidator()
+    public CreateUserCommandValidator()
     {
         RuleFor(user => user.FirstName)
             .Cascade(CascadeMode.Continue)
