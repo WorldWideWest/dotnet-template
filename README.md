@@ -9,6 +9,11 @@ The project contains integration test to check the functionality of the implemen
 The Solution is structured using the CLEAN Architecture Pattern.
 
 As the time goes we will add support to other things, like debugging in a containerised environment for amd64 architecture, scripts for generating the projects, solutions and certificates on Windows.
+
+### Initializing similar Solution structure without any implementation:
+
+To initialize the same Solution structure like this one, go to the [scripts](./scripts/README.md) where you can find the configuration, implementation details and improvements.
+
 ## Setup
 Initializing Blank Solution with all of it's projects
 ```bash
