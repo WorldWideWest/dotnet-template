@@ -10,6 +10,8 @@ The Solution is structured using the CLEAN Architecture Pattern.
 
 As the time goes we will add support to other things, like debugging in a containerised environment for amd64 architecture, scripts for generating the projects, solutions and certificates on Windows.
 
+<!-- A bit more about the overrall project you can find in the article [here]() -->
+
 ### Initializing similar Solution structure without any implementation:
 
 To initialize the same Solution structure like this one, go to the [scripts](./scripts/README.md) where you can find the configuration, implementation details and improvements.
@@ -19,6 +21,7 @@ To initialize the same Solution structure like this one, go to the [scripts](./s
 | Status of Implementation      | Description | Issue |
 | ----------- | ----------- |----------
 | ❌      | Global Error Handling | [#15](https://github.com/WorldWideWest/dotnet-template/issues/15)
+|  ❌      | Create an Actual .NET Project Template | [#16](https://github.com/WorldWideWest/dotnet-template/issues/16)
 
 
 ## Tooling
