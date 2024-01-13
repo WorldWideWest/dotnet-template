@@ -24,3 +24,9 @@ chmod +x ./apply.migration.sh
 
 TBD:
     - Add powershell scripts to support this functionality on Windows
+## Improvements
+
+| Status of Implementation      | Description | Issue |
+| ----------- | ----------- |----------
+| ❌      | Porting Migration Scripts to Windows | [#17](https://github.com/WorldWideWest/dotnet-template/issues/17)
+    
