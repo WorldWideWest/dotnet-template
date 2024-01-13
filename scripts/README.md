@@ -24,5 +24,5 @@ chmod +x ./setup.sh && ./setup.sh
 
 | Status of Implementation      | Description | Issue |
 | ----------- | ----------- |----------
-| ❌      | Adding support for Windows using the PowerShell scripts |
+| ❌      | Adding support for Windows using the PowerShell scripts | [#11](https://github.com/WorldWideWest/dotnet-template/issues/11)
 

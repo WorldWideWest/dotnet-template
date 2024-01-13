@@ -37,7 +37,7 @@ docker-compose -f ./docker-compose.debug.arm.yml down && docker-compose -f ./doc
 
 | Status of Implementation      | Description | Issue |
 | ----------- | ----------- |----------
-| ❌      | Compose file for AMD64 architecture |
-| ❌      | PowerShell script for generating certificates on Windows |
+| ❌      | Compose file for AMD64 architecture | [#12](https://github.com/WorldWideWest/dotnet-template/issues/12)
+| ❌      | PowerShell script for generating SSL certificates on Windows | [#13](https://github.com/WorldWideWest/dotnet-template/issues/13)
 | ❌      | Debugging using VS Code Debugger | [#1](https://github.com/WorldWideWest/dotnet-template/issues/1)
-| ❌      | Startup Script that generates SSL certificates and runs the dotnet watch command |
+| ❌      | Startup Script that generates SSL certificates and runs the dotnet watch command | [#14](https://github.com/WorldWideWest/dotnet-template/issues/14)
