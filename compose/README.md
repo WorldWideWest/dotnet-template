@@ -33,7 +33,6 @@ And to make it convinient run:
 docker-compose -f ./docker-compose.debug.arm.yml down && docker-compose -f ./docker-compose.debug.arm.yml up --build
 ```
 
-
 ## Improvements
 
 | Status of Implementation      | Description | Issue |
@@ -41,3 +40,4 @@ docker-compose -f ./docker-compose.debug.arm.yml down && docker-compose -f ./doc
 | ❌      | Compose file for AMD64 architecture |
 | ❌      | PowerShell script for generating certificates on Windows |
 | ❌      | Debugging using VS Code Debugger | [#1](https://github.com/WorldWideWest/dotnet-template/issues/1)
+| ❌      | Startup Script that generates SSL certificates and runs the dotnet watch command |

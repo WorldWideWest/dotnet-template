@@ -15,6 +15,8 @@ As the time goes we will add support to other things, like debugging in a contai
 To initialize the same Solution structure like this one, go to the [scripts](./scripts/README.md) where you can find the configuration, implementation details and improvements.
 
 ## Tooling
+The tooling is mostly focuesed on VS Code and it's integration with thees tools, because I develeoped everything with it.
+
 ### Debugging
 Follow the guide [here](./compose/README.md) to setup your environment for local development using Nginx, Docker, Compose and .NET 8
 
@@ -41,4 +43,13 @@ This will enable you to format your code on save. Inside the `.vscode/settings.j
   }
 }
 ```
+
+## CI/CD
+This is implemented using GitHub Actions and the script can be found at `.github/workflows/main.yml`, currently it only runs the tests.
+
+### Improvements
+| Status of Implementation      | Description | Issue |
+| ----------- | ----------- |----------
+| ❌      | Creating Production Ready Dockerfile and implementation of uploading the image to Docker Hub |
+
 
