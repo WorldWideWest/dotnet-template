@@ -14,8 +14,6 @@ Generate SSL certificates so `nginx` can consume them:
 # cwd nginx
 chmod +x ./certificates.sh && ./certificates.sh
 ```
-TBD:
-- PowerShell script for generating certificates on Windows
 
 ## Running the containers
 To mimic a deployment environment we added support for docker compose and debugging on it, simply we are running `dotnet watch run` inside our container so that every change gets replicated in the container. 
@@ -32,8 +30,14 @@ docker-compose -f ./docker-compose.debug.arm.yml down
 
 And to make it convinient run:
 ```bash
-docker-compose -f ./docker-compose.debug.arm.yml down && docker-compose -f compose/docker-compose.debug.arm.yml up --build
+docker-compose -f ./docker-compose.debug.arm.yml down && docker-compose -f ./docker-compose.debug.arm.yml up --build
 ```
 
-TBD:
-- Compose file for AMD64 architecture
+
+## Improvements
+
+| Status of Implementation      | Description | Issue |
+| ----------- | ----------- |----------
+| ❌      | Compose file for AMD64 architecture |
+| ❌      | PowerShell script for generating certificates on Windows |
+| ❌      | Debugging using VS Code Debugger | [#1](https://github.com/WorldWideWest/dotnet-template/issues/1)

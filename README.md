@@ -14,31 +14,13 @@ As the time goes we will add support to other things, like debugging in a contai
 
 To initialize the same Solution structure like this one, go to the [scripts](./scripts/README.md) where you can find the configuration, implementation details and improvements.
 
-## Setup
-Initializing Blank Solution with all of it's projects
-```bash
-chmod +x ./setup.sh && ./setup.sh
-```
-TBD:
-- Adding a Powershell script to support this on Windows
-
 ## Tooling
-### [Local Development](./compose/README.md)
+### Debugging
+Follow the guide [here](./compose/README.md) to setup your environment for local development using Nginx, Docker, Compose and .NET 8
 
-To use this functionality just run the following command:
-```bash
-docker-compose -f compose/docker-compose.debug.arm.yml up --build
-```
+### Code Formatting
 
-To down the containers run the command below
-```bash
-docker-compose -f compose/docker-compose.debug.arm.yml down
-```
-
-
-### Configure code formatter for .net
-
-Go into the console and install the `csharper` package globally:
+Go into the console and install the [csharper](https://csharpier.com/) package globally:
 ```bash
 dotnet tool install --global csharpier
 ```
