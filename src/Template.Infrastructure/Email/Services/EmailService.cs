@@ -10,14 +10,12 @@ using Template.Domain.Identity.Entites;
 namespace Template.Infrastructure.Email.Services;
 
 public class EmailService(
-    ILogger<EmailService> logger,
+    ILogger<EmailService> _logger,
     IOptions<AppConfig> options,
-    List<IEmailClassifier> classifier
+    List<IEmailClassifier> _classifier
 ) : IEmailService
 {
-    private readonly ILogger<EmailService> _logger = logger;
     private readonly AppConfig _options = options.Value;
-    private readonly List<IEmailClassifier> _classifier = classifier;
 
     public ClassifiedEmail Classify(EmailType type, Dictionary<string, string> paramters)
     {

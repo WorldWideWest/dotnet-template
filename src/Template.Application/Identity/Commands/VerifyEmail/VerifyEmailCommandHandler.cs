@@ -7,15 +7,11 @@ using Template.Domain.Common.Models;
 namespace Template.Application.Identity.Commands.VerifyEmail;
 
 public class VerifyEmailCommandHandler(
-    ILogger<VerifyEmailCommandHandler> logger,
-    IIdentityService identityService,
-    IValidationFactory validationFactory
+    ILogger<VerifyEmailCommandHandler> _logger,
+    IIdentityService _identityService,
+    IValidationFactory _validationFactory
 ) : IRequestHandler<VerifyEmailCommand, Result<object>>
 {
-    private readonly ILogger<VerifyEmailCommandHandler> _logger = logger;
-    private readonly IIdentityService _identityService = identityService;
-    private readonly IValidationFactory _validationFactory = validationFactory;
-
     public async Task<Result<object>> Handle(
         VerifyEmailCommand request,
         CancellationToken cancellationToken
