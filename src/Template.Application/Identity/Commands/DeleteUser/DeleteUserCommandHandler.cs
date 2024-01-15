@@ -1,15 +1,13 @@
 using MediatR;
 using Microsoft.Extensions.Logging;
 using Template.Application.Identity.Interfaces;
-using Template.Application.Validation.Interfaces;
 using Template.Domain.Common.Models;
 
 namespace Template.Application.Identity.Commands.DeleteUser;
 
 public class DeleteUserCommandHandler(
     ILogger<DeleteUserCommandHandler> _logger,
-    IIdentityService _identityService,
-    IValidationFactory _validationFactory
+    IIdentityService _identityService
 ) : IRequestHandler<DeleteUserCommand, Result<object>>
 {
     public async Task<Result<object>> Handle(
