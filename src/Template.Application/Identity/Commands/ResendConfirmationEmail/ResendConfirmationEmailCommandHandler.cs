@@ -9,17 +9,12 @@ using Template.Domain.Email.Enums;
 namespace Template.Application.Identity.Commands.ResendConfirmationEmail;
 
 public class ResendConfirmationEmailCommandHandler(
-    ILogger<ResendConfirmationEmailCommandHandler> logger,
-    IIdentityService identityService,
-    IValidationFactory validationFactory,
-    IEmailService emailService
+    ILogger<ResendConfirmationEmailCommandHandler> _logger,
+    IIdentityService _identityService,
+    IValidationFactory _validationFactory,
+    IEmailService _emailService
 ) : IRequestHandler<ResendConfirmationEmailCommand, Result<object>>
 {
-    private readonly ILogger<ResendConfirmationEmailCommandHandler> _logger = logger;
-    private readonly IIdentityService _identityService = identityService;
-    private readonly IValidationFactory _validationFactory = validationFactory;
-    private readonly IEmailService _emailService = emailService;
-
     public async Task<Result<object>> Handle(
         ResendConfirmationEmailCommand request,
         CancellationToken cancellationToken

@@ -6,12 +6,9 @@ using Template.Domain.Common.Models;
 
 namespace Template.Infrastructure.Validation.Services;
 
-public class ValidationFactory(ILogger<ValidationFactory> logger, IServiceProvider provider)
+public class ValidationFactory(ILogger<ValidationFactory> _logger, IServiceProvider _provider)
     : IValidationFactory
 {
-    private readonly ILogger<ValidationFactory> _logger = logger;
-    private readonly IServiceProvider _provider = provider;
-
     public async Task<Result<object>> ValidateAsync<T>(T request)
     {
         try
