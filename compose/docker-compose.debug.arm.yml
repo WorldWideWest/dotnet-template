@@ -13,13 +13,20 @@ services:
     restart: unless-stopped
     volumes:
       - sqlserver_data:/var/opt/mssql
+    healthcheck:
+      test: ["CMD", "/opt/mssql-tools/bin/sqlcmd", "-S", "localhost", "-U", "sa", "-P", "6ha9hqOpaJI430J*JVr*", "-Q", "SELECT 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 10s
 
   mssql-tools:
     container_name: tools
     image: mcr.microsoft.com/mssql-tools:latest
     user: root
     depends_on:
-      - mssql
+      mssql:
+        condition: service_started
     environment:
       MSSQL_SA_PASSWORD: 6ha9hqOpaJI430J*JVr*
       MSSQL_HOST: mssql
@@ -57,6 +64,13 @@ services:
       - /app/src/Template.Infrastructure/bin/
       - /app/src/Template.Application/obj/
       - /app/src/Template.Application/bin/
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:5000/ || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 10s
+
 
   nginx:
     build:
@@ -68,7 +82,8 @@ services:
       - 443:443
     command: sh -c "/usr/local/bin/startup.sh"
     depends_on:
-      - api
+      api:
+        condition: service_started
     volumes:
       - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
       - ./nginx/certs/:/etc/ssl/certs/
