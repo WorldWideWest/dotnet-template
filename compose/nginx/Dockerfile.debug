@@ -1,0 +1,9 @@
+FROM nginx:latest
+
+WORKDIR /usr/local/bin
+
+COPY ./startup.sh .
+
+RUN chmod +x ./startup.sh
+
+CMD [ "/usr/local/bin/startup.sh" ]
