@@ -43,17 +43,7 @@ services:
       - ASPNETCORE_ENVIRONMENT=Development
     expose:
       - 5000
-    command: [
-      "dotnet", 
-      "watch", 
-      "run", 
-      -v,
-      "--project", 
-      "/app/src/Template.Api/Template.Api.csproj", 
-      "--urls", 
-      "http://*:5000",
-      "--non-interactive"
-      ]
+    command: sh -c "./compose/startup.sh"
     depends_on:
       mssql-tools:
         condition: service_completed_successfully
@@ -69,11 +59,14 @@ services:
       - /app/src/Template.Application/bin/
 
   nginx:
-    image: nginx:latest
+    build:
+      context: ./nginx
+      dockerfile: Dockerfile.debug
     container_name: nginx
     ports:
       - 80:80
       - 443:443
+    command: sh -c "/usr/local/bin/startup.sh"
     depends_on:
       - api
     volumes:
