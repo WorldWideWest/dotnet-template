@@ -6,16 +6,17 @@ This document describes the use of the compose files and the dependencies that n
 
 Dependencies:
 - [Docker Desktop](https://www.docker.com/products/docker-desktop/)
-- [OpenSSL](https://www.openssl.org/source/)
 
 ## Setup
-Generate SSL certificates so `nginx` can consume them:
-```bash
-# cwd nginx
-chmod +x ./certificates.sh && ./certificates.sh
-```
 
-## Running the containers
+### Nginx
+The Nginx Dockerfile is located in `./nginx/Dockerfile.debug` it is now a standalone Dockerfile which is modified to generate SSL certificates on the startup removing the need for the developer to do it manualy.
+
+It runs the `./nginx/startup.sh` script which generates the certificates for localhost and after that it runs nginx.
+
+The certificates are mapped to the volume and are located inside `./nginx/certs` && `./nginx/keys` so you can inspect them, they are also ignored from tracking.
+
+### Running the containers
 To mimic a deployment environment we added support for docker compose and debugging on it, simply we are running `dotnet watch run` inside our container so that every change gets replicated in the container. 
 
 To use this functionality just run the following command:

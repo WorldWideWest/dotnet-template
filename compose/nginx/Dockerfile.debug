@@ -1,4 +1,4 @@
-FROM nginx:latest as build 
+FROM nginx:latest
 
 WORKDIR /usr/local/bin
 
