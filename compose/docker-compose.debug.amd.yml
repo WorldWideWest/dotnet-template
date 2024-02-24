@@ -1,0 +1,92 @@
+version: '3.9'
+
+services:
+  mssql:
+    container_name: mssql
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    user: root
+    ports:
+      - 1433:1433
+    environment:
+      MSSQL_SA_PASSWORD: 6ha9hqOpaJI430J*JVr*
+      ACCEPT_EULA: Y
+    restart: unless-stopped
+    volumes:
+      - sqlserver_data:/var/opt/mssql
+    healthcheck:
+      test: ["CMD", "/opt/mssql-tools/bin/sqlcmd", "-S", "localhost", "-U", "sa", "-P", "6ha9hqOpaJI430J*JVr*", "-Q", "SELECT 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 10s
+
+  mssql-tools:
+    container_name: tools
+    image: mcr.microsoft.com/mssql-tools:latest
+    user: root
+    depends_on:
+      mssql:
+        condition: service_started
+    environment:
+      MSSQL_SA_PASSWORD: 6ha9hqOpaJI430J*JVr*
+      MSSQL_HOST: mssql
+      MSSQL_PORT: 1433
+    command: bash /opt/scripts/configure.sh
+    volumes:
+      - ../src/Template.Infrastructure/Data/scripts:/opt/scripts:ro
+    healthcheck:
+      test: "exit 0"
+      interval: 30s
+      timeout: 20s
+      retries: 5
+    
+  api:
+    container_name: api
+    build:
+      context: ../
+      dockerfile: ./src/Template.Api/Dockerfile.debug
+    restart: unless-stopped
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+    expose:
+      - 5000
+    command: sh -c "/app/compose/startup.sh"
+    depends_on:
+      mssql-tools:
+        condition: service_completed_successfully
+    volumes:
+      - ../:/app
+      - /app/src/Template.Api/obj/
+      - /app/src/Template.Api/bin/
+      - /app/src/Template.Domain/obj/
+      - /app/src/Template.Domain/bin/
+      - /app/src/Template.Infrastructure/obj/
+      - /app/src/Template.Infrastructure/bin/
+      - /app/src/Template.Application/obj/
+      - /app/src/Template.Application/bin/
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:5000/ || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 10s
+
+  nginx:
+    build:
+      context: ./nginx
+      dockerfile: Dockerfile.debug
+    container_name: nginx
+    ports:
+      - 80:80
+      - 443:443
+    command: sh -c "/usr/local/bin/startup.sh"
+    depends_on:
+      api:
+        condition: service_started
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./nginx/certs/:/etc/ssl/certs/
+      - ./nginx/keys/:/etc/ssl/private/
+
+volumes:
+  sqlserver_data:
