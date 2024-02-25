@@ -39,7 +39,14 @@ public class ForgotPasswordCommandHandler(
                 result.Body
             );
 
-            _emailService.SendAsync(EmailType.ResetPassword, searchResult.Body.Email, parameters);
+            _emailService
+                .SendAsync(EmailType.ResetPassword, searchResult.Body.Email, parameters)
+                .ContinueWith(
+                    task =>
+                        _logger.LogError(task.Exception, task.Exception.Message, nameof(Handle)),
+                    TaskContinuationOptions.OnlyOnFaulted
+                );
+            ;
 
             return Result<object>.Success();
         }
