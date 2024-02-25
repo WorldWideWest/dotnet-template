@@ -24,6 +24,8 @@ if (app.Environment.IsDevelopment())
 
 app.UseForwardedHeadersConfiguration();
 
+app.UseExceptionHandler();
+
 app.UseIdentityServer();
 
 app.UseAuthentication();
