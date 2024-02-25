@@ -52,6 +52,6 @@ This is implemented using GitHub Actions and the script can be found at `.github
 | ----------- | ----------- |----------
 | ❌      | Creating Production Ready Dockerfile and implementation of uploading the image to Docker Hub | [#10](https://github.com/WorldWideWest/dotnet-template/issues/10)
 | ✅ | Safely manage not awaited calls | [#22](https://github.com/WorldWideWest/dotnet-template/issues/22)
-| ❌      | Global Error Handling | [#15](https://github.com/WorldWideWest/dotnet-template/issues/15)
+| ✅      | Global Error Handling | [#15](https://github.com/WorldWideWest/dotnet-template/issues/15)
 |  ❌      | Create an Actual .NET Project Template | [#16](https://github.com/WorldWideWest/dotnet-template/issues/16)
 

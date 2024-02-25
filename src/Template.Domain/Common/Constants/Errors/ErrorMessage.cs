@@ -11,4 +11,6 @@ public static class ErrorMessage
 
     public static string InvalidCharacters(string property) =>
         $"{property} can not have special characters or numbers";
+
+    public const string INTERNAL_SERVER_ERROR = "Server Error Occurred";
 }
