@@ -44,7 +44,13 @@ public class CreateUserCommandHandler(
                 verificationTokenResult.Body
             );
 
-            _emailService.SendAsync(EmailType.Verification, request.Email, parameters);
+            _emailService
+                .SendAsync(EmailType.Verification, request.Email, parameters)
+                .ContinueWith(
+                    task =>
+                        _logger.LogError(task.Exception, task.Exception.Message, nameof(Handle)),
+                    TaskContinuationOptions.OnlyOnFaulted
+                );
 
             return Result<object>.Success();
         }
