@@ -4,9 +4,9 @@ using IdentityModel;
 using Template.Domain.Common.Models;
 using DomainIdentityServerConstants = Template.Domain.IdentityServer.Constants.Authorization;
 
-namespace Template.Infrastructure.IdentityServer.Configurations;
+namespace Template.Infrastructure.IdentityServer.Extensions;
 
-public class IdentityServerResourceConfiguration
+public class IdentityServerResourceExtension
 {
     /// <summary>
     /// Returns a collection of API scopes representing different permissions for accessing endpoints.

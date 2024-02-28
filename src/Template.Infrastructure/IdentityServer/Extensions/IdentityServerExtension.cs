@@ -5,17 +5,17 @@ using Template.Domain.Common.Models;
 using Template.Domain.Identity.Entites;
 using Template.Infrastructure.IdentityServer.Services;
 
-namespace Template.Infrastructure.IdentityServer.Configurations;
+namespace Template.Infrastructure.IdentityServer.Extensions;
 
-public static class IdentityServerConfiguration
+public static class IdentityServerExtension
 {
-    public static IServiceCollection ConfigureIdentityServer(
+    public static IServiceCollection AddIdentityServerConfiguration(
         this IServiceCollection services,
         IConfiguration configuration
     )
     {
         var connectionString = configuration.GetConnectionString("DefaultConnection");
-        var migrationAssembly = typeof(IdentityServerConfiguration).Assembly.FullName;
+        var migrationAssembly = typeof(IdentityServerExtension).Assembly.FullName;
         var settings = configuration.GetSection("AppConfig").Get<AppConfig>();
 
         services

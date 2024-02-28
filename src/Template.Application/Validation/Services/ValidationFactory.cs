@@ -4,11 +4,14 @@ using Microsoft.Extensions.Logging;
 using Template.Application.Validation.Interfaces;
 using Template.Domain.Common.Models;
 
-namespace Template.Infrastructure.Validation.Services;
+namespace Template.Application.Validation.Services;
 
-public class ValidationFactory(ILogger<ValidationFactory> _logger, IServiceProvider _provider)
+public class ValidationFactory(ILogger<ValidationFactory> logger, IServiceProvider provider)
     : IValidationFactory
 {
+    private readonly ILogger<ValidationFactory> _logger = logger;
+    private readonly IServiceProvider _provider = provider;
+
     public async Task<Result<object>> ValidateAsync<T>(T request)
     {
         try

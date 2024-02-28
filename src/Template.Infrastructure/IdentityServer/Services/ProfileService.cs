@@ -7,9 +7,12 @@ using Template.Domain.Identity.Entites;
 
 namespace Template.Infrastructure.IdentityServer.Services;
 
-public class ProfileService(ILogger<ProfileService> _logger, UserManager<User> _userManager)
+public class ProfileService(ILogger<ProfileService> logger, UserManager<User> userManager)
     : IProfileService
 {
+    private readonly ILogger<ProfileService> _logger = logger;
+    private readonly UserManager<User> _userManager = userManager;
+
     public async Task GetProfileDataAsync(ProfileDataRequestContext context)
     {
         try

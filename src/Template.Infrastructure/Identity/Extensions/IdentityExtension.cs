@@ -10,17 +10,17 @@ using Template.Domain.Identity.Entites;
 using Template.Domain.IdentityServer.Constants.Authorization;
 using Template.Infrastructure.Data;
 
-namespace Template.Infrastructure.Identity.Configurations;
+namespace Template.Infrastructure.Identity.Extensions;
 
-public static class IdentityConfiguration
+public static class IdentityExtension
 {
-    public static IServiceCollection ConfigureIdentity(
+    public static IServiceCollection AddIdentityConfiguration(
         this IServiceCollection services,
         IConfiguration configuration
     )
     {
         var connectionString = configuration.GetConnectionString("DefaultConnection");
-        var migrationAssembly = typeof(IdentityConfiguration).Assembly.FullName;
+        var migrationAssembly = typeof(IdentityExtension).Assembly.FullName;
         var settings = configuration.GetSection("AppConfig").Get<AppConfig>();
 
         services

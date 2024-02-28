@@ -2,6 +2,8 @@ using FluentValidation;
 using Microsoft.Extensions.DependencyInjection;
 using Template.Application.Email.Interfaces;
 using Template.Application.Email.Templates;
+using Template.Application.Validation.Interfaces;
+using Template.Application.Validation.Services;
 
 namespace Template.Application;
 
@@ -25,6 +27,8 @@ public static class DependencyInjection
         {
             options.RegisterServicesFromAssembly(assembly);
         });
+
+        services.AddTransient<IValidationFactory, ValidationFactory>();
 
         return services;
     }

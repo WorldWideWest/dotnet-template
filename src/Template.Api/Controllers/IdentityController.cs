@@ -18,9 +18,12 @@ namespace Template.Api.Controllers;
 [ApiController]
 [Route("api/[controller]")]
 [ApiVersion("1.0")]
-public class IdentityController(ILogger<IdentityController> _logger, IMediator _mediator)
+public class IdentityController(ILogger<IdentityController> logger, IMediator mediator)
     : ControllerBase
 {
+    private readonly ILogger<IdentityController> _logger = logger;
+    private readonly IMediator _mediator = mediator;
+
     [AllowAnonymous]
     [HttpPost("register")]
     [ProducesResponseType(typeof(Result<object>), StatusCodes.Status200OK)]

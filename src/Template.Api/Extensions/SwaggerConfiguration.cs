@@ -1,11 +1,11 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.OpenApi.Models;
 
-namespace Template.Api.Configurations;
+namespace Template.Api.Extensions;
 
-public static class SwaggerConfiguration
+public static class SwaggerExtension
 {
-    public static IServiceCollection ConfigureSwagger(this IServiceCollection services)
+    public static IServiceCollection AddSwaggerConfiguration(this IServiceCollection services)
     {
         services.AddSwaggerGen(options =>
         {

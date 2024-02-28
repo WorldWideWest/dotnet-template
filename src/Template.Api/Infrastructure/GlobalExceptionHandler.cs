@@ -4,8 +4,10 @@ using Template.Domain.Common.Models;
 
 namespace Template.Api.Infrastructure;
 
-public class GlobalExceptionHandler(ILogger<GlobalExceptionHandler> _logger) : IExceptionHandler
+public class GlobalExceptionHandler(ILogger<GlobalExceptionHandler> logger) : IExceptionHandler
 {
+    private readonly ILogger<GlobalExceptionHandler> _logger = logger;
+
     public async ValueTask<bool> TryHandleAsync(
         HttpContext httpContext,
         Exception exception,

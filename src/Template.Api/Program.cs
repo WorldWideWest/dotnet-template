@@ -1,8 +1,8 @@
 using Template.Api;
-using Template.Api.Configurations;
+using Template.Api.Extensions;
 using Template.Application;
 using Template.Infrastructure;
-using Template.Infrastructure.IdentityServer.Configurations;
+using Template.Infrastructure.IdentityServer.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -17,7 +17,7 @@ var app = builder.Build();
 
 if (app.Environment.IsDevelopment())
 {
-    await IdentityServerMigrationConfiguration.ApplyMigrationsAsync(app);
+    await IdentityServerMigrationExtension.ApplyMigrationsAsync(app);
     app.UseDeveloperExceptionPage();
     app.UseSwaggerConfiguration();
 }
