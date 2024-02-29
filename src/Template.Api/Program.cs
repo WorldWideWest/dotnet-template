@@ -8,7 +8,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder
     .Configuration.SetBasePath(builder.Environment.ContentRootPath)
-    .AddJsonFile($"appsettings.{builder.Environment.EnvironmentName}.json", optional: false)
+    .AddJsonFile($"appsettings.Internal.json", optional: false)
     .AddEnvironmentVariables();
 
 builder.Services.AddApi().AddInfrastructure(builder.Configuration).AddApplication();

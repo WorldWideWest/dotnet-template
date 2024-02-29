@@ -147,6 +147,35 @@ public class IdentityServerResourceExtension
                 AllowOfflineAccess = true,
                 RefreshTokenUsage = TokenUsage.OneTimeOnly,
                 Enabled = true,
+            },
+            new()
+            {
+                ClientId = DomainIdentityServerConstants.ClientId.GoogleWeb,
+                ClientName = DomainIdentityServerConstants.ClientName.GoogleWeb,
+                AllowedGrantTypes = GrantTypes.Code,
+                AlwaysSendClientClaims = true,
+                AlwaysIncludeUserClaimsInIdToken = true,
+                RequireClientSecret = true,
+                AllowedScopes =
+                {
+                    DomainIdentityServerConstants.ApiScope.Read,
+                    DomainIdentityServerConstants.ApiScope.Write,
+                    DomainIdentityServerConstants.ApiScope.Update,
+                    DomainIdentityServerConstants.ApiScope.Delete,
+                    IdentityServerConstants.StandardScopes.Profile,
+                    IdentityServerConstants.StandardScopes.OpenId,
+                    IdentityServerConstants.StandardScopes.OfflineAccess,
+                    IdentityServerConstants.StandardScopes.Email,
+                },
+                ClientSecrets = new List<Secret>
+                {
+                    new Secret(
+                        configuration.IdentityServerConfig.Clients.GoogleWeb.InternalSecret.Sha256()
+                    ),
+                },
+                AllowOfflineAccess = true,
+                RefreshTokenUsage = TokenUsage.OneTimeOnly,
+                Enabled = true,
             }
         };
     }

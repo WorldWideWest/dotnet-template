@@ -52,7 +52,6 @@ public class ResendConfirmationEmailCommandHandler(
                         _logger.LogError(task.Exception, task.Exception.Message, nameof(Handle)),
                     TaskContinuationOptions.OnlyOnFaulted
                 );
-            ;
 
             return Result<object>.Success();
         }
