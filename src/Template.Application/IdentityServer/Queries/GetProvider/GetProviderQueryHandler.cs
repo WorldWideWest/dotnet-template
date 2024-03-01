@@ -8,6 +8,7 @@ namespace Template.Application.IdentityServer.Queries.GetProvider;
 public class GetProviderQueryHandler(List<IExternalProvider> providers)
     : IRequestHandler<GetProviderQuery, Result<AuthenticationPropertiesResponse>>
 {
+    // TODO: Move to Identity
     private readonly List<IExternalProvider> _providers = providers;
 
     public async Task<Result<AuthenticationPropertiesResponse>> Handle(

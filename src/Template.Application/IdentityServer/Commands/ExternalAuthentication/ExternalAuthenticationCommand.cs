@@ -10,6 +10,7 @@ public class ExternalAuthenticationCommandHandler(
     IIdentityService identityService
 ) : IRequestHandler<ExternalAuthenticationCommand, Result<string>>
 {
+    // TODO: Move to Identity
     private readonly ILogger<ExternalAuthenticationCommandHandler> _logger = logger;
     private readonly IIdentityService _identityService = identityService;
 

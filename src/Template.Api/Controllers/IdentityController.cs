@@ -236,7 +236,7 @@ public class IdentityController(ILogger<IdentityController> logger, IMediator me
             );
 
             if (!result.Succeeded)
-                return BadRequest(); // Implement real error handling
+                return BadRequest(); // TODO: Adding real response
 
             var request = new ExternalAuthenticationCommand(result);
 
