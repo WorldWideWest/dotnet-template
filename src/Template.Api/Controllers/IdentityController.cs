@@ -150,7 +150,7 @@ public class IdentityController(ILogger<IdentityController> logger, IMediator me
 
     [Authorize(
         AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme,
-        Policy = Policy.Update
+        Policy = Policy.ChangePassword
     )]
     [HttpPut("password/change")]
     [ProducesResponseType(typeof(Result<object>), StatusCodes.Status200OK)]
@@ -184,13 +184,11 @@ public class IdentityController(ILogger<IdentityController> logger, IMediator me
     [HttpDelete("delete")]
     [ProducesResponseType(typeof(Result<object>), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(Result<object>), StatusCodes.Status400BadRequest)]
-    public async Task<ActionResult<Result<object>>> DeleteUserAsync(
-        [FromBody] DeleteUserCommand request
-    )
+    public async Task<ActionResult<Result<object>>> DeleteUserAsync()
     {
         try
         {
-            request.Email = User.FindFirst(ClaimTypes.Email)?.Value;
+            var request = new DeleteUserCommand(User.FindFirst(ClaimTypes.Email)?.Value);
 
             var result = await _mediator.Send(request);
 

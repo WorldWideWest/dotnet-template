@@ -49,10 +49,18 @@ public class IdentityServerResourceExtension
             },
             new()
             {
+                Name = DomainIdentityServerConstants.ApiScope.ChangePassword,
+                DisplayName = DomainIdentityServerConstants.ApiScope.ChangePassword,
+                Description = "Authorized to change passwords",
+                Required = false,
+                UserClaims = new List<string> { JwtClaimTypes.Email, }
+            },
+            new()
+            {
                 Name = DomainIdentityServerConstants.ApiScope.Test,
                 DisplayName = DomainIdentityServerConstants.ApiScope.Test,
                 Description = "Testing Scope",
-                Required = true,
+                Required = false,
                 UserClaims = new List<string> { JwtClaimTypes.Email, }
             },
         };
@@ -74,13 +82,13 @@ public class IdentityServerResourceExtension
                     DomainIdentityServerConstants.ApiScope.Write,
                     DomainIdentityServerConstants.ApiScope.Update,
                     DomainIdentityServerConstants.ApiScope.Delete,
+                    DomainIdentityServerConstants.ApiScope.ChangePassword,
                 },
                 UserClaims = new List<string>
                 {
                     JwtClaimTypes.Email,
                     JwtClaimTypes.GivenName,
                     JwtClaimTypes.FamilyName,
-                    JwtClaimTypes.Profile,
                 }
             }
         };
@@ -108,6 +116,7 @@ public class IdentityServerResourceExtension
                     DomainIdentityServerConstants.ApiScope.Write,
                     DomainIdentityServerConstants.ApiScope.Update,
                     DomainIdentityServerConstants.ApiScope.Delete,
+                    DomainIdentityServerConstants.ApiScope.ChangePassword,
                     IdentityServerConstants.StandardScopes.Profile,
                     IdentityServerConstants.StandardScopes.OpenId,
                     IdentityServerConstants.StandardScopes.OfflineAccess,
@@ -135,6 +144,7 @@ public class IdentityServerResourceExtension
                     DomainIdentityServerConstants.ApiScope.Write,
                     DomainIdentityServerConstants.ApiScope.Update,
                     DomainIdentityServerConstants.ApiScope.Delete,
+                    DomainIdentityServerConstants.ApiScope.ChangePassword,
                     IdentityServerConstants.StandardScopes.Profile,
                     IdentityServerConstants.StandardScopes.OpenId,
                     IdentityServerConstants.StandardScopes.OfflineAccess,

@@ -31,7 +31,7 @@ public static class IdentityExtension
                 options =>
                 {
                     options.RequireHttpsMetadata = false;
-                    options.Audience = "Template";
+                    options.Audience = ApiResource.Template;
                     options.Authority = settings.IdentityServerConfig.Authority;
                 }
             )
@@ -83,6 +83,16 @@ public static class IdentityExtension
                 {
                     policy.RequireAuthenticatedUser();
                     policy.RequireClaim(JwtClaimTypes.Scope, ApiScope.Delete);
+                }
+            );
+
+            options.AddPolicy(
+                Policy.ChangePassword,
+                policy =>
+                {
+                    policy.RequireAuthenticatedUser();
+                    policy.RequireClaim(JwtClaimTypes.Scope, ApiScope.Update);
+                    policy.RequireClaim(JwtClaimTypes.Scope, ApiScope.ChangePassword);
                 }
             );
         });

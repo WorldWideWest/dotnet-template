@@ -6,4 +6,5 @@ public static class Policy
     public const string Write = "write_access";
     public const string Update = "update_access";
     public const string Delete = "delete_access";
+    public const string ChangePassword = "change_password_access";
 }
