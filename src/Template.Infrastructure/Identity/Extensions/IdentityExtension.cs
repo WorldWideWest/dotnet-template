@@ -1,3 +1,4 @@
+using Duende.IdentityServer;
 using IdentityModel;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
@@ -40,6 +41,8 @@ public static class IdentityExtension
                 {
                     var google = settings.IdentityServerConfig.Clients.GoogleWeb;
 
+                    options.SignInScheme =
+                        IdentityServerConstants.ExternalCookieAuthenticationScheme;
                     options.ClientId = google.ExternalClientId;
                     options.ClientSecret = google.ExternalClientSecret;
                 }

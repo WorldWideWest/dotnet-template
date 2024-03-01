@@ -10,10 +10,9 @@
             "request": "attach",
             "platform": "netCore",
             "sourceFileMap": {
-                "/src": "${workspaceFolder}"
+                "/app": "${workspaceFolder}"
             },
-            "processId":"${command:pickProcess}"
+            "processId": "${command:pickRemoteProcess}",
         }
-
     ]
 }
