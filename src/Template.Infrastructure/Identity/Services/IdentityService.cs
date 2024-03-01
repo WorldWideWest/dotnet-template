@@ -254,9 +254,9 @@ public sealed class IdentityService(
 
             if (user is null)
             {
-                var userResult = await _userManager
-                    .CreateAsync(result.Principal.ToEntity())
-                    .ConfigureAwait(false);
+                user = result.Principal.ToEntity();
+                var userResult = await _userManager.CreateAsync(user).ConfigureAwait(false);
+
                 if (!userResult.Succeeded)
                     return Result<object>.Failed(userResult.Errors.ToArray());
             }
