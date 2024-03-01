@@ -150,7 +150,7 @@ public class IdentityController(ILogger<IdentityController> logger, IMediator me
 
     [Authorize(
         AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme,
-        Policy = Policy.ChangePassword
+        Policy = Policy.UpdatePassword
     )]
     [HttpPut("password/change")]
     [ProducesResponseType(typeof(Result<object>), StatusCodes.Status200OK)]

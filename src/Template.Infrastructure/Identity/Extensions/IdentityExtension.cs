@@ -43,6 +43,7 @@ public static class IdentityExtension
 
                     options.SignInScheme =
                         IdentityServerConstants.ExternalCookieAuthenticationScheme;
+
                     options.ClientId = google.ExternalClientId;
                     options.ClientSecret = google.ExternalClientSecret;
                 }
@@ -87,12 +88,12 @@ public static class IdentityExtension
             );
 
             options.AddPolicy(
-                Policy.ChangePassword,
+                Policy.UpdatePassword,
                 policy =>
                 {
                     policy.RequireAuthenticatedUser();
                     policy.RequireClaim(JwtClaimTypes.Scope, ApiScope.Update);
-                    policy.RequireClaim(JwtClaimTypes.Scope, ApiScope.ChangePassword);
+                    policy.RequireClaim(JwtClaimTypes.Scope, ApiScope.UpdatePassword);
                 }
             );
         });
