@@ -10,6 +10,7 @@ using Template.Application.Identity.Commands.ForgotPassword;
 using Template.Application.Identity.Commands.ResendConfirmationEmail;
 using Template.Application.Identity.Commands.ResetPassword;
 using Template.Application.Identity.Commands.VerifyEmail;
+using Template.Application.IdentityServer.Queries.GetProvider;
 using Template.Domain.Common.Models;
 using Template.Domain.Identity.Constants.Authorization;
 
@@ -198,6 +199,43 @@ public class IdentityController(ILogger<IdentityController> logger, IMediator me
         catch (Exception ex)
         {
             _logger.LogError(ex, ex.Message, nameof(DeleteUserAsync));
+            throw;
+        }
+    }
+
+    [AllowAnonymous]
+    [HttpGet("external/Login")]
+    public async Task<IActionResult> Login(string returnUrl)
+    {
+        try
+        {
+            var request = new GetProviderQuery(returnUrl, Request);
+
+            var result = await _mediator.Send(request);
+            if (!result.Succeeded)
+                return BadRequest(result);
+
+            return Challenge(result.Body.Properties, result.Body.Provider);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, ex.Message, nameof(Login));
+            throw;
+        }
+    }
+
+    [AllowAnonymous]
+    [HttpGet("external/callback")]
+    public async Task<IActionResult> ExternalLoginCallback()
+    {
+        try
+        {
+            // TODO: Impelementation
+            return BadRequest();
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, ex.Message, nameof(Login));
             throw;
         }
     }
