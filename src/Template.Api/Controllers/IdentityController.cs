@@ -1,5 +1,7 @@
 using System.Security.Claims;
+using Duende.IdentityServer;
 using MediatR;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -230,7 +232,13 @@ public class IdentityController(ILogger<IdentityController> logger, IMediator me
     {
         try
         {
-            // TODO: Impelementation
+            AuthenticateResult result = await HttpContext.AuthenticateAsync(
+                IdentityServerConstants.ExternalCookieAuthenticationScheme
+            );
+
+            if (!result.Succeeded)
+                return BadRequest(); // Implement real error handling
+
             return BadRequest();
         }
         catch (Exception ex)

@@ -3,6 +3,7 @@ using System.Text;
 using IdentityModel;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Logging;
+using Microsoft.Identity.Client;
 using Template.Application.Identity.Commands.ChangePassword;
 using Template.Application.Identity.Commands.CreateUser;
 using Template.Application.Identity.Commands.ResetPassword;
@@ -12,18 +13,22 @@ using Template.Application.Identity.Interfaces;
 using Template.Domain.Common.Models;
 using Template.Domain.Identity.Constants.Errors;
 using Template.Domain.Identity.Entites;
+using Template.Domain.IdentityServer.Constants.Authorization;
+using Template.Infrastructure.Identity.Services.Extensions;
 
 namespace Template.Infrastructure.Identity.Services;
 
 public sealed class IdentityService(
     ILogger<IdentityService> logger,
     UserManager<User> userManager,
-    IPasswordHasher<User> passwordHasher
+    IPasswordHasher<User> passwordHasher,
+    SignInManager<User> signInManager
 ) : IIdentityService
 {
     private readonly ILogger<IdentityService> _logger = logger;
     private readonly UserManager<User> _userManager = userManager;
     private readonly IPasswordHasher<User> _passwordHasher = passwordHasher;
+    private readonly SignInManager<User> _signInManager = signInManager;
 
     public async Task<Result<User>> FindUserAsync(FindUserDto request)
     {
@@ -231,6 +236,40 @@ public sealed class IdentityService(
         catch (Exception ex)
         {
             _logger.LogError(ex, ex.Message, nameof(DeleteUserAsync));
+            throw;
+        }
+    }
+
+    public async Task<Result<object>> RegisterExternalAsync(AuthenticationResult result)
+    {
+        try
+        {
+            // TODO: Extension method for recognizing IdentityProvider
+
+            var userId = result.FindUserId();
+            var user = await _userManager
+                .FindByLoginAsync(userId, IdentityProvider.Google)
+                .ConfigureAwait(false);
+
+            if (user is null)
+            {
+                var userResult = await _userManager
+                    .CreateAsync(result.ClaimsPrincipal.ToEntity())
+                    .ConfigureAwait(false);
+                if (!userResult.Succeeded)
+                    return Result<object>.Failed(userResult.Errors.ToArray());
+            }
+
+            var info = new UserLoginInfo(IdentityProvider.Google, userId, IdentityProvider.Google);
+
+            await _userManager.AddLoginAsync(user, info).ConfigureAwait(false);
+            await _signInManager.SignInAsync(user, isPersistent: false).ConfigureAwait(false);
+
+            return Result<object>.Success();
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, ex.Message, nameof(RegisterExternalAsync));
             throw;
         }
     }

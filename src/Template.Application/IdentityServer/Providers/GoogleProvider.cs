@@ -9,7 +9,7 @@ namespace Template.Application.IdentityServer.Providers;
 
 public class GoogleProvider : IExternalProvider
 {
-    public bool Classify(string returnUrl) => returnUrl.Contains(Provider.Google);
+    public bool Classify(string returnUrl) => returnUrl.Contains(IdentityProvider.Google);
 
     public Result<AuthenticationPropertiesResponse> GetAuthenticationProperties(
         string returnUrl,
@@ -19,10 +19,10 @@ public class GoogleProvider : IExternalProvider
         var properties = new AuthenticationProperties
         {
             RedirectUri = $"{request.Scheme}://{request.Host}/api/Identity/external/callback",
-            Items = { { "returnUrl", returnUrl }, { "scheme", Provider.Google } }
+            Items = { { "returnUrl", returnUrl }, { "scheme", IdentityProvider.Google } }
         };
 
-        var response = new AuthenticationPropertiesResponse(properties, Provider.Google);
+        var response = new AuthenticationPropertiesResponse(properties, IdentityProvider.Google);
 
         return Result<AuthenticationPropertiesResponse>.Success(response);
     }
