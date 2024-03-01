@@ -113,14 +113,7 @@ public sealed class IdentityService(
                 return Result<object>.Failed(result.Errors.ToArray());
 
             var claimsResult = await _userManager
-                .AddClaimsAsync(
-                    searchResult.Body,
-                    [
-                        new Claim(JwtClaimTypes.Email, searchResult.Body.Email),
-                        new Claim(JwtClaimTypes.GivenName, searchResult.Body.FirstName),
-                        new Claim(JwtClaimTypes.FamilyName, searchResult.Body.LastName)
-                    ]
-                )
+                .AddClaimsAsync(searchResult.Body, searchResult.Body.SelectClaims())
                 .ConfigureAwait(false);
 
             if (!claimsResult.Succeeded)
@@ -245,11 +238,11 @@ public sealed class IdentityService(
     {
         try
         {
-            // TODO: Extension method for recognizing IdentityProvider
+            var identityProvider = result.FindIdentityProvider();
 
             var userId = result.FindUserId();
             var user = await _userManager
-                .FindByLoginAsync(userId, IdentityProvider.Google)
+                .FindByLoginAsync(userId, identityProvider)
                 .ConfigureAwait(false);
 
             if (user is null)
@@ -261,7 +254,14 @@ public sealed class IdentityService(
                     return Result<object>.Failed(userResult.Errors.ToArray());
             }
 
-            var info = new UserLoginInfo(IdentityProvider.Google, userId, IdentityProvider.Google);
+            var claimsResult = await _userManager
+                .AddClaimsAsync(user, user.SelectClaims())
+                .ConfigureAwait(false);
+
+            if (!claimsResult.Succeeded)
+                return Result<object>.Failed(claimsResult.Errors.ToArray());
+
+            var info = new UserLoginInfo(identityProvider, userId, identityProvider);
 
             await _userManager.AddLoginAsync(user, info).ConfigureAwait(false);
             await _signInManager.SignInAsync(user, isPersistent: false).ConfigureAwait(false);
