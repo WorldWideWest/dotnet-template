@@ -12,6 +12,7 @@ using Template.Application.Identity.Commands.ForgotPassword;
 using Template.Application.Identity.Commands.ResendConfirmationEmail;
 using Template.Application.Identity.Commands.ResetPassword;
 using Template.Application.Identity.Commands.VerifyEmail;
+using Template.Application.IdentityServer.Commands.ExternalAuthentication;
 using Template.Application.IdentityServer.Queries.GetProvider;
 using Template.Domain.Common.Models;
 using Template.Domain.Identity.Constants.Authorization;
@@ -206,7 +207,7 @@ public class IdentityController(ILogger<IdentityController> logger, IMediator me
     }
 
     [AllowAnonymous]
-    [HttpGet("external/Login")]
+    [HttpGet("external/login")]
     public async Task<IActionResult> Login(string returnUrl)
     {
         try
@@ -239,11 +240,21 @@ public class IdentityController(ILogger<IdentityController> logger, IMediator me
             if (!result.Succeeded)
                 return BadRequest(); // Implement real error handling
 
-            return BadRequest();
+            var request = new ExternalAuthenticationCommand(result);
+
+            var identityResult = await _mediator.Send(request);
+            if (!identityResult.Succeeded)
+                return BadRequest(identityResult);
+
+            await HttpContext.SignOutAsync(
+                IdentityServerConstants.ExternalCookieAuthenticationScheme
+            );
+
+            return Redirect(identityResult.Body);
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, ex.Message, nameof(Login));
+            _logger.LogError(ex, ex.Message, nameof(ExternalLoginCallback));
             throw;
         }
     }

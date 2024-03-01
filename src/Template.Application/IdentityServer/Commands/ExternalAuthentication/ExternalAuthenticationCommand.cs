@@ -20,8 +20,13 @@ public class ExternalAuthenticationCommandHandler(
     {
         try
         {
-            // var result = await HttpContext
-            return Result<string>.Success("");
+            var result = await _identityService.RegisterExternalAsync(request.Result);
+            if (!result.Succeeded)
+                return Result<string>.Failed(result.Errors.ToArray());
+
+            var returnUrl = request.Result.Properties.Items["returnUrl"] ?? "~/";
+
+            return Result<string>.Success(returnUrl);
         }
         catch (Exception ex)
         {

@@ -1,13 +1,13 @@
 using System.Security.Claims;
-using Microsoft.Identity.Client;
+using Microsoft.AspNetCore.Authentication;
 using Template.Domain.Identity.Entites;
 
 namespace Template.Infrastructure.Identity.Services.Extensions;
 
 public static class IdentityServiceExtension
 {
-    public static string FindUserId(this AuthenticationResult result) =>
-        result.ClaimsPrincipal.FindFirstValue(ClaimTypes.NameIdentifier);
+    public static string FindUserId(this AuthenticateResult result) =>
+        result.Principal.FindFirstValue(ClaimTypes.NameIdentifier);
 
     public static User ToEntity(this ClaimsPrincipal principal) =>
         new User

@@ -173,6 +173,7 @@ public class IdentityServerResourceExtension
                         configuration.IdentityServerConfig.Clients.GoogleWeb.InternalSecret.Sha256()
                     ),
                 },
+                RedirectUris = ["http://localhost:3000/signin-redirect"],
                 AllowOfflineAccess = true,
                 RefreshTokenUsage = TokenUsage.OneTimeOnly,
                 Enabled = true,

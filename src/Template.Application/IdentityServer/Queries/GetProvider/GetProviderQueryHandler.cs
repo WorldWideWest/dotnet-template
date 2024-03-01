@@ -24,7 +24,7 @@ public class GetProviderQueryHandler(List<IExternalProvider> providers)
             return Result<AuthenticationPropertiesResponse>.Failed(error);
         }
 
-        Task.FromResult(0);
+        await Task.FromResult(0);
 
         var properties = provider.GetAuthenticationProperties(request.ReturnUrl, request.Request);
 

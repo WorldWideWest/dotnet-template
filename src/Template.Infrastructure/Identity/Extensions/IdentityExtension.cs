@@ -33,6 +33,16 @@ public static class IdentityExtension
                     options.Audience = "Template";
                     options.Authority = settings.IdentityServerConfig.Authority;
                 }
+            )
+            .AddGoogle(
+                IdentityProvider.Google,
+                options =>
+                {
+                    var google = settings.IdentityServerConfig.Clients.GoogleWeb;
+
+                    options.ClientId = google.ExternalClientId;
+                    options.ClientSecret = google.ExternalClientSecret;
+                }
             );
 
         services.AddAuthorization(options =>

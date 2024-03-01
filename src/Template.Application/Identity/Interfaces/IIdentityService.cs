@@ -1,4 +1,4 @@
-using Microsoft.Identity.Client;
+using Microsoft.AspNetCore.Authentication;
 using Template.Application.Identity.Commands.ChangePassword;
 using Template.Application.Identity.Commands.CreateUser;
 using Template.Application.Identity.Commands.ResetPassword;
@@ -19,5 +19,5 @@ public interface IIdentityService
     Task<Result<object>> ResetPasswordAsync(ResetPasswordDto request);
     Task<Result<object>> ChangePasswordAsync(ChangePasswordDto request);
     Task<Result<object>> DeleteUserAsync(FindUserDto request);
-    Task<Result<object>> RegisterExternalAsync(AuthenticationResult result);
+    Task<Result<object>> RegisterExternalAsync(AuthenticateResult result);
 }

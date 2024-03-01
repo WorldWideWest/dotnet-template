@@ -29,6 +29,9 @@ public static class IdentityServerExtension
                 options.Authentication.CookieLifetime = TimeSpan.FromDays(30);
                 options.Authentication.CookieSlidingExpiration = true;
                 options.IssuerUri = settings.IdentityServerConfig.IssuerUri;
+
+                options.UserInteraction.LoginUrl = "/api/Identity/external/login";
+                options.UserInteraction.LogoutUrl = "/api/Identity/external/logout";
             })
             .AddConfigurationStore(options =>
             {

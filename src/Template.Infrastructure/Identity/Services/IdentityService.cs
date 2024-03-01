@@ -1,6 +1,7 @@
 using System.Security.Claims;
 using System.Text;
 using IdentityModel;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Logging;
 using Microsoft.Identity.Client;
@@ -240,7 +241,7 @@ public sealed class IdentityService(
         }
     }
 
-    public async Task<Result<object>> RegisterExternalAsync(AuthenticationResult result)
+    public async Task<Result<object>> RegisterExternalAsync(AuthenticateResult result)
     {
         try
         {
@@ -254,7 +255,7 @@ public sealed class IdentityService(
             if (user is null)
             {
                 var userResult = await _userManager
-                    .CreateAsync(result.ClaimsPrincipal.ToEntity())
+                    .CreateAsync(result.Principal.ToEntity())
                     .ConfigureAwait(false);
                 if (!userResult.Succeeded)
                     return Result<object>.Failed(userResult.Errors.ToArray());

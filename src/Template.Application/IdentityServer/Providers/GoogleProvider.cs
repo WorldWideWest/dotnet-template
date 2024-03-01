@@ -9,7 +9,8 @@ namespace Template.Application.IdentityServer.Providers;
 
 public class GoogleProvider : IExternalProvider
 {
-    public bool Classify(string returnUrl) => returnUrl.Contains(IdentityProvider.Google);
+    public bool Classify(string returnUrl) =>
+        returnUrl.Contains(IdentityProvider.Google, StringComparison.OrdinalIgnoreCase);
 
     public Result<AuthenticationPropertiesResponse> GetAuthenticationProperties(
         string returnUrl,

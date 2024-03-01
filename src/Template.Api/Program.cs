@@ -22,6 +22,11 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerConfiguration();
 }
 
+app.UseCors(options =>
+{
+    options.AllowAnyHeader().AllowAnyOrigin().AllowAnyMethod();
+});
+
 app.UseForwardedHeadersConfiguration();
 
 app.UseExceptionHandler();
