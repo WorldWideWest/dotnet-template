@@ -8,12 +8,12 @@ using Microsoft.AspNetCore.Mvc;
 using Template.Application.Identity.Commands.ChangePassword;
 using Template.Application.Identity.Commands.CreateUser;
 using Template.Application.Identity.Commands.DeleteUser;
+using Template.Application.Identity.Commands.ExternalAuthentication;
 using Template.Application.Identity.Commands.ForgotPassword;
 using Template.Application.Identity.Commands.ResendConfirmationEmail;
 using Template.Application.Identity.Commands.ResetPassword;
 using Template.Application.Identity.Commands.VerifyEmail;
-using Template.Application.IdentityServer.Commands.ExternalAuthentication;
-using Template.Application.IdentityServer.Queries.GetProvider;
+using Template.Application.Identity.Queries.GetProvider;
 using Template.Domain.Common.Models;
 using Template.Domain.Identity.Constants.Authorization;
 
