@@ -2,7 +2,7 @@ using FluentValidation;
 using Microsoft.Extensions.DependencyInjection;
 using Template.Application.Email.Interfaces;
 using Template.Application.Email.Templates;
-using Template.Application.IdentityServer.Interfaces;
+using Template.Application.Identity.Interfaces;
 using Template.Application.IdentityServer.Providers;
 using Template.Application.Validation.Interfaces;
 using Template.Application.Validation.Services;

@@ -1,8 +1,8 @@
 using Microsoft.AspNetCore.Http;
-using Template.Application.IdentityServer.Common;
+using Template.Application.Identity.Common;
 using Template.Domain.Common.Models;
 
-namespace Template.Application.IdentityServer.Interfaces;
+namespace Template.Application.Identity.Interfaces;
 
 public interface IExternalProvider
 {

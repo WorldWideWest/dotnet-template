@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Authentication;
 
-namespace Template.Application.IdentityServer.Common;
+namespace Template.Application.Identity.Common;
 
 public record AuthenticationPropertiesResponse(
     AuthenticationProperties Properties,

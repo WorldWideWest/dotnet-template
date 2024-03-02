@@ -1,9 +1,9 @@
 using MediatR;
-using Template.Application.IdentityServer.Common;
-using Template.Application.IdentityServer.Interfaces;
+using Template.Application.Identity.Common;
+using Template.Application.Identity.Interfaces;
 using Template.Domain.Common.Models;
 
-namespace Template.Application.IdentityServer.Queries.GetProvider;
+namespace Template.Application.Identity.Queries.GetProvider;
 
 public class GetProviderQueryHandler(List<IExternalProvider> providers)
     : IRequestHandler<GetProviderQuery, Result<AuthenticationPropertiesResponse>>

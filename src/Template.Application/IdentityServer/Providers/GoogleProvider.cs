@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Http;
-using Template.Application.IdentityServer.Common;
-using Template.Application.IdentityServer.Interfaces;
+using Template.Application.Identity.Common;
+using Template.Application.Identity.Interfaces;
 using Template.Domain.Common.Models;
 using Template.Domain.IdentityServer.Constants.Authorization;
 
