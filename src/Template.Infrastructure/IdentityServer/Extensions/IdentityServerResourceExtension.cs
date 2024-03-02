@@ -183,7 +183,15 @@ public class IdentityServerResourceExtension
                         configuration.IdentityServerConfig.Clients.GoogleWeb.InternalSecret.Sha256()
                     ),
                 },
-                RedirectUris = ["http://localhost:3000/signin-redirect"],
+                RedirectUris = [configuration.IdentityServerConfig.Clients.GoogleWeb.RedirectUri],
+                AllowedCorsOrigins =
+                [
+                    configuration.IdentityServerConfig.Clients.GoogleWeb.AllowedCorsOrigin
+                ],
+                PostLogoutRedirectUris =
+                [
+                    configuration.IdentityServerConfig.Clients.GoogleWeb.PostLogoutRedirectUri
+                ],
                 AllowOfflineAccess = true,
                 RefreshTokenUsage = TokenUsage.OneTimeOnly,
                 Enabled = true,
