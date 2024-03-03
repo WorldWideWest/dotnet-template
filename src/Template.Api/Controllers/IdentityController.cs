@@ -239,24 +239,13 @@ public class IdentityController(
     {
         try
         {
-            AuthenticateResult result = await HttpContext.AuthenticateAsync(
-                IdentityServerConstants.ExternalCookieAuthenticationScheme
-            );
+            var request = new ExternalAuthenticationCommand();
 
+            var result = await _mediator.Send(request);
             if (!result.Succeeded)
-                return BadRequest(); // TODO: Adding real response
+                return BadRequest(result);
 
-            var request = new ExternalAuthenticationCommand(result);
-
-            var identityResult = await _mediator.Send(request);
-            if (!identityResult.Succeeded)
-                return BadRequest(identityResult);
-
-            await HttpContext.SignOutAsync(
-                IdentityServerConstants.ExternalCookieAuthenticationScheme
-            );
-
-            return Redirect(identityResult.Body);
+            return Redirect(result.Body);
         }
         catch (Exception ex)
         {
