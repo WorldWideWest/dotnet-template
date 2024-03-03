@@ -238,12 +238,10 @@ public sealed class IdentityService(
     {
         try
         {
-            var identityProvider = result.FindIdentityProvider();
+            var provider = result.FindIdentityProvider();
 
             var userId = result.FindUserId();
-            var user = await _userManager
-                .FindByLoginAsync(userId, identityProvider)
-                .ConfigureAwait(false);
+            var user = await _userManager.FindByLoginAsync(provider, userId).ConfigureAwait(false);
 
             if (user is null)
             {
@@ -252,16 +250,16 @@ public sealed class IdentityService(
 
                 if (!userResult.Succeeded)
                     return Result<object>.Failed(userResult.Errors.ToArray());
+
+                var claimsResult = await _userManager
+                    .AddClaimsAsync(user, user.SelectClaims())
+                    .ConfigureAwait(false);
+
+                if (!claimsResult.Succeeded)
+                    return Result<object>.Failed(claimsResult.Errors.ToArray());
             }
 
-            var claimsResult = await _userManager
-                .AddClaimsAsync(user, user.SelectClaims())
-                .ConfigureAwait(false);
-
-            if (!claimsResult.Succeeded)
-                return Result<object>.Failed(claimsResult.Errors.ToArray());
-
-            var info = new UserLoginInfo(identityProvider, userId, identityProvider);
+            var info = new UserLoginInfo(provider, userId, provider);
 
             await _userManager.AddLoginAsync(user, info).ConfigureAwait(false);
             await _signInManager.SignInAsync(user, isPersistent: false).ConfigureAwait(false);
