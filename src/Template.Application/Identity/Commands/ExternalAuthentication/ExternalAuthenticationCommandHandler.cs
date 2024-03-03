@@ -3,6 +3,7 @@ using Microsoft.Extensions.Logging;
 using Template.Application.Identity.Extensions;
 using Template.Application.Identity.Interfaces;
 using Template.Domain.Common.Models;
+using Template.Domain.IdentityServer.Constants.Errors;
 
 namespace Template.Application.Identity.Commands.ExternalAuthentication;
 
@@ -29,13 +30,16 @@ public class ExternalAuthenticationCommandHandler(
             var authenticationResult = await httpContext.AuthenticateWithExternalScheme();
 
             if (!authenticationResult.Succeeded)
-                return Result<string>.Failed("", ""); // TODO: Adding real response status
+                return Result<string>.Failed(
+                    ErrorCode.ERR_TOKEN,
+                    authenticationResult.Failure.Message
+                );
 
             var result = await _identityService.RegisterExternalAsync(authenticationResult);
             if (!result.Succeeded)
                 return Result<string>.Failed(result.Errors.ToArray());
 
-            var returnUrl = authenticationResult.FindExternalUrl();
+            var returnUrl = authenticationResult.FindReturnUrl();
 
             await httpContext.DeleteCookieForExternalAuthentication();
 

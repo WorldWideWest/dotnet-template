@@ -22,6 +22,6 @@ public static class ExternalAuthenticationExstension
             .ConfigureAwait(false);
     }
 
-    public static string FindExternalUrl(this AuthenticateResult result) =>
+    public static string FindReturnUrl(this AuthenticateResult result) =>
         result.Properties.Items["returnUrl"] ?? "~/";
 }
