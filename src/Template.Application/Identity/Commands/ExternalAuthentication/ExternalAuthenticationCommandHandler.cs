@@ -1,8 +1,6 @@
-using Duende.IdentityServer;
 using MediatR;
-using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
+using Template.Application.Identity.Extensions;
 using Template.Application.Identity.Interfaces;
 using Template.Domain.Common.Models;
 
@@ -10,13 +8,11 @@ namespace Template.Application.Identity.Commands.ExternalAuthentication;
 
 public class ExternalAuthenticationCommandHandler(
     ILogger<ExternalAuthenticationCommandHandler> logger,
-    IIdentityService identityService,
-    HttpContextAccessor httpContextAccessor
+    IIdentityService identityService
 ) : IRequestHandler<ExternalAuthenticationCommand, Result<string>>
 {
     private readonly ILogger<ExternalAuthenticationCommandHandler> _logger = logger;
     private readonly IIdentityService _identityService = identityService;
-    private readonly HttpContextAccessor _httpContextAccessor = httpContextAccessor;
 
     public async Task<Result<string>> Handle(
         ExternalAuthenticationCommand request,
@@ -25,11 +21,12 @@ public class ExternalAuthenticationCommandHandler(
     {
         try
         {
-            var authenticationResult = await _httpContextAccessor
-                .HttpContext.AuthenticateAsync(
-                    IdentityServerConstants.ExternalCookieAuthenticationScheme
-                )
-                .ConfigureAwait(false);
+            /*
+                TODO: Investigate if this is the way to use the http context provided by the controller or find a workaround for using the http context accessor inside mediatr
+            */
+            var httpContext = request.HttpContext;
+
+            var authenticationResult = await httpContext.AuthenticateWithExternalScheme();
 
             if (!authenticationResult.Succeeded)
                 return Result<string>.Failed("", ""); // TODO: Adding real response status
@@ -38,13 +35,9 @@ public class ExternalAuthenticationCommandHandler(
             if (!result.Succeeded)
                 return Result<string>.Failed(result.Errors.ToArray());
 
-            var returnUrl = authenticationResult.Properties.Items["returnUrl"] ?? "~/";
+            var returnUrl = authenticationResult.FindExternalUrl();
 
-            await _httpContextAccessor
-                .HttpContext.SignOutAsync(
-                    IdentityServerConstants.ExternalCookieAuthenticationScheme
-                )
-                .ConfigureAwait(false);
+            await httpContext.DeleteCookieForExternalAuthentication();
 
             return Result<string>.Success(returnUrl);
         }

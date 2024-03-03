@@ -252,7 +252,7 @@ public sealed class IdentityService(
                     return Result<object>.Failed(userResult.Errors.ToArray());
 
                 var claimsResult = await _userManager
-                    .AddClaimsAsync(user, user.SelectClaims())
+                    .AddClaimsAsync(user, result.Principal.SelectClaims(provider))
                     .ConfigureAwait(false);
 
                 if (!claimsResult.Succeeded)

@@ -2,6 +2,7 @@ using System.Security.Claims;
 using IdentityModel;
 using Microsoft.AspNetCore.Authentication;
 using Template.Domain.Identity.Entites;
+using Template.Domain.IdentityServer.Constants.Authorization;
 
 namespace Template.Infrastructure.Identity.Services.Extensions;
 
@@ -28,6 +29,21 @@ public static class IdentityServiceExtension
         {
             new Claim(JwtClaimTypes.Email, user.Email),
             new Claim(JwtClaimTypes.GivenName, user.FirstName),
-            new Claim(JwtClaimTypes.FamilyName, user.LastName)
+            new Claim(JwtClaimTypes.FamilyName, user.LastName),
+            new Claim(JwtClaimTypes.IdentityProvider, IdentityProvider.Local),
+            new Claim(JwtClaimTypes.Name, user.Email),
+        };
+
+    public static List<Claim> SelectClaims(
+        this ClaimsPrincipal principal,
+        string provider = null
+    ) =>
+        new List<Claim>
+        {
+            new Claim(JwtClaimTypes.Email, principal.FindFirstValue(ClaimTypes.Email)),
+            new Claim(JwtClaimTypes.GivenName, principal.FindFirstValue(ClaimTypes.GivenName)),
+            new Claim(JwtClaimTypes.FamilyName, principal.FindFirstValue(ClaimTypes.Surname)),
+            new Claim(JwtClaimTypes.IdentityProvider, provider ?? IdentityProvider.Local),
+            new Claim(JwtClaimTypes.Subject, principal.FindFirstValue(ClaimTypes.NameIdentifier)),
         };
 }

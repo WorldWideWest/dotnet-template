@@ -1,5 +1,4 @@
 using System.Security.Claims;
-using Duende.IdentityServer;
 using Duende.IdentityServer.Services;
 using MediatR;
 using Microsoft.AspNetCore.Authentication;
@@ -239,7 +238,7 @@ public class IdentityController(
     {
         try
         {
-            var request = new ExternalAuthenticationCommand();
+            var request = new ExternalAuthenticationCommand(HttpContext);
 
             var result = await _mediator.Send(request);
             if (!result.Succeeded)
@@ -259,6 +258,7 @@ public class IdentityController(
     {
         try
         {
+            // TODO: Refactor and move the logout logic into the application layer
             var context = await _interaction.GetLogoutContextAsync(logoutId);
 
             await HttpContext.SignOutAsync();
