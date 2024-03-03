@@ -1,10 +1,12 @@
 using System.Security.Claims;
 using Duende.IdentityServer;
+using Duende.IdentityServer.Services;
 using MediatR;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Options;
 using Template.Application.Identity.Commands.ChangePassword;
 using Template.Application.Identity.Commands.CreateUser;
 using Template.Application.Identity.Commands.DeleteUser;
@@ -22,11 +24,17 @@ namespace Template.Api.Controllers;
 [ApiController]
 [Route("api/[controller]")]
 [ApiVersion("1.0")]
-public class IdentityController(ILogger<IdentityController> logger, IMediator mediator)
-    : ControllerBase
+public class IdentityController(
+    ILogger<IdentityController> logger,
+    IMediator mediator,
+    IIdentityServerInteractionService interaction,
+    IOptions<AppConfig> options
+) : ControllerBase
 {
     private readonly ILogger<IdentityController> _logger = logger;
     private readonly IMediator _mediator = mediator;
+    private readonly IIdentityServerInteractionService _interaction = interaction;
+    private readonly AppConfig _options = options.Value;
 
     [AllowAnonymous]
     [HttpPost("register")]
@@ -253,6 +261,29 @@ public class IdentityController(ILogger<IdentityController> logger, IMediator me
         catch (Exception ex)
         {
             _logger.LogError(ex, ex.Message, nameof(ExternalLoginCallback));
+            throw;
+        }
+    }
+
+    [HttpGet("external/logout")]
+    public async Task<IActionResult> Logout(string logoutId)
+    {
+        try
+        {
+            var context = await _interaction.GetLogoutContextAsync(logoutId);
+
+            await HttpContext.SignOutAsync();
+            await _interaction.CreateLogoutContextAsync();
+
+            var postLogoutUri = context?.PostLogoutRedirectUri;
+            if (!string.IsNullOrEmpty(postLogoutUri))
+                return Redirect(postLogoutUri);
+
+            return Redirect(_options.IdentityServerConfig.Clients.GoogleWeb.PostLogoutRedirectUri);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, ex.Message, nameof(Logout));
             throw;
         }
     }
