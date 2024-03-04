@@ -43,7 +43,6 @@ public static class IdentityServiceExtension
             new Claim(JwtClaimTypes.Email, principal.FindFirstValue(ClaimTypes.Email)),
             new Claim(JwtClaimTypes.GivenName, principal.FindFirstValue(ClaimTypes.GivenName)),
             new Claim(JwtClaimTypes.FamilyName, principal.FindFirstValue(ClaimTypes.Surname)),
-            new Claim(JwtClaimTypes.IdentityProvider, provider ?? IdentityProvider.Local),
-            new Claim(JwtClaimTypes.Subject, principal.FindFirstValue(ClaimTypes.NameIdentifier)),
+            new Claim(JwtClaimTypes.IdentityProvider, provider ?? IdentityProvider.Local)
         };
 }

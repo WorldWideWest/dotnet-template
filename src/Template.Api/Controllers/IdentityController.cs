@@ -9,7 +9,7 @@ using Microsoft.Extensions.Options;
 using Template.Application.Identity.Commands.ChangePassword;
 using Template.Application.Identity.Commands.CreateUser;
 using Template.Application.Identity.Commands.DeleteUser;
-using Template.Application.Identity.Commands.ExternalAuthentication;
+using Template.Application.Identity.Commands.ExternalSignIn;
 using Template.Application.Identity.Commands.ForgotPassword;
 using Template.Application.Identity.Commands.ResendConfirmationEmail;
 using Template.Application.Identity.Commands.ResetPassword;
@@ -238,7 +238,7 @@ public class IdentityController(
     {
         try
         {
-            var request = new ExternalAuthenticationCommand(HttpContext);
+            var request = new ExternalSignInCommand(HttpContext);
 
             var result = await _mediator.Send(request);
             if (!result.Succeeded)

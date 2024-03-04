@@ -5,18 +5,18 @@ using Template.Application.Identity.Interfaces;
 using Template.Domain.Common.Models;
 using Template.Domain.IdentityServer.Constants.Errors;
 
-namespace Template.Application.Identity.Commands.ExternalAuthentication;
+namespace Template.Application.Identity.Commands.ExternalSignIn;
 
-public class ExternalAuthenticationCommandHandler(
-    ILogger<ExternalAuthenticationCommandHandler> logger,
+public class ExternalSignInCommandHandler(
+    ILogger<ExternalSignInCommandHandler> logger,
     IIdentityService identityService
-) : IRequestHandler<ExternalAuthenticationCommand, Result<string>>
+) : IRequestHandler<ExternalSignInCommand, Result<string>>
 {
-    private readonly ILogger<ExternalAuthenticationCommandHandler> _logger = logger;
+    private readonly ILogger<ExternalSignInCommandHandler> _logger = logger;
     private readonly IIdentityService _identityService = identityService;
 
     public async Task<Result<string>> Handle(
-        ExternalAuthenticationCommand request,
+        ExternalSignInCommand request,
         CancellationToken cancellationToken
     )
     {
