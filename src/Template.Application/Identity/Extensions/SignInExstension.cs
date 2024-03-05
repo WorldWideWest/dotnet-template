@@ -1,10 +1,11 @@
+using System.Security.Claims;
 using Duende.IdentityServer;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Http;
 
 namespace Template.Application.Identity.Extensions;
 
-public static class ExternalAuthenticationExstension
+public static class SignInExstension
 {
     public static async Task<AuthenticateResult> AuthenticateWithExternalScheme(
         this HttpContext httpContext
@@ -24,4 +25,7 @@ public static class ExternalAuthenticationExstension
 
     public static string FindReturnUrl(this AuthenticateResult result) =>
         result.Properties.Items["returnUrl"] ?? "~/";
+
+    public static string FindIdentityProvider(this ClaimsPrincipal principal) =>
+        principal.FindFirstValue("idp");
 }

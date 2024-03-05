@@ -1,5 +1,6 @@
 using Duende.IdentityServer;
 using IdentityModel;
+using Microsoft.AspNetCore.Authentication.Google;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -36,7 +37,7 @@ public static class IdentityExtension
                 }
             )
             .AddGoogle(
-                IdentityProvider.Google,
+                GoogleDefaults.AuthenticationScheme,
                 options =>
                 {
                     var google = settings.IdentityServerConfig.Clients.GoogleWeb;

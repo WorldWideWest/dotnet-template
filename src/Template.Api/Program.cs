@@ -33,8 +33,6 @@ app.UseExceptionHandler();
 
 app.UseIdentityServer();
 
-app.UseAuthentication();
-
 app.UseAuthorization();
 
 app.MapControllers();

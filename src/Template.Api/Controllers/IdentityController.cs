@@ -1,11 +1,12 @@
 using System.Security.Claims;
+using Duende.IdentityServer;
 using Duende.IdentityServer.Services;
 using MediatR;
-using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Google;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Options;
 using Template.Application.Identity.Commands.ChangePassword;
 using Template.Application.Identity.Commands.CreateUser;
 using Template.Application.Identity.Commands.DeleteUser;
@@ -17,6 +18,7 @@ using Template.Application.Identity.Commands.VerifyEmail;
 using Template.Application.Identity.Queries.GetProvider;
 using Template.Domain.Common.Models;
 using Template.Domain.Identity.Constants.Authorization;
+using Template.Domain.Identity.Entites;
 
 namespace Template.Api.Controllers;
 
@@ -26,14 +28,14 @@ namespace Template.Api.Controllers;
 public class IdentityController(
     ILogger<IdentityController> logger,
     IMediator mediator,
-    IIdentityServerInteractionService interaction,
-    IOptions<AppConfig> options
+    SignInManager<User> signInManager,
+    IIdentityServerInteractionService interaction
 ) : ControllerBase
 {
     private readonly ILogger<IdentityController> _logger = logger;
     private readonly IMediator _mediator = mediator;
+    private readonly SignInManager<User> _signInManager = signInManager;
     private readonly IIdentityServerInteractionService _interaction = interaction;
-    private readonly AppConfig _options = options.Value;
 
     [AllowAnonymous]
     [HttpPost("register")]
@@ -156,7 +158,7 @@ public class IdentityController(
     }
 
     [Authorize(
-        AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme,
+        AuthenticationSchemes = AuthenticationScheme.DefaultAndGoogle,
         Policy = Policy.UpdatePassword
     )]
     [HttpPut("password/change")]
@@ -185,7 +187,7 @@ public class IdentityController(
     }
 
     [Authorize(
-        AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme,
+        AuthenticationSchemes = AuthenticationScheme.DefaultAndGoogle,
         Policy = Policy.Delete
     )]
     [HttpDelete("delete")]
@@ -258,17 +260,38 @@ public class IdentityController(
     {
         try
         {
-            // TODO: Refactor and move the logout logic into the application layer
+            _logger.LogInformation($"LOG >>>>>>>>>>>>> {logoutId}");
+
+            // // await HttpContext.SignOutAsync()
+
+            // var request = new ExternalSignOutCommand(HttpContext, User, logoutId);
+
+            // var result = await _mediator.Send(request);
+            // if (!result.Succeeded)
+            //     return BadRequest(result);
+
+            // await HttpContext.SignOutAsync(
+            //     IdentityServerConstants.ExternalCookieAuthenticationScheme
+            // );
+
+            // var idp = User.FindFirst("idp").Value;
+            // if (idp != IdentityServerConstants.LocalIdentityProvider)
+            //     return Redirect("http://localhost");
+
+            // return BadRequest();
+
+
+            await _signInManager.SignOutAsync();
+
             var context = await _interaction.GetLogoutContextAsync(logoutId);
+            if (!string.IsNullOrWhiteSpace(context.PostLogoutRedirectUri))
+                return Redirect(context.PostLogoutRedirectUri);
+            // Clear local session
 
-            await HttpContext.SignOutAsync();
-            await _interaction.CreateLogoutContextAsync();
+            // Redirect to Google logout
+            return Redirect("http://localhost:3000/");
 
-            var postLogoutUri = context?.PostLogoutRedirectUri;
-            if (!string.IsNullOrEmpty(postLogoutUri))
-                return Redirect(postLogoutUri);
-
-            return Redirect(_options.IdentityServerConfig.Clients.GoogleWeb.PostLogoutRedirectUri);
+            // return SignOut(result.Body);
         }
         catch (Exception ex)
         {
