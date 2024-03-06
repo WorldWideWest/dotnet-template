@@ -30,8 +30,6 @@ public class ExternalSignOutCommandHandler(
         {
             var httpContext = request.HttpContext;
 
-            await httpContext.SignOutAsync();
-
             var logoutId =
                 request.LogoutId
                 ?? await _interaction.CreateLogoutContextAsync().ConfigureAwait(false);
@@ -41,6 +39,8 @@ public class ExternalSignOutCommandHandler(
             var postLogoutUri =
                 context.PostLogoutRedirectUri
                 ?? _options.IdentityServerConfig.Clients.GoogleWeb.PostLogoutRedirectUri;
+
+            await httpContext.SignOutAsync();
 
             return Result<string>.Success(postLogoutUri);
         }

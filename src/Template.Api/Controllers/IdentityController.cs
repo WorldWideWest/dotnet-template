@@ -260,38 +260,13 @@ public class IdentityController(
     {
         try
         {
-            _logger.LogInformation($"LOG >>>>>>>>>>>>> {logoutId}");
+            var request = new ExternalSignOutCommand(HttpContext, logoutId ?? string.Empty);
 
-            // // await HttpContext.SignOutAsync()
+            var result = await _mediator.Send(request);
+            if (!result.Succeeded)
+                return BadRequest(result);
 
-            // var request = new ExternalSignOutCommand(HttpContext, User, logoutId);
-
-            // var result = await _mediator.Send(request);
-            // if (!result.Succeeded)
-            //     return BadRequest(result);
-
-            // await HttpContext.SignOutAsync(
-            //     IdentityServerConstants.ExternalCookieAuthenticationScheme
-            // );
-
-            // var idp = User.FindFirst("idp").Value;
-            // if (idp != IdentityServerConstants.LocalIdentityProvider)
-            //     return Redirect("http://localhost");
-
-            // return BadRequest();
-
-
-            await _signInManager.SignOutAsync();
-
-            var context = await _interaction.GetLogoutContextAsync(logoutId);
-            if (!string.IsNullOrWhiteSpace(context.PostLogoutRedirectUri))
-                return Redirect(context.PostLogoutRedirectUri);
-            // Clear local session
-
-            // Redirect to Google logout
-            return Redirect("http://localhost:3000/");
-
-            // return SignOut(result.Body);
+            return Redirect(result.Body);
         }
         catch (Exception ex)
         {

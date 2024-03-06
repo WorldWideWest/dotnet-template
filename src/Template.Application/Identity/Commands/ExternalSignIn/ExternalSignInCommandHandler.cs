@@ -27,14 +27,9 @@ public class ExternalSignInCommandHandler(
     {
         try
         {
-            /*
-                TODO: Investigate if this is the way to use the http context provided by the controller or find a workaround for using the http context accessor inside mediatr
-            */
             var httpContext = request.HttpContext;
 
-            var authenticationResult = await httpContext
-                .AuthenticateAsync(IdentityServerConstants.ExternalCookieAuthenticationScheme)
-                .ConfigureAwait(false);
+            var authenticationResult = await httpContext.AuthenticateWithExternalScheme();
 
             if (!authenticationResult.Succeeded)
                 return Result<string>.Failed(
@@ -48,9 +43,7 @@ public class ExternalSignInCommandHandler(
 
             var returnUrl = authenticationResult.FindReturnUrl();
 
-            await httpContext
-                .SignOutAsync(IdentityServerConstants.ExternalCookieAuthenticationScheme)
-                .ConfigureAwait(false);
+            await httpContext.DeleteCookieForExternalAuthentication();
 
             return Result<string>.Success(returnUrl);
         }
