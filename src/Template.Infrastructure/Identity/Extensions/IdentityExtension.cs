@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.IdentityModel.Tokens;
 using Template.Domain.Common.Models;
 using Template.Domain.Identity.Constants.Authorization;
 using Template.Domain.Identity.Entites;
@@ -34,6 +35,9 @@ public static class IdentityExtension
                     options.RequireHttpsMetadata = false;
                     options.Audience = ApiResource.Template;
                     options.Authority = settings.IdentityServerConfig.Authority;
+
+                    options.TokenValidationParameters.ValidateLifetime = true;
+                    options.TokenValidationParameters.ClockSkew = TimeSpan.Zero;
                 }
             )
             .AddGoogle(

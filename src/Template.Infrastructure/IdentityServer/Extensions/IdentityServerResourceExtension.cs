@@ -110,6 +110,7 @@ public class IdentityServerResourceExtension
                 RequireClientSecret = true,
                 AlwaysSendClientClaims = true,
                 AlwaysIncludeUserClaimsInIdToken = true,
+                AccessTokenLifetime = 30, // testing
                 AllowedScopes =
                 {
                     DomainIdentityServerConstants.ApiScope.Read,
