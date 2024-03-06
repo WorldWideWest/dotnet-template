@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Template.Domain.Common.Constants;
 using Template.Domain.Common.Models;
 using Template.Domain.Identity.Entites;
 using Template.Infrastructure.IdentityServer.Services;
@@ -16,7 +17,7 @@ public static class IdentityServerExtension
     {
         var connectionString = configuration.GetConnectionString("DefaultConnection");
         var migrationAssembly = typeof(IdentityServerExtension).Assembly.FullName;
-        var settings = configuration.GetSection("AppConfig").Get<AppConfig>();
+        var settings = configuration.GetSection(nameof(AppConfig)).Get<AppConfig>();
 
         services
             .AddIdentityServer(options =>
@@ -30,8 +31,8 @@ public static class IdentityServerExtension
                 options.Authentication.CookieSlidingExpiration = true;
                 options.IssuerUri = settings.IdentityServerConfig.IssuerUri;
 
-                options.UserInteraction.LoginUrl = "/api/Identity/external/login";
-                options.UserInteraction.LogoutUrl = "/api/Identity/external/logout";
+                options.UserInteraction.LoginUrl = TemplateDefaults.LoginUrl;
+                options.UserInteraction.LogoutUrl = TemplateDefaults.LogoutUrl;
             })
             .AddConfigurationStore(options =>
             {

@@ -16,6 +16,7 @@ using Template.Application.Identity.Commands.ResendConfirmationEmail;
 using Template.Application.Identity.Commands.ResetPassword;
 using Template.Application.Identity.Commands.VerifyEmail;
 using Template.Application.Identity.Queries.GetProvider;
+using Template.Domain.Common.Constants;
 using Template.Domain.Common.Models;
 using Template.Domain.Identity.Constants.Authorization;
 using Template.Domain.Identity.Entites;
@@ -214,7 +215,7 @@ public class IdentityController(
     }
 
     [AllowAnonymous]
-    [HttpGet("external/login")]
+    [HttpGet(TemplateDefaults.LoginPath)]
     public async Task<IActionResult> Login(string returnUrl)
     {
         try
@@ -235,7 +236,7 @@ public class IdentityController(
     }
 
     [AllowAnonymous]
-    [HttpGet("external/callback")]
+    [HttpGet(TemplateDefaults.CallbackPath)]
     public async Task<IActionResult> ExternalLoginCallback()
     {
         try
@@ -255,7 +256,8 @@ public class IdentityController(
         }
     }
 
-    [HttpGet("external/logout")]
+    [Authorize]
+    [HttpGet(TemplateDefaults.LogoutPath)]
     public async Task<IActionResult> Logout(string logoutId)
     {
         try
