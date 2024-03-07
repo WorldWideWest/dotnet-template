@@ -6,7 +6,6 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.IdentityModel.Tokens;
 using Template.Domain.Common.Models;
 using Template.Domain.Identity.Constants.Authorization;
 using Template.Domain.Identity.Entites;
@@ -24,7 +23,7 @@ public static class IdentityExtension
     {
         var connectionString = configuration.GetConnectionString("DefaultConnection");
         var migrationAssembly = typeof(IdentityExtension).Assembly.FullName;
-        var settings = configuration.GetSection("AppConfig").Get<AppConfig>();
+        var settings = configuration.GetSection(nameof(AppConfig)).Get<AppConfig>();
 
         services
             .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)

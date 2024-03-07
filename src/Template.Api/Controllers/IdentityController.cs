@@ -1,11 +1,8 @@
 using System.Security.Claims;
-using Duende.IdentityServer;
 using Duende.IdentityServer.Services;
 using MediatR;
-using Microsoft.AspNetCore.Authentication.Google;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Template.Application.Identity.Commands.ChangePassword;
 using Template.Application.Identity.Commands.CreateUser;
@@ -19,7 +16,6 @@ using Template.Application.Identity.Queries.GetProvider;
 using Template.Domain.Common.Constants;
 using Template.Domain.Common.Models;
 using Template.Domain.Identity.Constants.Authorization;
-using Template.Domain.Identity.Entites;
 
 namespace Template.Api.Controllers;
 
@@ -29,13 +25,11 @@ namespace Template.Api.Controllers;
 public class IdentityController(
     ILogger<IdentityController> logger,
     IMediator mediator,
-    SignInManager<User> signInManager,
     IIdentityServerInteractionService interaction
 ) : ControllerBase
 {
     private readonly ILogger<IdentityController> _logger = logger;
     private readonly IMediator _mediator = mediator;
-    private readonly SignInManager<User> _signInManager = signInManager;
     private readonly IIdentityServerInteractionService _interaction = interaction;
 
     [AllowAnonymous]
@@ -159,7 +153,7 @@ public class IdentityController(
     }
 
     [Authorize(
-        AuthenticationSchemes = AuthenticationScheme.DefaultAndGoogle,
+        AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme,
         Policy = Policy.UpdatePassword
     )]
     [HttpPut("password/change")]
@@ -188,7 +182,7 @@ public class IdentityController(
     }
 
     [Authorize(
-        AuthenticationSchemes = AuthenticationScheme.DefaultAndGoogle,
+        AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme,
         Policy = Policy.Delete
     )]
     [HttpDelete("delete")]
@@ -256,7 +250,6 @@ public class IdentityController(
         }
     }
 
-    [Authorize]
     [HttpGet(TemplateDefaults.LogoutPath)]
     public async Task<IActionResult> Logout(string logoutId)
     {

@@ -17,7 +17,7 @@ public static class DependencyInjection
         IConfiguration configuration
     )
     {
-        services.Configure<AppConfig>(configuration.GetSection("AppConfig"));
+        services.Configure<AppConfig>(configuration.GetSection(nameof(AppConfig)));
 
         services
             .AddIdentityConfiguration(configuration)
