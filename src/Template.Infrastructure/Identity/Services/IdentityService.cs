@@ -1,10 +1,7 @@
-using System.Security.Claims;
 using System.Text;
-using IdentityModel;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Logging;
-using Microsoft.Identity.Client;
 using Template.Application.Identity.Commands.ChangePassword;
 using Template.Application.Identity.Commands.CreateUser;
 using Template.Application.Identity.Commands.ResetPassword;
@@ -14,7 +11,6 @@ using Template.Application.Identity.Interfaces;
 using Template.Domain.Common.Models;
 using Template.Domain.Identity.Constants.Errors;
 using Template.Domain.Identity.Entites;
-using Template.Domain.IdentityServer.Constants.Authorization;
 using Template.Infrastructure.Identity.Services.Extensions;
 
 namespace Template.Infrastructure.Identity.Services;
