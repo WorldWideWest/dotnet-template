@@ -44,7 +44,6 @@ public class CreateUserCommandHandler(
             if (!verificationTokenResult.Succeeded)
                 return Result<object>.Failed(verificationTokenResult.Errors.ToArray());
 
-            Console.WriteLine($"Email Token: {verificationTokenResult.Body}");
             var parameters = _emailService.GenerateEmailConfirmationParameters(
                 searchResult.Body,
                 verificationTokenResult.Body
