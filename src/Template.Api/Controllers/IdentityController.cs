@@ -1,5 +1,4 @@
 using System.Security.Claims;
-using Duende.IdentityServer.Services;
 using MediatR;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
@@ -22,15 +21,11 @@ namespace Template.Api.Controllers;
 [ApiController]
 [Route("api/[controller]")]
 [ApiVersion("1.0")]
-public class IdentityController(
-    ILogger<IdentityController> logger,
-    IMediator mediator,
-    IIdentityServerInteractionService interaction
-) : ControllerBase
+public class IdentityController(ILogger<IdentityController> logger, IMediator mediator)
+    : ControllerBase
 {
     private readonly ILogger<IdentityController> _logger = logger;
     private readonly IMediator _mediator = mediator;
-    private readonly IIdentityServerInteractionService _interaction = interaction;
 
     [AllowAnonymous]
     [HttpPost("register")]
@@ -217,6 +212,7 @@ public class IdentityController(
             var request = new GetProviderQuery(returnUrl, Request);
 
             var result = await _mediator.Send(request);
+
             if (!result.Succeeded)
                 return BadRequest(result);
 
@@ -238,6 +234,7 @@ public class IdentityController(
             var request = new ExternalSignInCommand(HttpContext);
 
             var result = await _mediator.Send(request);
+
             if (!result.Succeeded)
                 return BadRequest(result);
 
@@ -250,14 +247,16 @@ public class IdentityController(
         }
     }
 
+    [AllowAnonymous]
     [HttpGet(TemplateDefaults.LogoutPath)]
     public async Task<IActionResult> Logout(string logoutId)
     {
         try
         {
-            var request = new ExternalSignOutCommand(HttpContext, logoutId ?? string.Empty);
+            var request = new ExternalSignOutCommand(logoutId);
 
             var result = await _mediator.Send(request);
+
             if (!result.Succeeded)
                 return BadRequest(result);
 

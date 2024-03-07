@@ -1,9 +1,4 @@
-using Duende.IdentityServer;
-using Duende.IdentityServer.Extensions;
-using IdentityModel;
 using MediatR;
-using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using Template.Application.Identity.Extensions;
 using Template.Application.Identity.Interfaces;
