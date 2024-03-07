@@ -149,7 +149,7 @@ public class IdentityController(ILogger<IdentityController> logger, IMediator me
 
     [Authorize(
         AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme,
-        Policy = Policy.UpdatePassword
+        Policy = Policy.UpdateProfilePasswordAccess
     )]
     [HttpPut("password/change")]
     [ProducesResponseType(typeof(Result<object>), StatusCodes.Status200OK)]
@@ -178,7 +178,7 @@ public class IdentityController(ILogger<IdentityController> logger, IMediator me
 
     [Authorize(
         AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme,
-        Policy = Policy.Delete
+        Policy = Policy.DeleteAccess
     )]
     [HttpDelete("delete")]
     [ProducesResponseType(typeof(Result<object>), StatusCodes.Status200OK)]

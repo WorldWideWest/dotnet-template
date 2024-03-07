@@ -56,7 +56,7 @@ public static class IdentityExtension
         services.AddAuthorization(options =>
         {
             options.AddPolicy(
-                Policy.Read,
+                Policy.ReadAccess,
                 policy =>
                 {
                     policy.RequireAuthenticatedUser();
@@ -65,7 +65,7 @@ public static class IdentityExtension
             );
 
             options.AddPolicy(
-                Policy.Write,
+                Policy.WriteAccess,
                 policy =>
                 {
                     policy.RequireAuthenticatedUser();
@@ -74,7 +74,7 @@ public static class IdentityExtension
             );
 
             options.AddPolicy(
-                Policy.Update,
+                Policy.UpdateAccess,
                 policy =>
                 {
                     policy.RequireAuthenticatedUser();
@@ -83,7 +83,7 @@ public static class IdentityExtension
             );
 
             options.AddPolicy(
-                Policy.Delete,
+                Policy.DeleteAccess,
                 policy =>
                 {
                     policy.RequireAuthenticatedUser();
@@ -92,12 +92,12 @@ public static class IdentityExtension
             );
 
             options.AddPolicy(
-                Policy.UpdatePassword,
+                Policy.UpdateProfilePasswordAccess,
                 policy =>
                 {
                     policy.RequireAuthenticatedUser();
                     policy.RequireClaim(JwtClaimTypes.Scope, ApiScope.Update);
-                    policy.RequireClaim(JwtClaimTypes.Scope, ApiScope.UpdatePassword);
+                    policy.RequireClaim(JwtClaimTypes.Scope, ApiScope.UpdateProfilePassword);
                 }
             );
         });

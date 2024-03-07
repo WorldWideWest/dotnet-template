@@ -8,5 +8,5 @@ public static class ApiScope
     public const string Delete = $"{ApiResource.Template}_delete";
     public const string Test = $"{ApiResource.Template}_test";
 
-    public const string UpdatePassword = $"{ApiResource.Template}_update_profile_password";
+    public const string UpdateProfilePassword = $"{ApiResource.Template}_update_profile_password";
 }
