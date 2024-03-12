@@ -1,6 +1,5 @@
-using System.Security.Claims;
 using System.Text;
-using IdentityModel;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Logging;
 using Template.Application.Identity.Commands.ChangePassword;
@@ -12,18 +11,21 @@ using Template.Application.Identity.Interfaces;
 using Template.Domain.Common.Models;
 using Template.Domain.Identity.Constants.Errors;
 using Template.Domain.Identity.Entites;
+using Template.Infrastructure.Identity.Services.Extensions;
 
 namespace Template.Infrastructure.Identity.Services;
 
 public sealed class IdentityService(
     ILogger<IdentityService> logger,
     UserManager<User> userManager,
-    IPasswordHasher<User> passwordHasher
+    IPasswordHasher<User> passwordHasher,
+    SignInManager<User> signInManager
 ) : IIdentityService
 {
     private readonly ILogger<IdentityService> _logger = logger;
     private readonly UserManager<User> _userManager = userManager;
     private readonly IPasswordHasher<User> _passwordHasher = passwordHasher;
+    private readonly SignInManager<User> _signInManager = signInManager;
 
     public async Task<Result<User>> FindUserAsync(FindUserDto request)
     {
@@ -31,7 +33,7 @@ public sealed class IdentityService(
         {
             var result = await _userManager.FindByEmailAsync(request.Email).ConfigureAwait(false);
             if (result is null)
-                return Result<User>.Failed(ErrorCode.ERR_USER, ErrorMessage.USER_DOES_NOT_EXIST);
+                return Result<User>.Failed(ErrorCode.DuplicateUser, ErrorMessage.DuplicateUser);
 
             return Result<User>.Success(result);
         }
@@ -48,7 +50,7 @@ public sealed class IdentityService(
         {
             var searchResult = await FindUserAsync(new(request.Email));
             if (searchResult.Succeeded)
-                return Result<object>.Failed(ErrorCode.ERR_USER, ErrorMessage.USER_ALREADY_EXISTS);
+                return Result<object>.Failed(ErrorCode.DuplicateUser, ErrorMessage.DuplicateUser);
 
             var user = CreateUserDto.ToEntity(request);
             user.PasswordHash = _passwordHasher.HashPassword(user, request.Password);
@@ -107,14 +109,7 @@ public sealed class IdentityService(
                 return Result<object>.Failed(result.Errors.ToArray());
 
             var claimsResult = await _userManager
-                .AddClaimsAsync(
-                    searchResult.Body,
-                    [
-                        new Claim(JwtClaimTypes.Email, searchResult.Body.Email),
-                        new Claim(JwtClaimTypes.GivenName, searchResult.Body.FirstName),
-                        new Claim(JwtClaimTypes.FamilyName, searchResult.Body.LastName)
-                    ]
-                )
+                .AddClaimsAsync(searchResult.Body, searchResult.Body.SelectClaims())
                 .ConfigureAwait(false);
 
             if (!claimsResult.Succeeded)
@@ -192,8 +187,8 @@ public sealed class IdentityService(
 
             if (!isOldPasswordCorrect)
                 return Result<object>.Failed(
-                    ErrorCode.ERR_PASSWORD,
-                    ErrorMessage.PASSWORD_NOT_MATCHING
+                    ErrorCode.InvalidPassword,
+                    ErrorMessage.InvalidPassword
                 );
 
             var user = searchResult.Body;
@@ -231,6 +226,45 @@ public sealed class IdentityService(
         catch (Exception ex)
         {
             _logger.LogError(ex, ex.Message, nameof(DeleteUserAsync));
+            throw;
+        }
+    }
+
+    public async Task<Result<object>> RegisterExternalAsync(AuthenticateResult result)
+    {
+        try
+        {
+            var provider = result.FindIdentityProvider();
+
+            var userId = result.FindUserId();
+            var user = await _userManager.FindByLoginAsync(provider, userId).ConfigureAwait(false);
+
+            if (user is null)
+            {
+                user = result.Principal.ToEntity();
+                var userResult = await _userManager.CreateAsync(user).ConfigureAwait(false);
+
+                if (!userResult.Succeeded)
+                    return Result<object>.Failed(userResult.Errors.ToArray());
+
+                var claimsResult = await _userManager
+                    .AddClaimsAsync(user, user.SelectClaims(provider))
+                    .ConfigureAwait(false);
+
+                if (!claimsResult.Succeeded)
+                    return Result<object>.Failed(claimsResult.Errors.ToArray());
+            }
+
+            var info = new UserLoginInfo(provider, userId, provider);
+
+            await _userManager.AddLoginAsync(user, info).ConfigureAwait(false);
+            await _signInManager.SignInAsync(user, isPersistent: false).ConfigureAwait(false);
+
+            return Result<object>.Success();
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, ex.Message, nameof(RegisterExternalAsync));
             throw;
         }
     }

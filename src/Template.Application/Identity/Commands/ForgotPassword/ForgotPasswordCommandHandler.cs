@@ -9,12 +9,17 @@ using Template.Domain.Email.Enums;
 namespace Template.Application.Identity.Commands.ForgotPassword;
 
 public class ForgotPasswordCommandHandler(
-    ILogger<ForgotPasswordCommandHandler> _logger,
-    IIdentityService _identityService,
-    IValidationFactory _validationFactory,
-    IEmailService _emailService
+    ILogger<ForgotPasswordCommandHandler> logger,
+    IIdentityService identityService,
+    IValidationFactory validationFactory,
+    IEmailService emailService
 ) : IRequestHandler<ForgotPasswordCommand, Result<object>>
 {
+    private readonly ILogger<ForgotPasswordCommandHandler> _logger = logger;
+    private readonly IIdentityService _identityService = identityService;
+    private readonly IValidationFactory _validationFactory = validationFactory;
+    private readonly IEmailService _emailService = emailService;
+
     public async Task<Result<object>> Handle(
         ForgotPasswordCommand request,
         CancellationToken cancellationToken

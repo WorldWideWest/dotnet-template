@@ -1,3 +1,4 @@
+using IdentityModel;
 using Microsoft.AspNetCore.Identity;
 
 namespace Template.Domain.Identity.Entites;

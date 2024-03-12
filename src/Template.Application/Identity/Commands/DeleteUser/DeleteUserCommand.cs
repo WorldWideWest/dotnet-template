@@ -4,8 +4,4 @@ using Template.Domain.Common.Models;
 
 namespace Template.Application.Identity.Commands.DeleteUser;
 
-public record DeleteUserCommand : IRequest<Result<object>>
-{
-    [JsonIgnore]
-    public string Email { get; set; }
-};
+public record DeleteUserCommand(string Email) : IRequest<Result<object>> { };

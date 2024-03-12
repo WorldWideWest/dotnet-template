@@ -51,5 +51,5 @@ docker-compose -f ./docker-compose.debug.amd.yml down && docker-compose -f ./doc
 | Status of Implementation      | Description | Issue |
 | ----------- | ----------- |----------
 | ✅      | Compose file for AMD64 architecture | [#12](https://github.com/WorldWideWest/dotnet-template/issues/12)
-| ❌      | Debugging using VS Code Debugger | [#1](https://github.com/WorldWideWest/dotnet-template/issues/1)
+| ✅      | Debugging using VS Code Debugger | [#1](https://github.com/WorldWideWest/dotnet-template/issues/1)
 | ✅      | Startup Script that generates SSL certificates and runs the dotnet watch command | [#14](https://github.com/WorldWideWest/dotnet-template/issues/14)

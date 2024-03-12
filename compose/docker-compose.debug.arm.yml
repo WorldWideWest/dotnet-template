@@ -70,7 +70,11 @@ services:
       timeout: 10s
       retries: 5
       start_period: 10s
-
+    develop:
+      watch:
+        - path: ./src
+          target: /app/src
+          action: sync
 
   nginx:
     build:

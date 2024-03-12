@@ -1,8 +1,8 @@
 using Microsoft.AspNetCore.HttpOverrides;
 
-namespace Template.Api.Configurations;
+namespace Template.Api.Extensions;
 
-public static class ForwardedHeadersConfiguration
+public static class ForwardedHeadersExtension
 {
     public static IApplicationBuilder UseForwardedHeadersConfiguration(this IApplicationBuilder app)
     {

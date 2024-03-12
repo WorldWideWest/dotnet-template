@@ -1,4 +1,6 @@
+using Duende.IdentityServer;
 using IdentityModel;
+using Microsoft.AspNetCore.Authentication.Google;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -10,18 +12,18 @@ using Template.Domain.Identity.Entites;
 using Template.Domain.IdentityServer.Constants.Authorization;
 using Template.Infrastructure.Data;
 
-namespace Template.Infrastructure.Identity.Configurations;
+namespace Template.Infrastructure.Identity.Extensions;
 
-public static class IdentityConfiguration
+public static class IdentityExtension
 {
-    public static IServiceCollection ConfigureIdentity(
+    public static IServiceCollection AddIdentityConfiguration(
         this IServiceCollection services,
         IConfiguration configuration
     )
     {
         var connectionString = configuration.GetConnectionString("DefaultConnection");
-        var migrationAssembly = typeof(IdentityConfiguration).Assembly.FullName;
-        var settings = configuration.GetSection("AppConfig").Get<AppConfig>();
+        var migrationAssembly = typeof(IdentityExtension).Assembly.FullName;
+        var settings = configuration.GetSection(nameof(AppConfig)).Get<AppConfig>();
 
         services
             .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
@@ -30,15 +32,31 @@ public static class IdentityConfiguration
                 options =>
                 {
                     options.RequireHttpsMetadata = false;
-                    options.Audience = "Template";
+                    options.Audience = ApiResource.Template;
                     options.Authority = settings.IdentityServerConfig.Authority;
+
+                    options.TokenValidationParameters.ValidateLifetime = true;
+                    options.TokenValidationParameters.ClockSkew = TimeSpan.Zero;
+                }
+            )
+            .AddGoogle(
+                GoogleDefaults.AuthenticationScheme,
+                options =>
+                {
+                    var google = settings.IdentityServerConfig.Clients.GoogleWeb;
+
+                    options.SignInScheme =
+                        IdentityServerConstants.ExternalCookieAuthenticationScheme;
+
+                    options.ClientId = google.ExternalClientId;
+                    options.ClientSecret = google.ExternalClientSecret;
                 }
             );
 
         services.AddAuthorization(options =>
         {
             options.AddPolicy(
-                Policy.Read,
+                Policy.ReadAccess,
                 policy =>
                 {
                     policy.RequireAuthenticatedUser();
@@ -47,7 +65,7 @@ public static class IdentityConfiguration
             );
 
             options.AddPolicy(
-                Policy.Write,
+                Policy.WriteAccess,
                 policy =>
                 {
                     policy.RequireAuthenticatedUser();
@@ -56,7 +74,7 @@ public static class IdentityConfiguration
             );
 
             options.AddPolicy(
-                Policy.Update,
+                Policy.UpdateAccess,
                 policy =>
                 {
                     policy.RequireAuthenticatedUser();
@@ -65,11 +83,21 @@ public static class IdentityConfiguration
             );
 
             options.AddPolicy(
-                Policy.Delete,
+                Policy.DeleteAccess,
                 policy =>
                 {
                     policy.RequireAuthenticatedUser();
                     policy.RequireClaim(JwtClaimTypes.Scope, ApiScope.Delete);
+                }
+            );
+
+            options.AddPolicy(
+                Policy.UpdateProfilePasswordAccess,
+                policy =>
+                {
+                    policy.RequireAuthenticatedUser();
+                    policy.RequireClaim(JwtClaimTypes.Scope, ApiScope.Update);
+                    policy.RequireClaim(JwtClaimTypes.Scope, ApiScope.UpdateProfilePassword);
                 }
             );
         });

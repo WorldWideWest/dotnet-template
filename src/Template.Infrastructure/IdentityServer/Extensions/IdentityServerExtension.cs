@@ -1,22 +1,23 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Template.Domain.Common.Constants;
 using Template.Domain.Common.Models;
 using Template.Domain.Identity.Entites;
 using Template.Infrastructure.IdentityServer.Services;
 
-namespace Template.Infrastructure.IdentityServer.Configurations;
+namespace Template.Infrastructure.IdentityServer.Extensions;
 
-public static class IdentityServerConfiguration
+public static class IdentityServerExtension
 {
-    public static IServiceCollection ConfigureIdentityServer(
+    public static IServiceCollection AddIdentityServerConfiguration(
         this IServiceCollection services,
         IConfiguration configuration
     )
     {
         var connectionString = configuration.GetConnectionString("DefaultConnection");
-        var migrationAssembly = typeof(IdentityServerConfiguration).Assembly.FullName;
-        var settings = configuration.GetSection("AppConfig").Get<AppConfig>();
+        var migrationAssembly = typeof(IdentityServerExtension).Assembly.FullName;
+        var settings = configuration.GetSection(nameof(AppConfig)).Get<AppConfig>();
 
         services
             .AddIdentityServer(options =>
@@ -29,6 +30,9 @@ public static class IdentityServerConfiguration
                 options.Authentication.CookieLifetime = TimeSpan.FromDays(30);
                 options.Authentication.CookieSlidingExpiration = true;
                 options.IssuerUri = settings.IdentityServerConfig.IssuerUri;
+
+                options.UserInteraction.LoginUrl = TemplateDefaults.LoginUrl;
+                options.UserInteraction.LogoutUrl = TemplateDefaults.LogoutUrl;
             })
             .AddConfigurationStore(options =>
             {

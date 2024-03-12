@@ -6,10 +6,13 @@ using Template.Domain.Common.Models;
 namespace Template.Application.Identity.Commands.DeleteUser;
 
 public class DeleteUserCommandHandler(
-    ILogger<DeleteUserCommandHandler> _logger,
-    IIdentityService _identityService
+    ILogger<DeleteUserCommandHandler> logger,
+    IIdentityService identityService
 ) : IRequestHandler<DeleteUserCommand, Result<object>>
 {
+    private readonly ILogger<DeleteUserCommandHandler> _logger = logger;
+    private readonly IIdentityService _identityService = identityService;
+
     public async Task<Result<object>> Handle(
         DeleteUserCommand request,
         CancellationToken cancellationToken

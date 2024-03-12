@@ -4,7 +4,7 @@ public static class ClientId
 {
     public const string Web = "web";
     public const string Mobile = "mobile";
-    public const string GoogleWeb = "google.web";
+    public const string GoogleWeb = "google_web";
 }
 
 public static class ClientName

@@ -9,12 +9,17 @@ using Template.Domain.Email.Enums;
 namespace Template.Application.Identity.Commands.CreateUser;
 
 public class CreateUserCommandHandler(
-    ILogger<CreateUserCommandHandler> _logger,
-    IIdentityService _identityService,
-    IValidationFactory _validationFactory,
-    IEmailService _emailService
+    ILogger<CreateUserCommandHandler> logger,
+    IIdentityService identityService,
+    IValidationFactory validationFactory,
+    IEmailService emailService
 ) : IRequestHandler<CreateUserCommand, Result<object>>
 {
+    private readonly ILogger<CreateUserCommandHandler> _logger = logger;
+    private readonly IIdentityService _identityService = identityService;
+    private readonly IValidationFactory _validationFactory = validationFactory;
+    private readonly IEmailService _emailService = emailService;
+
     public async Task<Result<object>> Handle(
         CreateUserCommand request,
         CancellationToken cancellationToken

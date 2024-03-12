@@ -6,10 +6,13 @@ using Microsoft.AspNetCore.Mvc;
 using Template.Application.Identity.Commands.ChangePassword;
 using Template.Application.Identity.Commands.CreateUser;
 using Template.Application.Identity.Commands.DeleteUser;
+using Template.Application.Identity.Commands.ExternalSignIn;
 using Template.Application.Identity.Commands.ForgotPassword;
 using Template.Application.Identity.Commands.ResendConfirmationEmail;
 using Template.Application.Identity.Commands.ResetPassword;
 using Template.Application.Identity.Commands.VerifyEmail;
+using Template.Application.Identity.Queries.GetProvider;
+using Template.Domain.Common.Constants;
 using Template.Domain.Common.Models;
 using Template.Domain.Identity.Constants.Authorization;
 
@@ -18,9 +21,12 @@ namespace Template.Api.Controllers;
 [ApiController]
 [Route("api/[controller]")]
 [ApiVersion("1.0")]
-public class IdentityController(ILogger<IdentityController> _logger, IMediator _mediator)
+public class IdentityController(ILogger<IdentityController> logger, IMediator mediator)
     : ControllerBase
 {
+    private readonly ILogger<IdentityController> _logger = logger;
+    private readonly IMediator _mediator = mediator;
+
     [AllowAnonymous]
     [HttpPost("register")]
     [ProducesResponseType(typeof(Result<object>), StatusCodes.Status200OK)]
@@ -143,7 +149,7 @@ public class IdentityController(ILogger<IdentityController> _logger, IMediator _
 
     [Authorize(
         AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme,
-        Policy = Policy.Update
+        Policy = Policy.UpdateProfilePasswordAccess
     )]
     [HttpPut("password/change")]
     [ProducesResponseType(typeof(Result<object>), StatusCodes.Status200OK)]
@@ -172,18 +178,16 @@ public class IdentityController(ILogger<IdentityController> _logger, IMediator _
 
     [Authorize(
         AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme,
-        Policy = Policy.Delete
+        Policy = Policy.DeleteAccess
     )]
     [HttpDelete("delete")]
     [ProducesResponseType(typeof(Result<object>), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(Result<object>), StatusCodes.Status400BadRequest)]
-    public async Task<ActionResult<Result<object>>> DeleteUserAsync(
-        [FromBody] DeleteUserCommand request
-    )
+    public async Task<ActionResult<Result<object>>> DeleteUserAsync()
     {
         try
         {
-            request.Email = User.FindFirst(ClaimTypes.Email)?.Value;
+            var request = new DeleteUserCommand(User.FindFirst(ClaimTypes.Email)?.Value);
 
             var result = await _mediator.Send(request);
 
@@ -195,6 +199,72 @@ public class IdentityController(ILogger<IdentityController> _logger, IMediator _
         catch (Exception ex)
         {
             _logger.LogError(ex, ex.Message, nameof(DeleteUserAsync));
+            throw;
+        }
+    }
+
+    [AllowAnonymous]
+    [HttpGet(TemplateDefaults.LoginPath)]
+    public async Task<IActionResult> Login(string returnUrl)
+    {
+        try
+        {
+            var request = new GetProviderQuery(returnUrl, Request);
+
+            var result = await _mediator.Send(request);
+
+            if (!result.Succeeded)
+                return BadRequest(result);
+
+            return Challenge(result.Body.Properties, result.Body.Provider);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, ex.Message, nameof(Login));
+            throw;
+        }
+    }
+
+    [AllowAnonymous]
+    [HttpGet(TemplateDefaults.CallbackPath)]
+    public async Task<IActionResult> ExternalLoginCallback()
+    {
+        try
+        {
+            var request = new ExternalSignInCommand(HttpContext);
+
+            var result = await _mediator.Send(request);
+
+            if (!result.Succeeded)
+                return BadRequest(result);
+
+            return Redirect(result.Body);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, ex.Message, nameof(ExternalLoginCallback));
+            throw;
+        }
+    }
+
+    [AllowAnonymous]
+    [HttpGet(TemplateDefaults.LogoutPath)]
+    public async Task<IActionResult> Logout(string logoutId)
+    {
+        try
+        {
+            var request = new ExternalSignOutCommand(logoutId);
+
+            var result = await _mediator.Send(request);
+
+            if (!result.Succeeded)
+                return BadRequest(result);
+
+            return Redirect(result.Body);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, ex.Message, nameof(Logout));
             throw;
         }
     }

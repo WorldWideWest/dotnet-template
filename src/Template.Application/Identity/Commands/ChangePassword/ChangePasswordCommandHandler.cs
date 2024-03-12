@@ -7,11 +7,15 @@ using Template.Domain.Common.Models;
 namespace Template.Application.Identity.Commands.ChangePassword;
 
 public class ChangePasswordCommandHandler(
-    ILogger<ChangePasswordCommandHandler> _logger,
-    IIdentityService _identityService,
-    IValidationFactory _validationFactory
+    ILogger<ChangePasswordCommandHandler> logger,
+    IIdentityService identityService,
+    IValidationFactory validationFactory
 ) : IRequestHandler<ChangePasswordCommand, Result<object>>
 {
+    private readonly ILogger<ChangePasswordCommandHandler> _logger = logger;
+    private readonly IIdentityService _identityService = identityService;
+    private readonly IValidationFactory _validationFactory = validationFactory;
+
     public async Task<Result<object>> Handle(
         ChangePasswordCommand request,
         CancellationToken cancellationToken

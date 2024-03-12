@@ -7,9 +7,9 @@ using Microsoft.Extensions.DependencyInjection;
 using Template.Domain.Common.Models;
 using Template.Infrastructure.Data;
 
-namespace Template.Infrastructure.IdentityServer.Configurations;
+namespace Template.Infrastructure.IdentityServer.Extensions;
 
-public class IdentityServerMigrationConfiguration
+public class IdentityServerMigrationExtension
 {
     public static async Task ApplyMigrationsAsync(WebApplication app)
     {
@@ -35,7 +35,7 @@ public class IdentityServerMigrationConfiguration
     {
         var settings = configuration.GetSection("AppConfig").Get<AppConfig>();
 
-        foreach (var scope in IdentityServerResourceConfiguration.ApiScopes)
+        foreach (var scope in IdentityServerResourceExtension.ApiScopes)
         {
             var exists = context.ApiScopes.Any(x => x.Name == scope.Name);
             if (!exists)
@@ -44,7 +44,7 @@ public class IdentityServerMigrationConfiguration
             await context.SaveChangesAsync();
         }
 
-        foreach (var resource in IdentityServerResourceConfiguration.IdentityResources)
+        foreach (var resource in IdentityServerResourceExtension.IdentityResources)
         {
             var exists = context.IdentityResources.Any(x => x.Name == resource.Name);
             if (!exists)
@@ -53,7 +53,7 @@ public class IdentityServerMigrationConfiguration
             await context.SaveChangesAsync();
         }
 
-        foreach (var resource in IdentityServerResourceConfiguration.ApiResources)
+        foreach (var resource in IdentityServerResourceExtension.ApiResources)
         {
             var exists = context.ApiResources.Any(x => x.Name == resource.Name);
             if (!exists)
@@ -62,7 +62,7 @@ public class IdentityServerMigrationConfiguration
             await context.SaveChangesAsync();
         }
 
-        foreach (var client in IdentityServerResourceConfiguration.Clients(settings))
+        foreach (var client in IdentityServerResourceExtension.Clients(settings))
         {
             var exists = context.Clients.Any(x => x.ClientId == client.ClientId);
             if (!exists)

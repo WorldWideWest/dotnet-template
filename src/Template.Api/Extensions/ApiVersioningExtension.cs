@@ -1,11 +1,11 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Versioning;
 
-namespace Template.Api.Configurations;
+namespace Template.Api.Extensions;
 
-public static class ApiVersioningConfiguration
+public static class ApiVersioningExtension
 {
-    public static IServiceCollection ConfigureApiVersioning(this IServiceCollection services)
+    public static IServiceCollection AddApiVersioningConfiguration(this IServiceCollection services)
     {
         services.AddApiVersioning(options =>
         {

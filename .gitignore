@@ -5,6 +5,8 @@ project.lock.json
 *.pyc
 nupkg/
 
+appsettings.Internal.json
+
 # cert & key files
 compose/nginx/certs
 compose/nginx/keys

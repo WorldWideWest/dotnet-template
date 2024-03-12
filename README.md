@@ -54,4 +54,5 @@ This is implemented using GitHub Actions and the script can be found at `.github
 | ✅ | Safely manage not awaited calls | [#22](https://github.com/WorldWideWest/dotnet-template/issues/22)
 | ✅      | Global Error Handling | [#15](https://github.com/WorldWideWest/dotnet-template/issues/15)
 |  ❌      | Create an Actual .NET Project Template | [#16](https://github.com/WorldWideWest/dotnet-template/issues/16)
+|  ✅      | Adding External Login Provider support (Google) | )
 

@@ -12,13 +12,13 @@ public class ResendConfirmationEmailCommandValidator
         RuleFor(user => user.Email)
             .Cascade(CascadeMode.Continue)
             .NotEmpty()
-            .WithErrorCode(ErrorCode.PropertyError("EMAIL"))
+            .WithErrorCode(ErrorCode.PropertyError("Email"))
             .WithMessage(ErrorMessage.PropertyEmpty("Email"))
             .NotNull()
-            .WithErrorCode(ErrorCode.PropertyError("EMAIL"))
+            .WithErrorCode(ErrorCode.PropertyError("Email"))
             .WithMessage(ErrorMessage.PropertyEmpty("Email"))
             .Matches(Pattern.Email)
-            .WithErrorCode(ErrorCode.PropertyError("EMAIL"))
+            .WithErrorCode(ErrorCode.PropertyError("Email"))
             .WithMessage(ErrorMessage.PropertyError("Email"));
     }
 }

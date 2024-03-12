@@ -18,6 +18,7 @@ public class IdentityServerClients
 {
     public InternalClient Web { get; set; }
     public InternalClient Mobile { get; set; }
+    public ExternalClient GoogleWeb { get; set; }
 }
 
 public class InternalClient

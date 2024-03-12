@@ -7,11 +7,15 @@ using Template.Domain.Common.Models;
 namespace Template.Application.Identity.Commands.ResetPassword;
 
 public class ResetPasswordCommandHandler(
-    ILogger<ResetPasswordCommandHandler> _logger,
-    IIdentityService _identityService,
-    IValidationFactory _validationFactory
+    ILogger<ResetPasswordCommandHandler> logger,
+    IIdentityService identityService,
+    IValidationFactory validationFactory
 ) : IRequestHandler<ResetPasswordCommand, Result<object>>
 {
+    private readonly ILogger<ResetPasswordCommandHandler> _logger = logger;
+    private readonly IIdentityService _identityService = identityService;
+    private readonly IValidationFactory _validationFactory = validationFactory;
+
     public async Task<Result<object>> Handle(
         ResetPasswordCommand request,
         CancellationToken cancellationToken

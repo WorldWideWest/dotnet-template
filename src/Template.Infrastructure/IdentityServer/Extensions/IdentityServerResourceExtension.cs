@@ -4,9 +4,9 @@ using IdentityModel;
 using Template.Domain.Common.Models;
 using DomainIdentityServerConstants = Template.Domain.IdentityServer.Constants.Authorization;
 
-namespace Template.Infrastructure.IdentityServer.Configurations;
+namespace Template.Infrastructure.IdentityServer.Extensions;
 
-public class IdentityServerResourceConfiguration
+public class IdentityServerResourceExtension
 {
     /// <summary>
     /// Returns a collection of API scopes representing different permissions for accessing endpoints.
@@ -49,10 +49,18 @@ public class IdentityServerResourceConfiguration
             },
             new()
             {
+                Name = DomainIdentityServerConstants.ApiScope.UpdateProfilePassword,
+                DisplayName = DomainIdentityServerConstants.ApiScope.UpdateProfilePassword,
+                Description = "Authorized to change passwords",
+                Required = false,
+                UserClaims = new List<string> { JwtClaimTypes.Email, }
+            },
+            new()
+            {
                 Name = DomainIdentityServerConstants.ApiScope.Test,
                 DisplayName = DomainIdentityServerConstants.ApiScope.Test,
                 Description = "Testing Scope",
-                Required = true,
+                Required = false,
                 UserClaims = new List<string> { JwtClaimTypes.Email, }
             },
         };
@@ -74,13 +82,13 @@ public class IdentityServerResourceConfiguration
                     DomainIdentityServerConstants.ApiScope.Write,
                     DomainIdentityServerConstants.ApiScope.Update,
                     DomainIdentityServerConstants.ApiScope.Delete,
+                    DomainIdentityServerConstants.ApiScope.UpdateProfilePassword,
                 },
                 UserClaims = new List<string>
                 {
                     JwtClaimTypes.Email,
                     JwtClaimTypes.GivenName,
                     JwtClaimTypes.FamilyName,
-                    JwtClaimTypes.Profile,
                 }
             }
         };
@@ -108,6 +116,7 @@ public class IdentityServerResourceConfiguration
                     DomainIdentityServerConstants.ApiScope.Write,
                     DomainIdentityServerConstants.ApiScope.Update,
                     DomainIdentityServerConstants.ApiScope.Delete,
+                    DomainIdentityServerConstants.ApiScope.UpdateProfilePassword,
                     IdentityServerConstants.StandardScopes.Profile,
                     IdentityServerConstants.StandardScopes.OpenId,
                     IdentityServerConstants.StandardScopes.OfflineAccess,
@@ -135,6 +144,7 @@ public class IdentityServerResourceConfiguration
                     DomainIdentityServerConstants.ApiScope.Write,
                     DomainIdentityServerConstants.ApiScope.Update,
                     DomainIdentityServerConstants.ApiScope.Delete,
+                    DomainIdentityServerConstants.ApiScope.UpdateProfilePassword,
                     IdentityServerConstants.StandardScopes.Profile,
                     IdentityServerConstants.StandardScopes.OpenId,
                     IdentityServerConstants.StandardScopes.OfflineAccess,
@@ -144,6 +154,44 @@ public class IdentityServerResourceConfiguration
                 {
                     new Secret(configuration.IdentityServerConfig.Clients.Mobile.Secret.Sha256()),
                 },
+                AllowOfflineAccess = true,
+                RefreshTokenUsage = TokenUsage.OneTimeOnly,
+                Enabled = true,
+            },
+            new()
+            {
+                ClientId = DomainIdentityServerConstants.ClientId.GoogleWeb,
+                ClientName = DomainIdentityServerConstants.ClientName.GoogleWeb,
+                AllowedGrantTypes = GrantTypes.Code,
+                AlwaysSendClientClaims = true,
+                AlwaysIncludeUserClaimsInIdToken = true,
+                RequireClientSecret = true,
+                AllowedScopes =
+                {
+                    DomainIdentityServerConstants.ApiScope.Read,
+                    DomainIdentityServerConstants.ApiScope.Write,
+                    DomainIdentityServerConstants.ApiScope.Update,
+                    DomainIdentityServerConstants.ApiScope.Delete,
+                    IdentityServerConstants.StandardScopes.Profile,
+                    IdentityServerConstants.StandardScopes.OpenId,
+                    IdentityServerConstants.StandardScopes.OfflineAccess,
+                    IdentityServerConstants.StandardScopes.Email,
+                },
+                ClientSecrets = new List<Secret>
+                {
+                    new Secret(
+                        configuration.IdentityServerConfig.Clients.GoogleWeb.InternalSecret.Sha256()
+                    ),
+                },
+                RedirectUris = [configuration.IdentityServerConfig.Clients.GoogleWeb.RedirectUri],
+                AllowedCorsOrigins =
+                [
+                    configuration.IdentityServerConfig.Clients.GoogleWeb.AllowedCorsOrigin
+                ],
+                PostLogoutRedirectUris =
+                [
+                    configuration.IdentityServerConfig.Clients.GoogleWeb.PostLogoutRedirectUri
+                ],
                 AllowOfflineAccess = true,
                 RefreshTokenUsage = TokenUsage.OneTimeOnly,
                 Enabled = true,
