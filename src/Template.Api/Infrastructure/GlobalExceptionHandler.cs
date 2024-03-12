@@ -18,7 +18,7 @@ public class GlobalExceptionHandler(ILogger<GlobalExceptionHandler> logger) : IE
 
         var error = new Error
         {
-            Code = ErrorCode.INTERNAL_SERVER_ERROR,
+            Code = ErrorCode.InternalServerError,
             Description = ErrorMessage.INTERNAL_SERVER_ERROR
         };
 

@@ -33,7 +33,7 @@ public sealed class IdentityService(
         {
             var result = await _userManager.FindByEmailAsync(request.Email).ConfigureAwait(false);
             if (result is null)
-                return Result<User>.Failed(ErrorCode.ERR_USER, ErrorMessage.USER_DOES_NOT_EXIST);
+                return Result<User>.Failed(ErrorCode.DuplicateUser, ErrorMessage.DuplicateUser);
 
             return Result<User>.Success(result);
         }
@@ -50,7 +50,7 @@ public sealed class IdentityService(
         {
             var searchResult = await FindUserAsync(new(request.Email));
             if (searchResult.Succeeded)
-                return Result<object>.Failed(ErrorCode.ERR_USER, ErrorMessage.USER_ALREADY_EXISTS);
+                return Result<object>.Failed(ErrorCode.DuplicateUser, ErrorMessage.DuplicateUser);
 
             var user = CreateUserDto.ToEntity(request);
             user.PasswordHash = _passwordHasher.HashPassword(user, request.Password);
@@ -187,8 +187,8 @@ public sealed class IdentityService(
 
             if (!isOldPasswordCorrect)
                 return Result<object>.Failed(
-                    ErrorCode.ERR_PASSWORD,
-                    ErrorMessage.PASSWORD_NOT_MATCHING
+                    ErrorCode.InvalidPassword,
+                    ErrorMessage.InvalidPassword
                 );
 
             var user = searchResult.Body;
