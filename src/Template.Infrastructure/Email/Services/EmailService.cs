@@ -64,10 +64,7 @@ public class EmailService(
             return new Dictionary<string, string>()
             {
                 { "fullName", $"{user.FirstName} {user.LastName}" },
-                {
-                    "url",
-                    $"{_options.FrontendConfig.Url}/confirm-email?email={user.Email}&token={token}"
-                }
+                { "url", $"{_options.FrontendConfig.Url}/verify?email={user.Email}&token={token}" }
             };
         }
         catch (Exception ex)
