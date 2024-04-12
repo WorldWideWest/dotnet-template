@@ -2,6 +2,7 @@ using Duende.IdentityServer;
 using IdentityModel;
 using Microsoft.AspNetCore.Authentication.Google;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -26,7 +27,7 @@ public static class IdentityExtension
         var settings = configuration.GetSection(nameof(AppConfig)).Get<AppConfig>();
 
         services
-            .AddAuthentication(JwtBearerDefaults.AuthenticationScheme) //MARK: Add default authentication handlers
+            .AddAuthentication()
             .AddJwtBearer(
                 JwtBearerDefaults.AuthenticationScheme,
                 options =>
@@ -100,6 +101,15 @@ public static class IdentityExtension
                     policy.RequireClaim(JwtClaimTypes.Scope, ApiScope.UpdateProfilePassword);
                 }
             );
+
+            // MARK: Add default authentication handlers
+            var defaultAuthorizationPolicy = new AuthorizationPolicyBuilder(
+                JwtBearerDefaults.AuthenticationScheme,
+                GoogleDefaults.AuthenticationScheme,
+                IdentityServerConstants.DefaultCookieAuthenticationScheme
+            );
+
+            options.DefaultPolicy = defaultAuthorizationPolicy.RequireAuthenticatedUser().Build();
         });
 
         services.AddDbContext<IdentityDbContext>(options =>
