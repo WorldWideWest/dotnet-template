@@ -2,13 +2,19 @@ using MediatR;
 using Template.Application.Identity.Common;
 using Template.Application.Identity.Interfaces;
 using Template.Domain.Common.Models;
+using Template.Domain.Identity.Constants.Errors;
 
 namespace Template.Application.Identity.Queries.GetProvider;
 
-public class GetProviderQueryHandler(List<IExternalProvider> providers)
+public class GetProviderQueryHandler
     : IRequestHandler<GetProviderQuery, Result<AuthenticationPropertiesResponse>>
 {
-    private readonly List<IExternalProvider> _providers = providers;
+    private readonly List<IExternalProvider> _providers;
+
+    public GetProviderQueryHandler(List<IExternalProvider> providers)
+    {
+        _providers = providers;
+    }
 
     public async Task<Result<AuthenticationPropertiesResponse>> Handle(
         GetProviderQuery request,
@@ -19,7 +25,7 @@ public class GetProviderQueryHandler(List<IExternalProvider> providers)
 
         if (provider is null)
         {
-            var error = new Error { Code = "", Description = " " };
+            var error = new Error(ErrorCode.ProviderNotFound, ErrorMessage.ProviderNotFound);
             return Result<AuthenticationPropertiesResponse>.Failed(error);
         }
 
