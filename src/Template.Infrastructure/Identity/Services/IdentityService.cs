@@ -271,8 +271,10 @@ public sealed class IdentityService : IIdentityService
 
             var info = new UserLoginInfo(provider, userId, provider);
 
-            await _userManager.AddLoginAsync(user, info).ConfigureAwait(false);
-            await _signInManager.SignInAsync(user, isPersistent: false).ConfigureAwait(false);
+            var addLogin = _userManager.AddLoginAsync(user, info);
+            var signIn = _signInManager.SignInAsync(user, isPersistent: false);
+
+            await Task.WhenAll(addLogin, signIn).ConfigureAwait(false);
 
             return Result<object>.Success();
         }
