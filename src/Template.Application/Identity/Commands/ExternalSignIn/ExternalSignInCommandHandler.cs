@@ -28,7 +28,7 @@ public class ExternalSignInCommandHandler(
 
             if (!authenticationResult.Succeeded)
                 return Result<string>.Failed(
-                    ErrorCode.ERR_TOKEN,
+                    ErrorCode.TokenError,
                     authenticationResult.Failure.Message
                 );
 

@@ -12,7 +12,6 @@ using Template.Application.Identity.Interfaces;
 using Template.Domain.Common.Models;
 using Template.Domain.Identity.Constants.Errors;
 using Template.Domain.Identity.Entites;
-using Template.Infrastructure.Identity.Services.Extensions;
 
 namespace Template.Infrastructure.Identity.Services;
 
@@ -42,7 +41,10 @@ public sealed class IdentityService : IIdentityService
         {
             var result = await _userManager.FindByEmailAsync(request.Email).ConfigureAwait(false);
             if (result is null)
-                return Result<User>.Failed(ErrorCode.DuplicateUser, ErrorMessage.DuplicateUser);
+                return Result<User>.Failed(
+                    ErrorCode.UserAlreadyExists,
+                    ErrorMessage.UserAlreadyExists
+                );
 
             return Result<User>.Success(result);
         }
@@ -59,7 +61,10 @@ public sealed class IdentityService : IIdentityService
         {
             var searchResult = await FindUserAsync(new(request.Email));
             if (searchResult.Succeeded)
-                return Result<object>.Failed(ErrorCode.DuplicateUser, ErrorMessage.DuplicateUser);
+                return Result<object>.Failed(
+                    ErrorCode.UserAlreadyExists,
+                    ErrorMessage.UserAlreadyExists
+                );
 
             var user = CreateUserDto.ToEntity(request);
             user.PasswordHash = _passwordHasher.HashPassword(user, request.Password);
@@ -243,9 +248,9 @@ public sealed class IdentityService : IIdentityService
     {
         try
         {
-            var provider = result.FindIdentityProvider();
+            var provider = result.SelectIdentityProvider();
 
-            var userId = result.FindUserId();
+            var userId = result.SelectUserId();
             var user = await _userManager.FindByLoginAsync(provider, userId).ConfigureAwait(false);
 
             if (user is null)

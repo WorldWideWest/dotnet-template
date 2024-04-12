@@ -21,16 +21,22 @@ namespace Template.Api.Controllers;
 [ApiController]
 [Route("api/[controller]")]
 [ApiVersion("1.0")]
-public class IdentityController(ILogger<IdentityController> logger, IMediator mediator)
-    : ControllerBase
+public class IdentityController : ControllerBase
 {
-    private readonly ILogger<IdentityController> _logger = logger;
-    private readonly IMediator _mediator = mediator;
+    private readonly ILogger<IdentityController> _logger;
+    private readonly IMediator _mediator;
+
+    public IdentityController(ILogger<IdentityController> logger, IMediator mediator)
+    {
+        _logger = logger;
+        _mediator = mediator;
+    }
 
     [AllowAnonymous]
     [HttpPost("register")]
     [ProducesResponseType(typeof(Result<object>), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(Result<object>), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(Result<object>), StatusCodes.Status500InternalServerError)]
     public async Task<ActionResult<Result<object>>> CreateUserAsnyc(
         [FromBody] CreateUserCommand request
     )
@@ -55,6 +61,7 @@ public class IdentityController(ILogger<IdentityController> logger, IMediator me
     [HttpPost("verify")]
     [ProducesResponseType(typeof(Result<object>), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(Result<object>), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(Result<object>), StatusCodes.Status500InternalServerError)]
     public async Task<ActionResult<Result<object>>> VerifyEmailAsnyc(
         [FromBody] VerifyEmailCommand request
     )
@@ -79,6 +86,7 @@ public class IdentityController(ILogger<IdentityController> logger, IMediator me
     [HttpPost("verify/resend")]
     [ProducesResponseType(typeof(Result<object>), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(Result<object>), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(Result<object>), StatusCodes.Status500InternalServerError)]
     public async Task<ActionResult<Result<object>>> ResendVerificationEmailAsnyc(
         [FromBody] ResendConfirmationEmailCommand request
     )
@@ -103,6 +111,7 @@ public class IdentityController(ILogger<IdentityController> logger, IMediator me
     [HttpPost("password/forgot")]
     [ProducesResponseType(typeof(Result<object>), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(Result<object>), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(Result<object>), StatusCodes.Status500InternalServerError)]
     public async Task<ActionResult<Result<object>>> ForgotPasswordAsync(
         [FromBody] ForgotPasswordCommand request
     )
@@ -127,6 +136,7 @@ public class IdentityController(ILogger<IdentityController> logger, IMediator me
     [HttpPost("password/reset")]
     [ProducesResponseType(typeof(Result<object>), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(Result<object>), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(Result<object>), StatusCodes.Status500InternalServerError)]
     public async Task<ActionResult<Result<object>>> ResetPasswordAsync(
         [FromBody] ResetPasswordCommand request
     )
@@ -154,6 +164,7 @@ public class IdentityController(ILogger<IdentityController> logger, IMediator me
     [HttpPut("password/change")]
     [ProducesResponseType(typeof(Result<object>), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(Result<object>), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(Result<object>), StatusCodes.Status500InternalServerError)]
     public async Task<ActionResult<Result<object>>> ChangetPasswordAsync(
         [FromBody] ChangePasswordCommand request
     )
@@ -183,6 +194,7 @@ public class IdentityController(ILogger<IdentityController> logger, IMediator me
     [HttpDelete("delete")]
     [ProducesResponseType(typeof(Result<object>), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(Result<object>), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(Result<object>), StatusCodes.Status500InternalServerError)]
     public async Task<ActionResult<Result<object>>> DeleteUserAsync()
     {
         try
