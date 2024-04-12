@@ -5,7 +5,7 @@ namespace Template.Api.Extensions;
 
 public static class SwaggerExtension
 {
-    public static IServiceCollection AddSwaggerConfiguration(this IServiceCollection services)
+    public static IServiceCollection AddSwaggerExtension(this IServiceCollection services)
     {
         services.AddSwaggerGen(options =>
         {
@@ -44,7 +44,7 @@ public static class SwaggerExtension
         return services;
     }
 
-    public static void UseSwaggerConfiguration(this IApplicationBuilder builder)
+    public static void UseSwaggerExtension(this IApplicationBuilder builder)
     {
         builder.UseSwagger();
         builder.UseSwaggerUI(options =>

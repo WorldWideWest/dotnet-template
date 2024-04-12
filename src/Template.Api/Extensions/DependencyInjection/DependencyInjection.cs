@@ -1,4 +1,3 @@
-using Template.Api.Extensions;
 using Template.Api.Infrastructure;
 
 namespace Template.Api.Extensions.DependencyInjection;
@@ -10,7 +9,7 @@ public static class DependencyInjection
         services.AddExceptionHandler<GlobalExceptionHandler>();
         services.AddProblemDetails();
 
-        services.AddSwaggerConfiguration().AddApiVersioningConfiguration();
+        services.AddSwaggerExtension().AddApiVersioningExtension();
 
         return services;
     }

@@ -10,7 +10,7 @@ namespace Template.Infrastructure.Extensions;
 
 public static class IdentityServerExtension
 {
-    public static IServiceCollection AddIdentityServerConfiguration(
+    public static IServiceCollection AddIdentityServerExtension(
         this IServiceCollection services,
         IConfiguration configuration
     )

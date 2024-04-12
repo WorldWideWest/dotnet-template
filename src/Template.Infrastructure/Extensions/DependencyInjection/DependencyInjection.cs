@@ -17,9 +17,7 @@ public static class DependencyInjection
     {
         services.Configure<AppConfig>(configuration.GetSection(nameof(AppConfig)));
 
-        services
-            .AddIdentityConfiguration(configuration)
-            .AddIdentityServerConfiguration(configuration);
+        services.AddIdentityExtension(configuration).AddIdentityServerExtension(configuration);
 
         services.AddScoped<IIdentityService, IdentityService>();
         services.AddScoped<IEmailService, EmailService>();

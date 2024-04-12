@@ -4,7 +4,7 @@ namespace Template.Api.Extensions;
 
 public static class ForwardedHeadersExtension
 {
-    public static IApplicationBuilder UseForwardedHeadersConfiguration(this IApplicationBuilder app)
+    public static IApplicationBuilder UseForwardedHeadersExtension(this IApplicationBuilder app)
     {
         var options = new ForwardedHeadersOptions
         {

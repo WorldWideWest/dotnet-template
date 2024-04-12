@@ -5,7 +5,7 @@ namespace Template.Api.Extensions;
 
 public static class ApiVersioningExtension
 {
-    public static IServiceCollection AddApiVersioningConfiguration(this IServiceCollection services)
+    public static IServiceCollection AddApiVersioningExtension(this IServiceCollection services)
     {
         services.AddApiVersioning(options =>
         {

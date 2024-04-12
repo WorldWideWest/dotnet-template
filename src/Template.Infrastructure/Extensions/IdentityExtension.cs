@@ -16,7 +16,7 @@ namespace Template.Infrastructure.Extensions;
 
 public static class IdentityExtension
 {
-    public static IServiceCollection AddIdentityConfiguration(
+    public static IServiceCollection AddIdentityExtension(
         this IServiceCollection services,
         IConfiguration configuration
     )
@@ -26,7 +26,7 @@ public static class IdentityExtension
         var settings = configuration.GetSection(nameof(AppConfig)).Get<AppConfig>();
 
         services
-            .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+            .AddAuthentication(JwtBearerDefaults.AuthenticationScheme) //MARK: Add default authentication handlers
             .AddJwtBearer(
                 JwtBearerDefaults.AuthenticationScheme,
                 options =>
