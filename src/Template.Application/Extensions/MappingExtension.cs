@@ -4,6 +4,7 @@ using FluentValidation.Results;
 using IdentityModel;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Identity;
+using Template.Application.Identity.Commands.CreateUser;
 using Template.Domain.Common.Models;
 using Template.Domain.Email.Models;
 using Template.Domain.Identity.Entites;
@@ -45,6 +46,15 @@ public static class MappingExtension
             UserName = principal.FindFirstValue(ClaimTypes.Email),
             Email = principal.FindFirstValue(ClaimTypes.Email),
             EmailConfirmed = true
+        };
+
+    public static User ToEntity(this CreateUserDto dto) =>
+        new User()
+        {
+            FirstName = dto.FirstName,
+            LastName = dto.LastName,
+            Email = dto.Email,
+            UserName = dto.Email
         };
 
     public static string SelectUserId(this AuthenticateResult result) =>

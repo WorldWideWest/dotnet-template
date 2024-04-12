@@ -1,6 +1,5 @@
 using MediatR;
 using Template.Domain.Common.Models;
-using Template.Domain.Identity.Entites;
 
 namespace Template.Application.Identity.Commands.VerifyEmail;
 

@@ -38,12 +38,13 @@ public class IdentityController : ControllerBase
     [ProducesResponseType(typeof(Result<object>), StatusCodes.Status400BadRequest)]
     [ProducesResponseType(typeof(Result<object>), StatusCodes.Status500InternalServerError)]
     public async Task<ActionResult<Result<object>>> CreateUserAsnyc(
-        [FromBody] CreateUserCommand request
+        [FromBody] CreateUserCommand request,
+        CancellationToken cancellationToken = default
     )
     {
         try
         {
-            var result = await _mediator.Send(request);
+            var result = await _mediator.Send(request, cancellationToken);
 
             if (!result.Succeeded)
                 return BadRequest(result);
@@ -63,12 +64,13 @@ public class IdentityController : ControllerBase
     [ProducesResponseType(typeof(Result<object>), StatusCodes.Status400BadRequest)]
     [ProducesResponseType(typeof(Result<object>), StatusCodes.Status500InternalServerError)]
     public async Task<ActionResult<Result<object>>> VerifyEmailAsnyc(
-        [FromBody] VerifyEmailCommand request
+        [FromBody] VerifyEmailCommand request,
+        CancellationToken cancellationToken = default
     )
     {
         try
         {
-            var result = await _mediator.Send(request);
+            var result = await _mediator.Send(request, cancellationToken);
 
             if (!result.Succeeded)
                 return BadRequest(result);
@@ -88,12 +90,13 @@ public class IdentityController : ControllerBase
     [ProducesResponseType(typeof(Result<object>), StatusCodes.Status400BadRequest)]
     [ProducesResponseType(typeof(Result<object>), StatusCodes.Status500InternalServerError)]
     public async Task<ActionResult<Result<object>>> ResendVerificationEmailAsnyc(
-        [FromBody] ResendConfirmationEmailCommand request
+        [FromBody] ResendConfirmationEmailCommand request,
+        CancellationToken cancellationToken = default
     )
     {
         try
         {
-            var result = await _mediator.Send(request);
+            var result = await _mediator.Send(request, cancellationToken);
 
             if (!result.Succeeded)
                 return BadRequest(result);
@@ -113,12 +116,13 @@ public class IdentityController : ControllerBase
     [ProducesResponseType(typeof(Result<object>), StatusCodes.Status400BadRequest)]
     [ProducesResponseType(typeof(Result<object>), StatusCodes.Status500InternalServerError)]
     public async Task<ActionResult<Result<object>>> ForgotPasswordAsync(
-        [FromBody] ForgotPasswordCommand request
+        [FromBody] ForgotPasswordCommand request,
+        CancellationToken cancellationToken = default
     )
     {
         try
         {
-            var result = await _mediator.Send(request);
+            var result = await _mediator.Send(request, cancellationToken);
 
             if (!result.Succeeded)
                 return BadRequest(result);
@@ -138,12 +142,13 @@ public class IdentityController : ControllerBase
     [ProducesResponseType(typeof(Result<object>), StatusCodes.Status400BadRequest)]
     [ProducesResponseType(typeof(Result<object>), StatusCodes.Status500InternalServerError)]
     public async Task<ActionResult<Result<object>>> ResetPasswordAsync(
-        [FromBody] ResetPasswordCommand request
+        [FromBody] ResetPasswordCommand request,
+        CancellationToken cancellationToken = default
     )
     {
         try
         {
-            var result = await _mediator.Send(request);
+            var result = await _mediator.Send(request, cancellationToken);
 
             if (!result.Succeeded)
                 return BadRequest(result);
@@ -166,14 +171,15 @@ public class IdentityController : ControllerBase
     [ProducesResponseType(typeof(Result<object>), StatusCodes.Status400BadRequest)]
     [ProducesResponseType(typeof(Result<object>), StatusCodes.Status500InternalServerError)]
     public async Task<ActionResult<Result<object>>> ChangetPasswordAsync(
-        [FromBody] ChangePasswordCommand request
+        [FromBody] ChangePasswordCommand request,
+        CancellationToken cancellationToken = default
     )
     {
         try
         {
             request.Email = User.FindFirst(ClaimTypes.Email)?.Value;
 
-            var result = await _mediator.Send(request);
+            var result = await _mediator.Send(request, cancellationToken);
 
             if (!result.Succeeded)
                 return BadRequest(result);
@@ -195,13 +201,15 @@ public class IdentityController : ControllerBase
     [ProducesResponseType(typeof(Result<object>), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(Result<object>), StatusCodes.Status400BadRequest)]
     [ProducesResponseType(typeof(Result<object>), StatusCodes.Status500InternalServerError)]
-    public async Task<ActionResult<Result<object>>> DeleteUserAsync()
+    public async Task<ActionResult<Result<object>>> DeleteUserAsync(
+        CancellationToken cancellationToken = default
+    )
     {
         try
         {
             var request = new DeleteUserCommand(User.FindFirst(ClaimTypes.Email)?.Value);
 
-            var result = await _mediator.Send(request);
+            var result = await _mediator.Send(request, cancellationToken);
 
             if (!result.Succeeded)
                 return BadRequest(result);
@@ -217,13 +225,16 @@ public class IdentityController : ControllerBase
 
     [AllowAnonymous]
     [HttpGet(TemplateDefaults.LoginPath)]
-    public async Task<IActionResult> Login(string returnUrl)
+    public async Task<IActionResult> Login(
+        string returnUrl,
+        CancellationToken cancellationToken = default
+    )
     {
         try
         {
             var request = new GetProviderQuery(returnUrl, Request);
 
-            var result = await _mediator.Send(request);
+            var result = await _mediator.Send(request, cancellationToken);
 
             if (!result.Succeeded)
                 return BadRequest(result);
@@ -239,13 +250,15 @@ public class IdentityController : ControllerBase
 
     [AllowAnonymous]
     [HttpGet(TemplateDefaults.CallbackPath)]
-    public async Task<IActionResult> ExternalLoginCallback()
+    public async Task<IActionResult> ExternalLoginCallback(
+        CancellationToken cancellationToken = default
+    )
     {
         try
         {
             var request = new ExternalSignInCommand(HttpContext);
 
-            var result = await _mediator.Send(request);
+            var result = await _mediator.Send(request, cancellationToken);
 
             if (!result.Succeeded)
                 return BadRequest(result);
@@ -261,13 +274,16 @@ public class IdentityController : ControllerBase
 
     [AllowAnonymous]
     [HttpGet(TemplateDefaults.LogoutPath)]
-    public async Task<IActionResult> Logout(string logoutId)
+    public async Task<IActionResult> Logout(
+        string logoutId,
+        CancellationToken cancellationToken = default
+    )
     {
         try
         {
             var request = new ExternalSignOutCommand(logoutId);
 
-            var result = await _mediator.Send(request);
+            var result = await _mediator.Send(request, cancellationToken);
 
             if (!result.Succeeded)
                 return BadRequest(result);

@@ -66,7 +66,7 @@ public sealed class IdentityService : IIdentityService
                     ErrorMessage.UserAlreadyExists
                 );
 
-            var user = CreateUserDto.ToEntity(request);
+            var user = request.ToEntity();
             user.PasswordHash = _passwordHasher.HashPassword(user, request.Password);
 
             var result = await _userManager.CreateAsync(user).ConfigureAwait(false);

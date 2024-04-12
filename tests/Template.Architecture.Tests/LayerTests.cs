@@ -1,5 +1,3 @@
-using FluentAssertions;
-
 namespace Template.Architecture.Tests;
 
 public class LayerTests : BaseTest
