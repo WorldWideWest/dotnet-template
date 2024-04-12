@@ -7,7 +7,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Template.Domain.Common.Models;
 using Template.Infrastructure.Data;
 
-namespace Template.Infrastructure.IdentityServer.Extensions;
+namespace Template.Infrastructure.Extensions;
 
 public class IdentityServerMigrationExtension
 {

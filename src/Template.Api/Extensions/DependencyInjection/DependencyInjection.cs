@@ -1,7 +1,7 @@
 using Template.Api.Extensions;
 using Template.Api.Infrastructure;
 
-namespace Template.Api;
+namespace Template.Api.Extensions.DependencyInjection;
 
 public static class DependencyInjection
 {

@@ -12,7 +12,7 @@ using Template.Domain.Identity.Entites;
 using Template.Domain.IdentityServer.Constants.Authorization;
 using Template.Infrastructure.Data;
 
-namespace Template.Infrastructure.Identity.Extensions;
+namespace Template.Infrastructure.Extensions;
 
 public static class IdentityExtension
 {

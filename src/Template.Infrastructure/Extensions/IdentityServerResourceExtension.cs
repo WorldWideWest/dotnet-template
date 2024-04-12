@@ -4,7 +4,7 @@ using IdentityModel;
 using Template.Domain.Common.Models;
 using DomainIdentityServerConstants = Template.Domain.IdentityServer.Constants.Authorization;
 
-namespace Template.Infrastructure.IdentityServer.Extensions;
+namespace Template.Infrastructure.Extensions;
 
 public class IdentityServerResourceExtension
 {

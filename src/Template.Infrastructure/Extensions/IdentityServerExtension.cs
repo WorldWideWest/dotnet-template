@@ -6,7 +6,7 @@ using Template.Domain.Common.Models;
 using Template.Domain.Identity.Entites;
 using Template.Infrastructure.IdentityServer.Services;
 
-namespace Template.Infrastructure.IdentityServer.Extensions;
+namespace Template.Infrastructure.Extensions;
 
 public static class IdentityServerExtension
 {

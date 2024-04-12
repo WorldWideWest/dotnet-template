@@ -1,14 +1,13 @@
-using Template.Api;
 using Template.Api.Extensions;
-using Template.Application;
-using Template.Infrastructure;
-using Template.Infrastructure.IdentityServer.Extensions;
+using Template.Api.Extensions.DependencyInjection;
+using Template.Application.Extensions.DependencyInjection;
+using Template.Infrastructure.Extensions;
+using Template.Infrastructure.Extensions.DependencyInjection;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder
     .Configuration.SetBasePath(builder.Environment.ContentRootPath)
-    // * OPTIONAL set to true due to latter introduction to ConfigMap
     .AddJsonFile($"appsettings.{builder.Environment.EnvironmentName}.json", optional: true)
     .AddEnvironmentVariables();
 
@@ -19,7 +18,9 @@ var app = builder.Build();
 if (app.Environment.IsDevelopment())
 {
     await IdentityServerMigrationExtension.ApplyMigrationsAsync(app);
+
     app.UseDeveloperExceptionPage();
+
     app.UseSwaggerConfiguration();
 }
 
