@@ -13,4 +13,22 @@ public abstract class BaseTest
         typeof(CreateUserCommandHandler).Assembly;
     protected static readonly Assembly InfrastructureAssembly = typeof(IdentityService).Assembly;
     protected static readonly Assembly ApiAssembly = typeof(IdentityController).Assembly;
+
+    public static TheoryData<string> DomainAssemblyTestData =>
+        new TheoryData<string>
+        {
+            { ApplicationAssembly.GetName().Name },
+            { InfrastructureAssembly.GetName().Name },
+            { ApiAssembly.GetName().Name },
+        };
+
+    public static TheoryData<string> ApplicationAssemblyTestData =>
+        new TheoryData<string>
+        {
+            { InfrastructureAssembly.GetName().Name },
+            { ApiAssembly.GetName().Name },
+        };
+
+    public static TheoryData<string> InfrastructureAssemblyTestData =>
+        new TheoryData<string> { { ApiAssembly.GetName().Name }, };
 }

@@ -1,4 +1,3 @@
-using System.Reflection;
 using FluentAssertions;
 
 namespace Template.Architecture.Tests;
@@ -6,9 +5,7 @@ namespace Template.Architecture.Tests;
 public class LayerTests : BaseTest
 {
     [Theory]
-    [InlineData("Application")]
-    [InlineData("Infrastructure")]
-    [InlineData("Api")]
+    [MemberData(nameof(DomainAssemblyTestData))]
     public void Domain_Should_NotHaveDependencyAnyLayer(string assemblyName)
     {
         var result = Types
@@ -21,8 +18,7 @@ public class LayerTests : BaseTest
     }
 
     [Theory]
-    [InlineData("Infrastructure")]
-    [InlineData("Api")]
+    [MemberData(nameof(ApplicationAssemblyTestData))]
     public void Application_Should_NotHaveDependencyOnApiAndInfrastructure(string assemblyName)
     {
         var result = Types
@@ -35,8 +31,8 @@ public class LayerTests : BaseTest
     }
 
     [Theory]
-    [InlineData("Api")]
-    public void Domain_Should_NotHaveDependencyApi(string assemblyName)
+    [MemberData(nameof(InfrastructureAssemblyTestData))]
+    public void Infrastructure_Should_NotHaveDependencyApi(string assemblyName)
     {
         var result = Types
             .InAssembly(InfrastructureAssembly)
