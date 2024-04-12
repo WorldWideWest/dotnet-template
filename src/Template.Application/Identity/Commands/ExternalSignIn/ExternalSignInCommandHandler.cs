@@ -1,6 +1,6 @@
 using MediatR;
 using Microsoft.Extensions.Logging;
-using Template.Application.Identity.Extensions;
+using Template.Application.Extensions;
 using Template.Application.Identity.Interfaces;
 using Template.Domain.Common.Models;
 using Template.Domain.IdentityServer.Constants.Errors;

@@ -3,7 +3,7 @@ using Duende.IdentityServer;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Http;
 
-namespace Template.Application.Identity.Extensions;
+namespace Template.Application.Extensions;
 
 public static class SignInExstension
 {

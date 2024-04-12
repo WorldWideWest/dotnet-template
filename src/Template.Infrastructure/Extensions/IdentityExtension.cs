@@ -106,7 +106,8 @@ public static class IdentityExtension
             var defaultAuthorizationPolicy = new AuthorizationPolicyBuilder(
                 JwtBearerDefaults.AuthenticationScheme,
                 GoogleDefaults.AuthenticationScheme,
-                IdentityServerConstants.DefaultCookieAuthenticationScheme
+                IdentityServerConstants.DefaultCookieAuthenticationScheme,
+                IdentityServerConstants.ExternalCookieAuthenticationScheme
             );
 
             options.DefaultPolicy = defaultAuthorizationPolicy.RequireAuthenticatedUser().Build();
