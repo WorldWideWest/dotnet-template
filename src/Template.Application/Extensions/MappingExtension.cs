@@ -14,6 +14,11 @@ namespace Template.Application.Extensions;
 
 public static class MappingExtension
 {
+    /// <summary>
+    /// Converts a <see cref="ValidationResult"/> to an array of <see cref="Error"/> objects.
+    /// </summary>
+    /// <param name="result">The <see cref="ValidationResult"/> to convert.</param>
+    /// <returns>An array of <see cref="Error"/> objects.</returns>
     public static Error[] ToError(this ValidationResult result)
     {
         if (!result.Errors.Any())
