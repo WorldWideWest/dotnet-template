@@ -1,8 +1,8 @@
 using Azure.Communication.Email;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using Template.Application.Email.Extensions;
 using Template.Application.Email.Interfaces;
-using Template.Application.Extensions;
 using Template.Domain.Common.Models;
 using Template.Domain.Email.Enums;
 using Template.Domain.Email.Models;

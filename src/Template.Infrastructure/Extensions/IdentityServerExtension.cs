@@ -31,8 +31,8 @@ public static class IdentityServerExtension
                 options.Authentication.CookieSlidingExpiration = true;
                 options.IssuerUri = settings.IdentityServerConfig.IssuerUri;
 
-                options.UserInteraction.LoginUrl = TemplateDefaults.LoginUrl;
-                options.UserInteraction.LogoutUrl = TemplateDefaults.LogoutUrl;
+                options.UserInteraction.LoginUrl = IdentityDefaults.LoginUrl;
+                options.UserInteraction.LogoutUrl = IdentityDefaults.LogoutUrl;
             })
             .AddConfigurationStore(options =>
             {

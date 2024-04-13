@@ -5,7 +5,7 @@ namespace Template.Application.Identity.Commands.VerifyEmail;
 
 public record VerifyEmailCommand(string Email, string Token) : IRequest<Result<object>>
 {
-    public VerifyEmailDto ToDto() => new(Email, Token);
+    public VerifyEmailRequest ToDto() => new(Email, Token);
 };
 
-public record VerifyEmailDto(string Email, string Token);
+public record VerifyEmailRequest(string Email, string Token);

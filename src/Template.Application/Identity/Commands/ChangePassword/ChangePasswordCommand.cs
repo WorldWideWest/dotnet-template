@@ -10,7 +10,7 @@ public record ChangePasswordCommand(string OldPassword, string NewPassword)
     [JsonIgnore]
     public string Email { get; set; }
 
-    public ChangePasswordDto ToDto() => new(OldPassword, NewPassword, Email);
+    public ChangePasswordRequest ToDto() => new(OldPassword, NewPassword, Email);
 };
 
-public record ChangePasswordDto(string OldPassword, string NewPassword, string Email);
+public record ChangePasswordRequest(string OldPassword, string NewPassword, string Email);

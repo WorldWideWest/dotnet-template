@@ -2,12 +2,12 @@ using System.Text;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Logging;
-using Template.Application.Extensions;
 using Template.Application.Identity.Commands.ChangePassword;
 using Template.Application.Identity.Commands.CreateUser;
 using Template.Application.Identity.Commands.ResetPassword;
 using Template.Application.Identity.Commands.VerifyEmail;
 using Template.Application.Identity.Common;
+using Template.Application.Identity.Extensions;
 using Template.Application.Identity.Interfaces;
 using Template.Domain.Common.Models;
 using Template.Domain.Identity.Constants.Errors;
@@ -55,7 +55,7 @@ public sealed class IdentityService : IIdentityService
         }
     }
 
-    public async Task<Result<object>> CreateUserAsync(CreateUserDto request)
+    public async Task<Result<object>> CreateUserAsync(CreateUserRequest request)
     {
         try
         {
@@ -71,7 +71,7 @@ public sealed class IdentityService : IIdentityService
 
             var result = await _userManager.CreateAsync(user).ConfigureAwait(false);
             if (!result.Succeeded)
-                return Result<object>.Failed(result.ToError());
+                return Result<object>.Failed(result.ToErrors());
 
             return Result<object>.Success();
         }
@@ -105,7 +105,7 @@ public sealed class IdentityService : IIdentityService
         }
     }
 
-    public async Task<Result<object>> VerifyEmailAsync(VerifyEmailDto request)
+    public async Task<Result<object>> VerifyEmailAsync(VerifyEmailRequest request)
     {
         try
         {
@@ -120,14 +120,14 @@ public sealed class IdentityService : IIdentityService
                 .ConfigureAwait(false);
 
             if (!result.Succeeded)
-                return Result<object>.Failed(result.ToError());
+                return Result<object>.Failed(result.ToErrors());
 
             var claimsResult = await _userManager
                 .AddClaimsAsync(searchResult.Body, searchResult.Body.SelectClaims())
                 .ConfigureAwait(false);
 
             if (!claimsResult.Succeeded)
-                return Result<object>.Failed(result.ToError());
+                return Result<object>.Failed(result.ToErrors());
 
             return Result<object>.Success();
         }
@@ -161,7 +161,7 @@ public sealed class IdentityService : IIdentityService
         }
     }
 
-    public async Task<Result<object>> ResetPasswordAsync(ResetPasswordDto request)
+    public async Task<Result<object>> ResetPasswordAsync(ResetPasswordRequest request)
     {
         try
         {
@@ -176,7 +176,7 @@ public sealed class IdentityService : IIdentityService
                 .ConfigureAwait(false);
 
             if (!result.Succeeded)
-                return Result<object>.Failed(result.ToError());
+                return Result<object>.Failed(result.ToErrors());
 
             return Result<object>.Success();
         }
@@ -187,7 +187,7 @@ public sealed class IdentityService : IIdentityService
         }
     }
 
-    public async Task<Result<object>> ChangePasswordAsync(ChangePasswordDto request)
+    public async Task<Result<object>> ChangePasswordAsync(ChangePasswordRequest request)
     {
         try
         {
@@ -210,7 +210,7 @@ public sealed class IdentityService : IIdentityService
 
             var result = await _userManager.UpdateAsync(user).ConfigureAwait(false);
             if (!result.Succeeded)
-                return Result<object>.Failed(result.ToError());
+                return Result<object>.Failed(result.ToErrors());
 
             return Result<object>.Success();
         }
@@ -233,7 +233,7 @@ public sealed class IdentityService : IIdentityService
 
             var result = await _userManager.DeleteAsync(user).ConfigureAwait(false);
             if (!result.Succeeded)
-                return Result<object>.Failed(result.ToError());
+                return Result<object>.Failed(result.ToErrors());
 
             return Result<object>.Success();
         }
@@ -259,14 +259,14 @@ public sealed class IdentityService : IIdentityService
                 var userResult = await _userManager.CreateAsync(user).ConfigureAwait(false);
 
                 if (!userResult.Succeeded)
-                    return Result<object>.Failed(userResult.ToError());
+                    return Result<object>.Failed(userResult.ToErrors());
 
                 var claimsResult = await _userManager
                     .AddClaimsAsync(user, user.SelectClaims(provider))
                     .ConfigureAwait(false);
 
                 if (!claimsResult.Succeeded)
-                    return Result<object>.Failed(claimsResult.ToError());
+                    return Result<object>.Failed(claimsResult.ToErrors());
             }
 
             var info = new UserLoginInfo(provider, userId, provider);

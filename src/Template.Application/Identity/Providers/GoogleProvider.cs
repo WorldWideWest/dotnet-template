@@ -2,10 +2,11 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Http;
 using Template.Application.Identity.Common;
 using Template.Application.Identity.Interfaces;
+using Template.Domain.Common.Constants;
 using Template.Domain.Common.Models;
-using Template.Domain.IdentityServer.Constants.Authorization;
+using Template.Domain.Identity.Constants.Authorization;
 
-namespace Template.Application.IdentityServer.Providers;
+namespace Template.Application.Identity.Providers;
 
 public class GoogleProvider : IExternalProvider
 {
@@ -19,7 +20,7 @@ public class GoogleProvider : IExternalProvider
     {
         var properties = new AuthenticationProperties
         {
-            RedirectUri = $"{request.Scheme}://{request.Host}/api/Identity/external/callback",
+            RedirectUri = $"{request.Scheme}://{request.Host}{IdentityDefaults.CallbackUrl}",
             Items = { { "returnUrl", returnUrl }, { "scheme", IdentityProvider.Google } }
         };
 

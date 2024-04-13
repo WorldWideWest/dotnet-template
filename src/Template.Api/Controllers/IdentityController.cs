@@ -224,7 +224,7 @@ public class IdentityController : ControllerBase
     }
 
     [AllowAnonymous]
-    [HttpGet(TemplateDefaults.LoginPath)]
+    [HttpGet(IdentityDefaults.LoginPath)]
     public async Task<IActionResult> Login(
         string returnUrl,
         CancellationToken cancellationToken = default
@@ -249,7 +249,7 @@ public class IdentityController : ControllerBase
     }
 
     [AllowAnonymous]
-    [HttpGet(TemplateDefaults.CallbackPath)]
+    [HttpGet(IdentityDefaults.CallbackPath)]
     public async Task<IActionResult> ExternalLoginCallback(
         CancellationToken cancellationToken = default
     )
@@ -273,7 +273,7 @@ public class IdentityController : ControllerBase
     }
 
     [AllowAnonymous]
-    [HttpGet(TemplateDefaults.LogoutPath)]
+    [HttpGet(IdentityDefaults.LogoutPath)]
     public async Task<IActionResult> Logout(
         string logoutId,
         CancellationToken cancellationToken = default
