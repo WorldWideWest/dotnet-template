@@ -3,9 +3,9 @@ using Duende.IdentityServer;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Http;
 
-namespace Template.Application.Identity.Extensions;
+namespace Template.Application.Extensions;
 
-public static class SignInExstension
+public static class SignInExtension
 {
     public static async Task<AuthenticateResult> AuthenticateWithExternalScheme(
         this HttpContext httpContext

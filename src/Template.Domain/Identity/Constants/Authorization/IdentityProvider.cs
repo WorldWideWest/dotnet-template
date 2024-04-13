@@ -1,4 +1,4 @@
-namespace Template.Domain.IdentityServer.Constants.Authorization;
+namespace Template.Domain.Identity.Constants.Authorization;
 
 public static class IdentityProvider
 {

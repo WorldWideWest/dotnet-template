@@ -7,7 +7,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Template.Domain.Common.Models;
 using Template.Infrastructure.Data;
 
-namespace Template.Infrastructure.IdentityServer.Extensions;
+namespace Template.Infrastructure.Extensions;
 
 public class IdentityServerMigrationExtension
 {
@@ -39,36 +39,30 @@ public class IdentityServerMigrationExtension
         {
             var exists = context.ApiScopes.Any(x => x.Name == scope.Name);
             if (!exists)
-                context.ApiScopes.Add(scope.ToEntity());
-
-            await context.SaveChangesAsync();
+                await context.ApiScopes.AddAsync(scope.ToEntity());
         }
 
         foreach (var resource in IdentityServerResourceExtension.IdentityResources)
         {
             var exists = context.IdentityResources.Any(x => x.Name == resource.Name);
             if (!exists)
-                context.IdentityResources.Add(resource.ToEntity());
-
-            await context.SaveChangesAsync();
+                await context.IdentityResources.AddAsync(resource.ToEntity());
         }
 
         foreach (var resource in IdentityServerResourceExtension.ApiResources)
         {
             var exists = context.ApiResources.Any(x => x.Name == resource.Name);
             if (!exists)
-                context.ApiResources.Add(resource.ToEntity());
-
-            await context.SaveChangesAsync();
+                await context.ApiResources.AddAsync(resource.ToEntity());
         }
 
         foreach (var client in IdentityServerResourceExtension.Clients(settings))
         {
             var exists = context.Clients.Any(x => x.ClientId == client.ClientId);
             if (!exists)
-                context.Clients.Add(client.ToEntity());
-
-            await context.SaveChangesAsync();
+                await context.Clients.AddAsync(client.ToEntity());
         }
+
+        await context.SaveChangesAsync();
     }
 }

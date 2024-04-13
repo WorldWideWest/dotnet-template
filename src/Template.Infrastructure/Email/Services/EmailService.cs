@@ -1,6 +1,7 @@
 using Azure.Communication.Email;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using Template.Application.Email.Extensions;
 using Template.Application.Email.Interfaces;
 using Template.Domain.Common.Models;
 using Template.Domain.Email.Enums;
@@ -9,13 +10,22 @@ using Template.Domain.Identity.Entites;
 
 namespace Template.Infrastructure.Email.Services;
 
-public class EmailService(
-    ILogger<EmailService> _logger,
-    IOptions<AppConfig> options,
-    List<IEmailClassifier> _classifier
-) : IEmailService
+public sealed class EmailService : IEmailService
 {
-    private readonly AppConfig _options = options.Value;
+    private readonly ILogger<EmailService> _logger;
+    private readonly AppConfig _options;
+    private readonly List<IEmailClassifier> _classifier;
+
+    public EmailService(
+        ILogger<EmailService> logger,
+        IOptions<AppConfig> options,
+        List<IEmailClassifier> classifier
+    )
+    {
+        _logger = logger;
+        _options = options.Value;
+        _classifier = classifier;
+    }
 
     public ClassifiedEmail Classify(EmailType type, Dictionary<string, string> paramters)
     {
@@ -45,7 +55,7 @@ public class EmailService(
 
             EmailClient client = new EmailClient(_options.EmailServiceConfig.ConnectionString);
 
-            var content = ClassifiedEmail.GetEmailContent(classifiedEmail);
+            var content = classifiedEmail.SelectEmailContent();
             var message = new EmailMessage(_options.EmailServiceConfig.Sender, email, content);
 
             await client.SendAsync(Azure.WaitUntil.Completed, message).ConfigureAwait(false);

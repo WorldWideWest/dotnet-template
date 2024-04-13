@@ -1,6 +1,7 @@
 using FluentValidation;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using Template.Application.Validation.Extensions;
 using Template.Application.Validation.Interfaces;
 using Template.Domain.Common.Models;
 
@@ -20,7 +21,7 @@ public class ValidationFactory(ILogger<ValidationFactory> logger, IServiceProvid
 
             var result = await validator.ValidateAsync(request);
             if (!result.IsValid)
-                return Result<object>.Failed(result.Errors.ToArray());
+                return Result<object>.Failed(result.ToErrors());
 
             return Result<object>.Success();
         }

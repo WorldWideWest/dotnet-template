@@ -6,11 +6,11 @@ using Template.Domain.Common.Models;
 using Template.Domain.Identity.Entites;
 using Template.Infrastructure.IdentityServer.Services;
 
-namespace Template.Infrastructure.IdentityServer.Extensions;
+namespace Template.Infrastructure.Extensions;
 
 public static class IdentityServerExtension
 {
-    public static IServiceCollection AddIdentityServerConfiguration(
+    public static IServiceCollection AddIdentityServerExtension(
         this IServiceCollection services,
         IConfiguration configuration
     )
@@ -31,8 +31,8 @@ public static class IdentityServerExtension
                 options.Authentication.CookieSlidingExpiration = true;
                 options.IssuerUri = settings.IdentityServerConfig.IssuerUri;
 
-                options.UserInteraction.LoginUrl = TemplateDefaults.LoginUrl;
-                options.UserInteraction.LogoutUrl = TemplateDefaults.LogoutUrl;
+                options.UserInteraction.LoginUrl = IdentityDefaults.LoginUrl;
+                options.UserInteraction.LogoutUrl = IdentityDefaults.LogoutUrl;
             })
             .AddConfigurationStore(options =>
             {

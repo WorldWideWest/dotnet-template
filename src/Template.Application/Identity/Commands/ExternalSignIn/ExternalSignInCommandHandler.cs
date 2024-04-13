@@ -1,6 +1,6 @@
 using MediatR;
 using Microsoft.Extensions.Logging;
-using Template.Application.Identity.Extensions;
+using Template.Application.Extensions;
 using Template.Application.Identity.Interfaces;
 using Template.Domain.Common.Models;
 using Template.Domain.IdentityServer.Constants.Errors;
@@ -28,7 +28,7 @@ public class ExternalSignInCommandHandler(
 
             if (!authenticationResult.Succeeded)
                 return Result<string>.Failed(
-                    ErrorCode.ERR_TOKEN,
+                    ErrorCode.TokenError,
                     authenticationResult.Failure.Message
                 );
 

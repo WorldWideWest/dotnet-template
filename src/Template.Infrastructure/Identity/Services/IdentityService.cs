@@ -7,25 +7,33 @@ using Template.Application.Identity.Commands.CreateUser;
 using Template.Application.Identity.Commands.ResetPassword;
 using Template.Application.Identity.Commands.VerifyEmail;
 using Template.Application.Identity.Common;
+using Template.Application.Identity.Extensions;
 using Template.Application.Identity.Interfaces;
 using Template.Domain.Common.Models;
 using Template.Domain.Identity.Constants.Errors;
 using Template.Domain.Identity.Entites;
-using Template.Infrastructure.Identity.Services.Extensions;
 
 namespace Template.Infrastructure.Identity.Services;
 
-public sealed class IdentityService(
-    ILogger<IdentityService> logger,
-    UserManager<User> userManager,
-    IPasswordHasher<User> passwordHasher,
-    SignInManager<User> signInManager
-) : IIdentityService
+public sealed class IdentityService : IIdentityService
 {
-    private readonly ILogger<IdentityService> _logger = logger;
-    private readonly UserManager<User> _userManager = userManager;
-    private readonly IPasswordHasher<User> _passwordHasher = passwordHasher;
-    private readonly SignInManager<User> _signInManager = signInManager;
+    private readonly ILogger<IdentityService> _logger;
+    private readonly UserManager<User> _userManager;
+    private readonly IPasswordHasher<User> _passwordHasher;
+    private readonly SignInManager<User> _signInManager;
+
+    public IdentityService(
+        ILogger<IdentityService> logger,
+        UserManager<User> userManager,
+        IPasswordHasher<User> passwordHasher,
+        SignInManager<User> signInManager
+    )
+    {
+        _logger = logger;
+        _userManager = userManager;
+        _passwordHasher = passwordHasher;
+        _signInManager = signInManager;
+    }
 
     public async Task<Result<User>> FindUserAsync(FindUserDto request)
     {
@@ -33,7 +41,10 @@ public sealed class IdentityService(
         {
             var result = await _userManager.FindByEmailAsync(request.Email).ConfigureAwait(false);
             if (result is null)
-                return Result<User>.Failed(ErrorCode.DuplicateUser, ErrorMessage.DuplicateUser);
+                return Result<User>.Failed(
+                    ErrorCode.UserDoesNotExist,
+                    ErrorMessage.UserDoesNotExist
+                );
 
             return Result<User>.Success(result);
         }
@@ -44,20 +55,23 @@ public sealed class IdentityService(
         }
     }
 
-    public async Task<Result<object>> CreateUserAsync(CreateUserDto request)
+    public async Task<Result<object>> CreateUserAsync(CreateUserRequest request)
     {
         try
         {
             var searchResult = await FindUserAsync(new(request.Email));
             if (searchResult.Succeeded)
-                return Result<object>.Failed(ErrorCode.DuplicateUser, ErrorMessage.DuplicateUser);
+                return Result<object>.Failed(
+                    ErrorCode.UserAlreadyExists,
+                    ErrorMessage.UserAlreadyExists
+                );
 
-            var user = CreateUserDto.ToEntity(request);
+            var user = request.ToEntity();
             user.PasswordHash = _passwordHasher.HashPassword(user, request.Password);
 
             var result = await _userManager.CreateAsync(user).ConfigureAwait(false);
             if (!result.Succeeded)
-                return Result<object>.Failed(result.Errors.ToArray());
+                return Result<object>.Failed(result.ToErrors());
 
             return Result<object>.Success();
         }
@@ -91,7 +105,7 @@ public sealed class IdentityService(
         }
     }
 
-    public async Task<Result<object>> VerifyEmailAsync(VerifyEmailDto request)
+    public async Task<Result<object>> VerifyEmailAsync(VerifyEmailRequest request)
     {
         try
         {
@@ -106,14 +120,14 @@ public sealed class IdentityService(
                 .ConfigureAwait(false);
 
             if (!result.Succeeded)
-                return Result<object>.Failed(result.Errors.ToArray());
+                return Result<object>.Failed(result.ToErrors());
 
             var claimsResult = await _userManager
                 .AddClaimsAsync(searchResult.Body, searchResult.Body.SelectClaims())
                 .ConfigureAwait(false);
 
             if (!claimsResult.Succeeded)
-                return Result<object>.Failed(claimsResult.Errors.ToArray());
+                return Result<object>.Failed(result.ToErrors());
 
             return Result<object>.Success();
         }
@@ -147,7 +161,7 @@ public sealed class IdentityService(
         }
     }
 
-    public async Task<Result<object>> ResetPasswordAsync(ResetPasswordDto request)
+    public async Task<Result<object>> ResetPasswordAsync(ResetPasswordRequest request)
     {
         try
         {
@@ -162,7 +176,7 @@ public sealed class IdentityService(
                 .ConfigureAwait(false);
 
             if (!result.Succeeded)
-                return Result<object>.Failed(result.Errors.ToArray());
+                return Result<object>.Failed(result.ToErrors());
 
             return Result<object>.Success();
         }
@@ -173,7 +187,7 @@ public sealed class IdentityService(
         }
     }
 
-    public async Task<Result<object>> ChangePasswordAsync(ChangePasswordDto request)
+    public async Task<Result<object>> ChangePasswordAsync(ChangePasswordRequest request)
     {
         try
         {
@@ -196,7 +210,7 @@ public sealed class IdentityService(
 
             var result = await _userManager.UpdateAsync(user).ConfigureAwait(false);
             if (!result.Succeeded)
-                return Result<object>.Failed(result.Errors.ToArray());
+                return Result<object>.Failed(result.ToErrors());
 
             return Result<object>.Success();
         }
@@ -219,7 +233,7 @@ public sealed class IdentityService(
 
             var result = await _userManager.DeleteAsync(user).ConfigureAwait(false);
             if (!result.Succeeded)
-                return Result<object>.Failed(result.Errors.ToArray());
+                return Result<object>.Failed(result.ToErrors());
 
             return Result<object>.Success();
         }
@@ -234,9 +248,9 @@ public sealed class IdentityService(
     {
         try
         {
-            var provider = result.FindIdentityProvider();
+            var provider = result.SelectIdentityProvider();
 
-            var userId = result.FindUserId();
+            var userId = result.SelectUserId();
             var user = await _userManager.FindByLoginAsync(provider, userId).ConfigureAwait(false);
 
             if (user is null)
@@ -245,20 +259,20 @@ public sealed class IdentityService(
                 var userResult = await _userManager.CreateAsync(user).ConfigureAwait(false);
 
                 if (!userResult.Succeeded)
-                    return Result<object>.Failed(userResult.Errors.ToArray());
+                    return Result<object>.Failed(userResult.ToErrors());
 
                 var claimsResult = await _userManager
                     .AddClaimsAsync(user, user.SelectClaims(provider))
                     .ConfigureAwait(false);
 
                 if (!claimsResult.Succeeded)
-                    return Result<object>.Failed(claimsResult.Errors.ToArray());
+                    return Result<object>.Failed(claimsResult.ToErrors());
             }
 
             var info = new UserLoginInfo(provider, userId, provider);
 
-            await _userManager.AddLoginAsync(user, info).ConfigureAwait(false);
-            await _signInManager.SignInAsync(user, isPersistent: false).ConfigureAwait(false);
+            await _userManager.AddLoginAsync(user, info);
+            await _signInManager.SignInAsync(user, isPersistent: false);
 
             return Result<object>.Success();
         }

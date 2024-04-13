@@ -3,11 +3,11 @@ using Microsoft.Extensions.DependencyInjection;
 using Template.Application.Email.Interfaces;
 using Template.Application.Email.Templates;
 using Template.Application.Identity.Interfaces;
-using Template.Application.IdentityServer.Providers;
+using Template.Application.Identity.Providers;
 using Template.Application.Validation.Interfaces;
 using Template.Application.Validation.Services;
 
-namespace Template.Application;
+namespace Template.Application.Extensions.DependencyInjection;
 
 public static class DependencyInjection
 {
@@ -30,6 +30,7 @@ public static class DependencyInjection
         });
 
         services.AddValidatorsFromAssembly(assembly);
+
         services.AddMediatR(options =>
         {
             options.RegisterServicesFromAssembly(assembly);
