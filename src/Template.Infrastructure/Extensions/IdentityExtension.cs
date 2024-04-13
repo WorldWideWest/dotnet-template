@@ -102,7 +102,6 @@ public static class IdentityExtension
                 }
             );
 
-            // MARK: Add default authentication handlers
             var defaultAuthorizationPolicy = new AuthorizationPolicyBuilder(
                 JwtBearerDefaults.AuthenticationScheme,
                 GoogleDefaults.AuthenticationScheme,
