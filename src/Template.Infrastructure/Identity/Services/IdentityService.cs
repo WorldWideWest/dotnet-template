@@ -42,8 +42,8 @@ public sealed class IdentityService : IIdentityService
             var result = await _userManager.FindByEmailAsync(request.Email).ConfigureAwait(false);
             if (result is null)
                 return Result<User>.Failed(
-                    ErrorCode.UserAlreadyExists,
-                    ErrorMessage.UserAlreadyExists
+                    ErrorCode.UserDoesNotExist,
+                    ErrorMessage.UserDoesNotExist
                 );
 
             return Result<User>.Success(result);
