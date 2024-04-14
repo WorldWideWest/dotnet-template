@@ -15,7 +15,7 @@ builder.Services.AddApi().AddInfrastructure(builder.Configuration).AddApplicatio
 
 var app = builder.Build();
 
-if (app.Environment.IsDevelopment())
+if (!app.Environment.IsProduction())
 {
     await IdentityServerMigrationExtension.ApplyMigrationsAsync(app);
 
@@ -40,3 +40,5 @@ app.UseAuthorization();
 app.MapControllers();
 
 app.Run();
+
+public partial class Program { }
