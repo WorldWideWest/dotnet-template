@@ -42,20 +42,12 @@ public class IdentityController : ControllerBase
         CancellationToken cancellationToken = default
     )
     {
-        try
-        {
-            var result = await _mediator.Send(request, cancellationToken);
+        var result = await _mediator.Send(request, cancellationToken);
 
-            if (!result.Succeeded)
-                return BadRequest(result);
+        if (!result.Succeeded)
+            return BadRequest(result);
 
-            return Ok(result);
-        }
-        catch (Exception ex)
-        {
-            _logger.LogError(ex, ex.Message, nameof(CreateUserAsnyc));
-            throw;
-        }
+        return Ok(result);
     }
 
     [AllowAnonymous]
@@ -68,20 +60,12 @@ public class IdentityController : ControllerBase
         CancellationToken cancellationToken = default
     )
     {
-        try
-        {
-            var result = await _mediator.Send(request, cancellationToken);
+        var result = await _mediator.Send(request, cancellationToken);
 
-            if (!result.Succeeded)
-                return BadRequest(result);
+        if (!result.Succeeded)
+            return BadRequest(result);
 
-            return Ok(result);
-        }
-        catch (Exception ex)
-        {
-            _logger.LogError(ex, ex.Message, nameof(VerifyEmailAsnyc));
-            throw;
-        }
+        return Ok(result);
     }
 
     [AllowAnonymous]
@@ -94,20 +78,12 @@ public class IdentityController : ControllerBase
         CancellationToken cancellationToken = default
     )
     {
-        try
-        {
-            var result = await _mediator.Send(request, cancellationToken);
+        var result = await _mediator.Send(request, cancellationToken);
 
-            if (!result.Succeeded)
-                return BadRequest(result);
+        if (!result.Succeeded)
+            return BadRequest(result);
 
-            return Ok(result);
-        }
-        catch (Exception ex)
-        {
-            _logger.LogError(ex, ex.Message, nameof(ResendVerificationEmailAsnyc));
-            throw;
-        }
+        return Ok(result);
     }
 
     [AllowAnonymous]
@@ -120,20 +96,12 @@ public class IdentityController : ControllerBase
         CancellationToken cancellationToken = default
     )
     {
-        try
-        {
-            var result = await _mediator.Send(request, cancellationToken);
+        var result = await _mediator.Send(request, cancellationToken);
 
-            if (!result.Succeeded)
-                return BadRequest(result);
+        if (!result.Succeeded)
+            return BadRequest(result);
 
-            return Ok(result);
-        }
-        catch (Exception ex)
-        {
-            _logger.LogError(ex, ex.Message, nameof(ForgotPasswordAsync));
-            throw;
-        }
+        return Ok(result);
     }
 
     [AllowAnonymous]
@@ -146,20 +114,12 @@ public class IdentityController : ControllerBase
         CancellationToken cancellationToken = default
     )
     {
-        try
-        {
-            var result = await _mediator.Send(request, cancellationToken);
+        var result = await _mediator.Send(request, cancellationToken);
 
-            if (!result.Succeeded)
-                return BadRequest(result);
+        if (!result.Succeeded)
+            return BadRequest(result);
 
-            return Ok(result);
-        }
-        catch (Exception ex)
-        {
-            _logger.LogError(ex, ex.Message, nameof(ResetPasswordAsync));
-            throw;
-        }
+        return Ok(result);
     }
 
     [Authorize(
@@ -175,22 +135,14 @@ public class IdentityController : ControllerBase
         CancellationToken cancellationToken = default
     )
     {
-        try
-        {
-            request.Email = User.FindFirst(ClaimTypes.Email)?.Value;
+        request.Email = User.FindFirst(ClaimTypes.Email)?.Value;
 
-            var result = await _mediator.Send(request, cancellationToken);
+        var result = await _mediator.Send(request, cancellationToken);
 
-            if (!result.Succeeded)
-                return BadRequest(result);
+        if (!result.Succeeded)
+            return BadRequest(result);
 
-            return Ok(result);
-        }
-        catch (Exception ex)
-        {
-            _logger.LogError(ex, ex.Message, nameof(ChangetPasswordAsync));
-            throw;
-        }
+        return Ok(result);
     }
 
     [Authorize(
@@ -205,22 +157,14 @@ public class IdentityController : ControllerBase
         CancellationToken cancellationToken = default
     )
     {
-        try
-        {
-            var request = new DeleteUserCommand(User.FindFirst(ClaimTypes.Email)?.Value);
+        var request = new DeleteUserCommand(User.FindFirst(ClaimTypes.Email)?.Value);
 
-            var result = await _mediator.Send(request, cancellationToken);
+        var result = await _mediator.Send(request, cancellationToken);
 
-            if (!result.Succeeded)
-                return BadRequest(result);
+        if (!result.Succeeded)
+            return BadRequest(result);
 
-            return Ok(result);
-        }
-        catch (Exception ex)
-        {
-            _logger.LogError(ex, ex.Message, nameof(DeleteUserAsync));
-            throw;
-        }
+        return Ok(result);
     }
 
     [AllowAnonymous]
@@ -230,22 +174,14 @@ public class IdentityController : ControllerBase
         CancellationToken cancellationToken = default
     )
     {
-        try
-        {
-            var request = new GetProviderQuery(returnUrl, Request);
+        var request = new GetProviderQuery(returnUrl, Request);
 
-            var result = await _mediator.Send(request, cancellationToken);
+        var result = await _mediator.Send(request, cancellationToken);
 
-            if (!result.Succeeded)
-                return BadRequest(result);
+        if (!result.Succeeded)
+            return BadRequest(result);
 
-            return Challenge(result.Body.Properties, result.Body.Provider);
-        }
-        catch (Exception ex)
-        {
-            _logger.LogError(ex, ex.Message, nameof(Login));
-            throw;
-        }
+        return Challenge(result.Body.Properties, result.Body.Provider);
     }
 
     [AllowAnonymous]
@@ -254,22 +190,14 @@ public class IdentityController : ControllerBase
         CancellationToken cancellationToken = default
     )
     {
-        try
-        {
-            var request = new ExternalSignInCommand(HttpContext);
+        var request = new ExternalSignInCommand(HttpContext);
 
-            var result = await _mediator.Send(request, cancellationToken);
+        var result = await _mediator.Send(request, cancellationToken);
 
-            if (!result.Succeeded)
-                return BadRequest(result);
+        if (!result.Succeeded)
+            return BadRequest(result);
 
-            return Redirect(result.Body);
-        }
-        catch (Exception ex)
-        {
-            _logger.LogError(ex, ex.Message, nameof(ExternalLoginCallback));
-            throw;
-        }
+        return Redirect(result.Body);
     }
 
     [AllowAnonymous]
@@ -279,21 +207,13 @@ public class IdentityController : ControllerBase
         CancellationToken cancellationToken = default
     )
     {
-        try
-        {
-            var request = new ExternalSignOutCommand(logoutId);
+        var request = new ExternalSignOutCommand(logoutId);
 
-            var result = await _mediator.Send(request, cancellationToken);
+        var result = await _mediator.Send(request, cancellationToken);
 
-            if (!result.Succeeded)
-                return BadRequest(result);
+        if (!result.Succeeded)
+            return BadRequest(result);
 
-            return Redirect(result.Body);
-        }
-        catch (Exception ex)
-        {
-            _logger.LogError(ex, ex.Message, nameof(Logout));
-            throw;
-        }
+        return Redirect(result.Body);
     }
 }
