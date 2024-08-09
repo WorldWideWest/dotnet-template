@@ -23,12 +23,10 @@ namespace Template.Api.Controllers;
 [ApiVersion("1.0")]
 public class IdentityController : ControllerBase
 {
-    private readonly ILogger<IdentityController> _logger;
     private readonly IMediator _mediator;
 
-    public IdentityController(ILogger<IdentityController> logger, IMediator mediator)
+    public IdentityController(IMediator mediator)
     {
-        _logger = logger;
         _mediator = mediator;
     }
 
