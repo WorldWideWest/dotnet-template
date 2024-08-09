@@ -2,7 +2,6 @@ using MediatR;
 using Microsoft.Extensions.Logging;
 using Template.Application.Email.Interfaces;
 using Template.Application.Identity.Interfaces;
-using Template.Application.Validation.Interfaces;
 using Template.Domain.Common.Models;
 using Template.Domain.Email.Enums;
 
@@ -12,19 +11,16 @@ public class ForgotPasswordCommandHandler : IRequestHandler<ForgotPasswordComman
 {
     private readonly ILogger<ForgotPasswordCommandHandler> _logger;
     private readonly IIdentityService _identityService;
-    private readonly IValidationFactory _validationFactory;
     private readonly IEmailService _emailService;
 
     public ForgotPasswordCommandHandler(
         ILogger<ForgotPasswordCommandHandler> logger,
         IIdentityService identityService,
-        IValidationFactory validationFactory,
         IEmailService emailService
     )
     {
         _logger = logger;
         _identityService = identityService;
-        _validationFactory = validationFactory;
         _emailService = emailService;
     }
 
@@ -33,10 +29,6 @@ public class ForgotPasswordCommandHandler : IRequestHandler<ForgotPasswordComman
         CancellationToken cancellationToken
     )
     {
-        var validationResult = await _validationFactory.ValidateAsync(request);
-        if (!validationResult.Succeeded)
-            return validationResult;
-
         var searchResult = await _identityService.FindUserAsync(new(request.Email));
         if (!searchResult.Succeeded)
             return Result<object>.Failed(searchResult.Errors.ToArray());

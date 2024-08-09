@@ -1,5 +1,6 @@
 using FluentValidation;
 using Microsoft.Extensions.DependencyInjection;
+using Template.Application.Common.Behaviours;
 using Template.Application.Email.Interfaces;
 using Template.Application.Email.Templates;
 using Template.Application.Identity.Interfaces;
@@ -34,6 +35,7 @@ public static class DependencyInjection
         services.AddMediatR(options =>
         {
             options.RegisterServicesFromAssembly(assembly);
+            options.AddOpenBehavior(typeof(ValidationBehaviour<,>));
         });
 
         services.AddTransient<IValidationFactory, ValidationFactory>();
