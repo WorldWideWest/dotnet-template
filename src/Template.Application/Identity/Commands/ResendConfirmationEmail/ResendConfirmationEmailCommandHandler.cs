@@ -8,7 +8,7 @@ using Template.Domain.Email.Enums;
 namespace Template.Application.Identity.Commands.ResendConfirmationEmail;
 
 public class ResendConfirmationEmailCommandHandler
-    : IRequestHandler<ResendConfirmationEmailCommand, Result<object>>
+    : IRequestHandler<ResendConfirmationEmailCommand, Result<object, object>>
 {
     private readonly ILogger<ResendConfirmationEmailCommandHandler> _logger;
     private readonly IIdentityService _identityService;
@@ -25,24 +25,24 @@ public class ResendConfirmationEmailCommandHandler
         _emailService = emailService;
     }
 
-    public async Task<Result<object>> Handle(
+    public async Task<Result<object, object>> Handle(
         ResendConfirmationEmailCommand request,
         CancellationToken cancellationToken
     )
     {
         var searchResult = await _identityService.FindUserAsync(new(request.Email));
         if (!searchResult.Succeeded)
-            return Result<object>.Failed(searchResult.Errors.ToArray());
+            return Result<object, object>.Failed(searchResult.Errors.ToArray());
 
         var verificationTokenResult = await _identityService.GenerateEmailVerificationTokenAsync(
             request.Email
         );
         if (!verificationTokenResult.Succeeded)
-            return Result<object>.Failed(verificationTokenResult.Errors.ToArray());
+            return Result<object, object>.Failed(verificationTokenResult.Errors.ToArray());
 
         var parameters = _emailService.GenerateEmailConfirmationParameters(
-            searchResult.Body,
-            verificationTokenResult.Body
+            searchResult.Data,
+            verificationTokenResult.Data
         );
 
         _emailService
@@ -52,6 +52,6 @@ public class ResendConfirmationEmailCommandHandler
                 TaskContinuationOptions.OnlyOnFaulted
             );
 
-        return Result<object>.Success();
+        return Result<object, object>.Success();
     }
 }

@@ -4,5 +4,5 @@ namespace Template.Application.Validation.Interfaces;
 
 public interface IValidationFactory
 {
-    Task<Result<object>> ValidateAsync<T>(T request);
+    Task<Result<object, object>> ValidateAsync<T>(T request);
 }

@@ -3,7 +3,7 @@ using Template.Domain.Common.Models;
 
 namespace Template.Application.Identity.Commands.VerifyEmail;
 
-public record VerifyEmailCommand(string Email, string Token) : IRequest<Result<object>>
+public record VerifyEmailCommand(string Email, string Token) : IRequest<Result<object, object>>
 {
     public VerifyEmailRequest ToDto() => new(Email, Token);
 };

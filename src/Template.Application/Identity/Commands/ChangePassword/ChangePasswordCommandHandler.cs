@@ -4,7 +4,8 @@ using Template.Domain.Common.Models;
 
 namespace Template.Application.Identity.Commands.ChangePassword;
 
-public class ChangePasswordCommandHandler : IRequestHandler<ChangePasswordCommand, Result<object>>
+public class ChangePasswordCommandHandler
+    : IRequestHandler<ChangePasswordCommand, Result<object, object>>
 {
     private readonly IIdentityService _identityService;
 
@@ -13,7 +14,7 @@ public class ChangePasswordCommandHandler : IRequestHandler<ChangePasswordComman
         _identityService = identityService;
     }
 
-    public async Task<Result<object>> Handle(
+    public async Task<Result<object, object>> Handle(
         ChangePasswordCommand request,
         CancellationToken cancellationToken
     )
@@ -22,6 +23,6 @@ public class ChangePasswordCommandHandler : IRequestHandler<ChangePasswordComman
         if (!result.Succeeded)
             return result;
 
-        return Result<object>.Success();
+        return Result<object, object>.Success();
     }
 }

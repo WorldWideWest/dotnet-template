@@ -7,7 +7,8 @@ using Template.Domain.Email.Enums;
 
 namespace Template.Application.Identity.Commands.ForgotPassword;
 
-public class ForgotPasswordCommandHandler : IRequestHandler<ForgotPasswordCommand, Result<object>>
+public class ForgotPasswordCommandHandler
+    : IRequestHandler<ForgotPasswordCommand, Result<object, object>>
 {
     private readonly ILogger<ForgotPasswordCommandHandler> _logger;
     private readonly IIdentityService _identityService;
@@ -24,32 +25,32 @@ public class ForgotPasswordCommandHandler : IRequestHandler<ForgotPasswordComman
         _emailService = emailService;
     }
 
-    public async Task<Result<object>> Handle(
+    public async Task<Result<object, object>> Handle(
         ForgotPasswordCommand request,
         CancellationToken cancellationToken
     )
     {
         var searchResult = await _identityService.FindUserAsync(new(request.Email));
         if (!searchResult.Succeeded)
-            return Result<object>.Failed(searchResult.Errors.ToArray());
+            return Result<object, object>.Failed(searchResult.Errors.ToArray());
 
         var result = await _identityService.GenerateResetPasswordTokenAsync(new(request.Email));
         if (!result.Succeeded)
-            return Result<object>.Failed(result.Errors.ToArray());
+            return Result<object, object>.Failed(result.Errors.ToArray());
 
         var parameters = _emailService.GenerateResetPasswordParameters(
-            searchResult.Body,
-            result.Body
+            searchResult.Data,
+            result.Data
         );
 
         _emailService
-            .SendAsync(EmailType.ResetPassword, searchResult.Body.Email, parameters)
+            .SendAsync(EmailType.ResetPassword, searchResult.Data.Email, parameters)
             .ContinueWith(
                 task => _logger.LogError(task.Exception, task.Exception.Message, nameof(Handle)),
                 TaskContinuationOptions.OnlyOnFaulted
             );
         ;
 
-        return Result<object>.Success();
+        return Result<object, object>.Success();
     }
 }

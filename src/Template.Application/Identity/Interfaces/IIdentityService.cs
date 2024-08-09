@@ -11,13 +11,13 @@ namespace Template.Application.Identity.Interfaces;
 
 public interface IIdentityService
 {
-    Task<Result<User>> FindUserAsync(FindUserDto request);
-    Task<Result<object>> CreateUserAsync(CreateUserRequest request);
-    Task<Result<string>> GenerateEmailVerificationTokenAsync(string email);
-    Task<Result<object>> VerifyEmailAsync(VerifyEmailRequest request);
-    Task<Result<string>> GenerateResetPasswordTokenAsync(string email);
-    Task<Result<object>> ResetPasswordAsync(ResetPasswordRequest request);
-    Task<Result<object>> ChangePasswordAsync(ChangePasswordRequest request);
-    Task<Result<object>> DeleteUserAsync(FindUserDto request);
-    Task<Result<object>> RegisterExternalAsync(AuthenticateResult result);
+    Task<Result<User, object>> FindUserAsync(FindUserDto request);
+    Task<Result<object, object>> CreateUserAsync(CreateUserRequest request);
+    Task<Result<string, object>> GenerateEmailVerificationTokenAsync(string email);
+    Task<Result<object, object>> VerifyEmailAsync(VerifyEmailRequest request);
+    Task<Result<string, object>> GenerateResetPasswordTokenAsync(string email);
+    Task<Result<object, object>> ResetPasswordAsync(ResetPasswordRequest request);
+    Task<Result<object, object>> ChangePasswordAsync(ChangePasswordRequest request);
+    Task<Result<object, object>> DeleteUserAsync(FindUserDto request);
+    Task<Result<object, object>> RegisterExternalAsync(AuthenticateResult result);
 }

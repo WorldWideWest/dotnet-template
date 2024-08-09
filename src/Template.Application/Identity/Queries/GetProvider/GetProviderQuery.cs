@@ -6,4 +6,4 @@ using Template.Domain.Common.Models;
 namespace Template.Application.Identity.Queries.GetProvider;
 
 public record GetProviderQuery(string ReturnUrl, HttpRequest Request)
-    : IRequest<Result<AuthenticationPropertiesResponse>>;
+    : IRequest<Result<AuthenticationPropertiesResponse, object>>;

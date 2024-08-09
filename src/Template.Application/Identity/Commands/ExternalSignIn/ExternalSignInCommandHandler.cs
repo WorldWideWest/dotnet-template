@@ -6,7 +6,8 @@ using Template.Domain.IdentityServer.Constants.Errors;
 
 namespace Template.Application.Identity.Commands.ExternalSignIn;
 
-public class ExternalSignInCommandHandler : IRequestHandler<ExternalSignInCommand, Result<string>>
+public class ExternalSignInCommandHandler
+    : IRequestHandler<ExternalSignInCommand, Result<string, object>>
 {
     private readonly IIdentityService _identityService;
 
@@ -15,7 +16,7 @@ public class ExternalSignInCommandHandler : IRequestHandler<ExternalSignInComman
         _identityService = identityService;
     }
 
-    public async Task<Result<string>> Handle(
+    public async Task<Result<string, object>> Handle(
         ExternalSignInCommand request,
         CancellationToken cancellationToken
     )
@@ -25,19 +26,19 @@ public class ExternalSignInCommandHandler : IRequestHandler<ExternalSignInComman
         var authenticationResult = await httpContext.AuthenticateWithExternalScheme();
 
         if (!authenticationResult.Succeeded)
-            return Result<string>.Failed(
+            return Result<string, object>.Failed(
                 ErrorCode.TokenError,
                 authenticationResult.Failure.Message
             );
 
         var result = await _identityService.RegisterExternalAsync(authenticationResult);
         if (!result.Succeeded)
-            return Result<string>.Failed(result.Errors.ToArray());
+            return Result<string, object>.Failed(result.Errors.ToArray());
 
         var returnUrl = authenticationResult.FindReturnUrl();
 
         await httpContext.DeleteCookieForExternalAuthentication();
 
-        return Result<string>.Success(returnUrl);
+        return Result<string, object>.Success(returnUrl);
     }
 }

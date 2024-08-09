@@ -7,7 +7,7 @@ using Template.Domain.Email.Enums;
 
 namespace Template.Application.Identity.Commands.CreateUser;
 
-public class CreateUserCommandHandler : IRequestHandler<CreateUserCommand, Result<object>>
+public class CreateUserCommandHandler : IRequestHandler<CreateUserCommand, Result<object, object>>
 {
     private readonly ILogger<CreateUserCommandHandler> _logger;
     private readonly IIdentityService _identityService;
@@ -24,7 +24,7 @@ public class CreateUserCommandHandler : IRequestHandler<CreateUserCommand, Resul
         _emailService = emailService;
     }
 
-    public async Task<Result<object>> Handle(
+    public async Task<Result<object, object>> Handle(
         CreateUserCommand request,
         CancellationToken cancellationToken
     )
@@ -35,17 +35,17 @@ public class CreateUserCommandHandler : IRequestHandler<CreateUserCommand, Resul
 
         var searchResult = await _identityService.FindUserAsync(new(request.Email));
         if (!searchResult.Succeeded)
-            return Result<object>.Failed(searchResult.Errors.ToArray());
+            return Result<object, object>.Failed(searchResult.Errors.ToArray());
 
         var verificationTokenResult = await _identityService.GenerateEmailVerificationTokenAsync(
             request.Email
         );
         if (!verificationTokenResult.Succeeded)
-            return Result<object>.Failed(verificationTokenResult.Errors.ToArray());
+            return Result<object, object>.Failed(verificationTokenResult.Errors.ToArray());
 
         var parameters = _emailService.GenerateEmailConfirmationParameters(
-            searchResult.Body,
-            verificationTokenResult.Body
+            searchResult.Data,
+            verificationTokenResult.Data
         );
 
         _emailService
@@ -55,6 +55,6 @@ public class CreateUserCommandHandler : IRequestHandler<CreateUserCommand, Resul
                 TaskContinuationOptions.OnlyOnFaulted
             );
 
-        return Result<object>.Success();
+        return Result<object, object>.Success();
     }
 }

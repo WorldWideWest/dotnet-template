@@ -23,7 +23,7 @@ public class GlobalExceptionHandler : IExceptionHandler
 
         var error = new Error(ErrorCode.InternalServerError, ErrorMessage.InternalServerError);
 
-        var result = Result<object>.Failed(error);
+        var result = Result<object, object>.Failed(error);
 
         httpContext.Response.StatusCode = StatusCodes.Status500InternalServerError;
 

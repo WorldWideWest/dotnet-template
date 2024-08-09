@@ -5,7 +5,8 @@ using Microsoft.Extensions.Options;
 using Template.Domain.Common.Models;
 using Template.Domain.Identity.Entites;
 
-public class ExternalSignOutCommandHandler : IRequestHandler<ExternalSignOutCommand, Result<string>>
+public class ExternalSignOutCommandHandler
+    : IRequestHandler<ExternalSignOutCommand, Result<string, object>>
 {
     private readonly IIdentityServerInteractionService _interaction;
     private readonly AppConfig _options;
@@ -22,7 +23,7 @@ public class ExternalSignOutCommandHandler : IRequestHandler<ExternalSignOutComm
         _signInManager = signInManager;
     }
 
-    public async Task<Result<string>> Handle(
+    public async Task<Result<string, object>> Handle(
         ExternalSignOutCommand request,
         CancellationToken cancellationToken
     )
@@ -38,6 +39,6 @@ public class ExternalSignOutCommandHandler : IRequestHandler<ExternalSignOutComm
 
         await _signInManager.SignOutAsync();
 
-        return Result<string>.Success(postLogoutUri);
+        return Result<string, object>.Success(postLogoutUri);
     }
 }

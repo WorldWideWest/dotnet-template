@@ -7,10 +7,10 @@ public class ValidationException : Exception
     public ValidationException()
         : base() { }
 
-    public ValidationException(Result<object> result)
+    public ValidationException(Result<object, object> result)
     {
         Result = result;
     }
 
-    public Result<object> Result { get; }
+    public Result<object, object> Result { get; }
 }

@@ -4,7 +4,8 @@ using Template.Domain.Common.Models;
 
 namespace Template.Application.Identity.Commands.ResetPassword;
 
-public class ResetPasswordCommandHandler : IRequestHandler<ResetPasswordCommand, Result<object>>
+public class ResetPasswordCommandHandler
+    : IRequestHandler<ResetPasswordCommand, Result<object, object>>
 {
     private readonly IIdentityService _identityService;
 
@@ -13,19 +14,19 @@ public class ResetPasswordCommandHandler : IRequestHandler<ResetPasswordCommand,
         _identityService = identityService;
     }
 
-    public async Task<Result<object>> Handle(
+    public async Task<Result<object, object>> Handle(
         ResetPasswordCommand request,
         CancellationToken cancellationToken
     )
     {
         var searchResult = await _identityService.FindUserAsync(new(request.Email));
         if (!searchResult.Succeeded)
-            return Result<object>.Failed(searchResult.Errors.ToArray());
+            return Result<object, object>.Failed(searchResult.Errors.ToArray());
 
         var result = await _identityService.ResetPasswordAsync(request.ToDto());
         if (!result.Succeeded)
             return result;
 
-        return Result<object>.Success();
+        return Result<object, object>.Success();
     }
 }

@@ -34,10 +34,10 @@ public class IdentityController : ControllerBase
 
     [AllowAnonymous]
     [HttpPost("register")]
-    [ProducesResponseType(typeof(Result<object>), StatusCodes.Status200OK)]
-    [ProducesResponseType(typeof(Result<object>), StatusCodes.Status400BadRequest)]
-    [ProducesResponseType(typeof(Result<object>), StatusCodes.Status500InternalServerError)]
-    public async Task<ActionResult<Result<object>>> CreateUserAsnyc(
+    [ProducesResponseType(typeof(Result<object, object>), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(Result<object, object>), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(Result<object, object>), StatusCodes.Status500InternalServerError)]
+    public async Task<ActionResult<Result<object, object>>> CreateUserAsnyc(
         [FromBody] CreateUserCommand request,
         CancellationToken cancellationToken = default
     )
@@ -52,10 +52,10 @@ public class IdentityController : ControllerBase
 
     [AllowAnonymous]
     [HttpPost("verify")]
-    [ProducesResponseType(typeof(Result<object>), StatusCodes.Status200OK)]
-    [ProducesResponseType(typeof(Result<object>), StatusCodes.Status400BadRequest)]
-    [ProducesResponseType(typeof(Result<object>), StatusCodes.Status500InternalServerError)]
-    public async Task<ActionResult<Result<object>>> VerifyEmailAsnyc(
+    [ProducesResponseType(typeof(Result<object, object>), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(Result<object, object>), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(Result<object, object>), StatusCodes.Status500InternalServerError)]
+    public async Task<ActionResult<Result<object, object>>> VerifyEmailAsnyc(
         [FromBody] VerifyEmailCommand request,
         CancellationToken cancellationToken = default
     )
@@ -70,10 +70,10 @@ public class IdentityController : ControllerBase
 
     [AllowAnonymous]
     [HttpPost("verify/resend")]
-    [ProducesResponseType(typeof(Result<object>), StatusCodes.Status200OK)]
-    [ProducesResponseType(typeof(Result<object>), StatusCodes.Status400BadRequest)]
-    [ProducesResponseType(typeof(Result<object>), StatusCodes.Status500InternalServerError)]
-    public async Task<ActionResult<Result<object>>> ResendVerificationEmailAsnyc(
+    [ProducesResponseType(typeof(Result<object, object>), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(Result<object, object>), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(Result<object, object>), StatusCodes.Status500InternalServerError)]
+    public async Task<ActionResult<Result<object, object>>> ResendVerificationEmailAsnyc(
         [FromBody] ResendConfirmationEmailCommand request,
         CancellationToken cancellationToken = default
     )
@@ -88,10 +88,10 @@ public class IdentityController : ControllerBase
 
     [AllowAnonymous]
     [HttpPost("password/forgot")]
-    [ProducesResponseType(typeof(Result<object>), StatusCodes.Status200OK)]
-    [ProducesResponseType(typeof(Result<object>), StatusCodes.Status400BadRequest)]
-    [ProducesResponseType(typeof(Result<object>), StatusCodes.Status500InternalServerError)]
-    public async Task<ActionResult<Result<object>>> ForgotPasswordAsync(
+    [ProducesResponseType(typeof(Result<object, object>), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(Result<object, object>), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(Result<object, object>), StatusCodes.Status500InternalServerError)]
+    public async Task<ActionResult<Result<object, object>>> ForgotPasswordAsync(
         [FromBody] ForgotPasswordCommand request,
         CancellationToken cancellationToken = default
     )
@@ -106,10 +106,10 @@ public class IdentityController : ControllerBase
 
     [AllowAnonymous]
     [HttpPost("password/reset")]
-    [ProducesResponseType(typeof(Result<object>), StatusCodes.Status200OK)]
-    [ProducesResponseType(typeof(Result<object>), StatusCodes.Status400BadRequest)]
-    [ProducesResponseType(typeof(Result<object>), StatusCodes.Status500InternalServerError)]
-    public async Task<ActionResult<Result<object>>> ResetPasswordAsync(
+    [ProducesResponseType(typeof(Result<object, object>), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(Result<object, object>), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(Result<object, object>), StatusCodes.Status500InternalServerError)]
+    public async Task<ActionResult<Result<object, object>>> ResetPasswordAsync(
         [FromBody] ResetPasswordCommand request,
         CancellationToken cancellationToken = default
     )
@@ -127,10 +127,10 @@ public class IdentityController : ControllerBase
         Policy = Policy.UpdateProfilePasswordAccess
     )]
     [HttpPut("password/change")]
-    [ProducesResponseType(typeof(Result<object>), StatusCodes.Status200OK)]
-    [ProducesResponseType(typeof(Result<object>), StatusCodes.Status400BadRequest)]
-    [ProducesResponseType(typeof(Result<object>), StatusCodes.Status500InternalServerError)]
-    public async Task<ActionResult<Result<object>>> ChangetPasswordAsync(
+    [ProducesResponseType(typeof(Result<object, object>), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(Result<object, object>), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(Result<object, object>), StatusCodes.Status500InternalServerError)]
+    public async Task<ActionResult<Result<object, object>>> ChangetPasswordAsync(
         [FromBody] ChangePasswordCommand request,
         CancellationToken cancellationToken = default
     )
@@ -150,10 +150,10 @@ public class IdentityController : ControllerBase
         Policy = Policy.DeleteAccess
     )]
     [HttpDelete("delete")]
-    [ProducesResponseType(typeof(Result<object>), StatusCodes.Status200OK)]
-    [ProducesResponseType(typeof(Result<object>), StatusCodes.Status400BadRequest)]
-    [ProducesResponseType(typeof(Result<object>), StatusCodes.Status500InternalServerError)]
-    public async Task<ActionResult<Result<object>>> DeleteUserAsync(
+    [ProducesResponseType(typeof(Result<object, object>), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(Result<object, object>), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(Result<object, object>), StatusCodes.Status500InternalServerError)]
+    public async Task<ActionResult<Result<object, object>>> DeleteUserAsync(
         CancellationToken cancellationToken = default
     )
     {
@@ -181,7 +181,7 @@ public class IdentityController : ControllerBase
         if (!result.Succeeded)
             return BadRequest(result);
 
-        return Challenge(result.Body.Properties, result.Body.Provider);
+        return Challenge(result.Data.Properties, result.Data.Provider);
     }
 
     [AllowAnonymous]
@@ -197,7 +197,7 @@ public class IdentityController : ControllerBase
         if (!result.Succeeded)
             return BadRequest(result);
 
-        return Redirect(result.Body);
+        return Redirect(result.Data);
     }
 
     [AllowAnonymous]
@@ -214,6 +214,6 @@ public class IdentityController : ControllerBase
         if (!result.Succeeded)
             return BadRequest(result);
 
-        return Redirect(result.Body);
+        return Redirect(result.Data);
     }
 }

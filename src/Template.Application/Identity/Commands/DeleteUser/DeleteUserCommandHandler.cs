@@ -4,7 +4,7 @@ using Template.Domain.Common.Models;
 
 namespace Template.Application.Identity.Commands.DeleteUser;
 
-public class DeleteUserCommandHandler : IRequestHandler<DeleteUserCommand, Result<object>>
+public class DeleteUserCommandHandler : IRequestHandler<DeleteUserCommand, Result<object, object>>
 {
     private readonly IIdentityService _identityService;
 
@@ -13,7 +13,7 @@ public class DeleteUserCommandHandler : IRequestHandler<DeleteUserCommand, Resul
         _identityService = identityService;
     }
 
-    public async Task<Result<object>> Handle(
+    public async Task<Result<object, object>> Handle(
         DeleteUserCommand request,
         CancellationToken cancellationToken
     )
@@ -22,6 +22,6 @@ public class DeleteUserCommandHandler : IRequestHandler<DeleteUserCommand, Resul
         if (!result.Succeeded)
             return result;
 
-        return Result<object>.Success();
+        return Result<object, object>.Success();
     }
 }

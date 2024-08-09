@@ -5,7 +5,7 @@ using Template.Domain.Common.Models;
 namespace Template.Application.Identity.Commands.ChangePassword;
 
 public record ChangePasswordCommand(string OldPassword, string NewPassword)
-    : IRequest<Result<object>>
+    : IRequest<Result<object, object>>
 {
     [JsonIgnore]
     public string Email { get; set; }

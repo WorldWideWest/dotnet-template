@@ -13,7 +13,7 @@ public class GoogleProvider : IExternalProvider
     public bool Classify(string returnUrl) =>
         returnUrl.Contains(IdentityProvider.Google, StringComparison.OrdinalIgnoreCase);
 
-    public Result<AuthenticationPropertiesResponse> GetAuthenticationProperties(
+    public Result<AuthenticationPropertiesResponse, object> GetAuthenticationProperties(
         string returnUrl,
         HttpRequest request
     )
@@ -26,6 +26,6 @@ public class GoogleProvider : IExternalProvider
 
         var response = new AuthenticationPropertiesResponse(properties, IdentityProvider.Google);
 
-        return Result<AuthenticationPropertiesResponse>.Success(response);
+        return Result<AuthenticationPropertiesResponse, object>.Success(response);
     }
 }
