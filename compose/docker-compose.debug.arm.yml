@@ -1,5 +1,3 @@
-version: '3.9'
-
 services:
   mssql:
     container_name: mssql
