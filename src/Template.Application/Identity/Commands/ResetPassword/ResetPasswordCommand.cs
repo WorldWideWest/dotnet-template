@@ -4,7 +4,7 @@ using Template.Domain.Common.Models;
 namespace Template.Application.Identity.Commands.ResetPassword;
 
 public record ResetPasswordCommand(string Email, string Token, string Password)
-    : IRequest<Result<object>>
+    : IRequest<Result<object, object>>
 {
     public ResetPasswordRequest ToDto() => new(Email, Token, Password);
 };

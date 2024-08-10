@@ -7,7 +7,7 @@ using Template.Domain.Identity.Constants.Errors;
 namespace Template.Application.Identity.Queries.GetProvider;
 
 public class GetProviderQueryHandler
-    : IRequestHandler<GetProviderQuery, Result<AuthenticationPropertiesResponse>>
+    : IRequestHandler<GetProviderQuery, Result<AuthenticationPropertiesResponse, object>>
 {
     private readonly List<IExternalProvider> _providers;
 
@@ -16,7 +16,7 @@ public class GetProviderQueryHandler
         _providers = providers;
     }
 
-    public async Task<Result<AuthenticationPropertiesResponse>> Handle(
+    public async Task<Result<AuthenticationPropertiesResponse, object>> Handle(
         GetProviderQuery request,
         CancellationToken cancellationToken
     )
@@ -26,13 +26,13 @@ public class GetProviderQueryHandler
         if (provider is null)
         {
             var error = new Error(ErrorCode.ProviderNotFound, ErrorMessage.ProviderNotFound);
-            return Result<AuthenticationPropertiesResponse>.Failed(error);
+            return Result<AuthenticationPropertiesResponse, object>.Failed(error);
         }
 
         await Task.FromResult(0);
 
         var properties = provider.GetAuthenticationProperties(request.ReturnUrl, request.Request);
 
-        return Result<AuthenticationPropertiesResponse>.Success(properties.Body);
+        return Result<AuthenticationPropertiesResponse, object>.Success(properties.Data);
     }
 }

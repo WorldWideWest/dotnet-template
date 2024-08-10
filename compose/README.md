@@ -22,28 +22,28 @@ To mimic a deployment environment we added support for docker compose and debugg
 To use this functionality just run the following command:
 ```bash
 # Arm based CPU's
-docker-compose -f ./docker-compose.debug.arm.yml up --build
+docker compose -f ./docker-compose.debug.arm.yml up --build
 
 # x86 based CPU's (intel, amd)
-docker-compose -f ./docker-compose.debug.amd.yml up --build
+docker compose -f ./docker-compose.debug.amd.yml up --build
 ```
 
 To down the containers run the command below
 ```bash
 # Arm based CPU's
-docker-compose -f ./docker-compose.debug.arm.yml down
+docker compose -f ./docker-compose.debug.arm.yml down
 
 # x86 based CPU's (intel, amd)
-docker-compose -f ./docker-compose.debug.amd.yml down
+docker compose -f ./docker-compose.debug.amd.yml down
 ```
 
 And to make it convinient run:
 ```bash
 # Arm based CPU's
-docker-compose -f ./docker-compose.debug.arm.yml down && docker-compose -f ./docker-compose.debug.arm.yml up --build
+docker compose -f ./docker-compose.debug.arm.yml down && docker compose -f ./docker-compose.debug.arm.yml up --build
 
 # x86 based CPU's (intel, amd)
-docker-compose -f ./docker-compose.debug.amd.yml down; docker-compose -f ./docker-compose.debug.amd.yml up --build
+docker compose -f ./docker-compose.debug.amd.yml down; docker compose -f ./docker-compose.debug.amd.yml up --build
 ```
 
 ### Formatting .sh files

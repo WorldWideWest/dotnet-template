@@ -35,18 +35,18 @@ public sealed class IdentityService : IIdentityService
         _signInManager = signInManager;
     }
 
-    public async Task<Result<User>> FindUserAsync(FindUserDto request)
+    public async Task<Result<User, object>> FindUserAsync(FindUserDto request)
     {
         try
         {
             var result = await _userManager.FindByEmailAsync(request.Email).ConfigureAwait(false);
             if (result is null)
-                return Result<User>.Failed(
+                return Result<User, object>.Failed(
                     ErrorCode.UserDoesNotExist,
                     ErrorMessage.UserDoesNotExist
                 );
 
-            return Result<User>.Success(result);
+            return Result<User, object>.Success(result);
         }
         catch (Exception ex)
         {
@@ -55,13 +55,13 @@ public sealed class IdentityService : IIdentityService
         }
     }
 
-    public async Task<Result<object>> CreateUserAsync(CreateUserRequest request)
+    public async Task<Result<object, object>> CreateUserAsync(CreateUserRequest request)
     {
         try
         {
             var searchResult = await FindUserAsync(new(request.Email));
             if (searchResult.Succeeded)
-                return Result<object>.Failed(
+                return Result<object, object>.Failed(
                     ErrorCode.UserAlreadyExists,
                     ErrorMessage.UserAlreadyExists
                 );
@@ -71,9 +71,9 @@ public sealed class IdentityService : IIdentityService
 
             var result = await _userManager.CreateAsync(user).ConfigureAwait(false);
             if (!result.Succeeded)
-                return Result<object>.Failed(result.ToErrors());
+                return Result<object, object>.Failed(result.ToErrors());
 
-            return Result<object>.Success();
+            return Result<object, object>.Success();
         }
         catch (Exception ex)
         {
@@ -82,21 +82,21 @@ public sealed class IdentityService : IIdentityService
         }
     }
 
-    public async Task<Result<string>> GenerateEmailVerificationTokenAsync(string email)
+    public async Task<Result<string, object>> GenerateEmailVerificationTokenAsync(string email)
     {
         try
         {
             var searchResult = await FindUserAsync(new(email));
             if (!searchResult.Succeeded)
-                return Result<string>.Failed(searchResult.Errors.ToArray());
+                return Result<string, object>.Failed(searchResult.Errors.ToArray());
 
             var token = await _userManager
-                .GenerateEmailConfirmationTokenAsync(searchResult.Body)
+                .GenerateEmailConfirmationTokenAsync(searchResult.Data)
                 .ConfigureAwait(false);
 
             var result = Convert.ToBase64String(Encoding.UTF8.GetBytes(token));
 
-            return Result<string>.Success(result);
+            return Result<string, object>.Success(result);
         }
         catch (Exception ex)
         {
@@ -105,31 +105,31 @@ public sealed class IdentityService : IIdentityService
         }
     }
 
-    public async Task<Result<object>> VerifyEmailAsync(VerifyEmailRequest request)
+    public async Task<Result<object, object>> VerifyEmailAsync(VerifyEmailRequest request)
     {
         try
         {
             var searchResult = await FindUserAsync(new(request.Email));
             if (!searchResult.Succeeded)
-                return Result<object>.Failed(searchResult.Errors.ToArray());
+                return Result<object, object>.Failed(searchResult.Errors.ToArray());
 
             var token = Encoding.UTF8.GetString(Convert.FromBase64String(request.Token));
 
             var result = await _userManager
-                .ConfirmEmailAsync(searchResult.Body, token)
+                .ConfirmEmailAsync(searchResult.Data, token)
                 .ConfigureAwait(false);
 
             if (!result.Succeeded)
-                return Result<object>.Failed(result.ToErrors());
+                return Result<object, object>.Failed(result.ToErrors());
 
             var claimsResult = await _userManager
-                .AddClaimsAsync(searchResult.Body, searchResult.Body.SelectClaims())
+                .AddClaimsAsync(searchResult.Data, searchResult.Data.SelectClaims())
                 .ConfigureAwait(false);
 
             if (!claimsResult.Succeeded)
-                return Result<object>.Failed(result.ToErrors());
+                return Result<object, object>.Failed(result.ToErrors());
 
-            return Result<object>.Success();
+            return Result<object, object>.Success();
         }
         catch (Exception ex)
         {
@@ -138,21 +138,21 @@ public sealed class IdentityService : IIdentityService
         }
     }
 
-    public async Task<Result<string>> GenerateResetPasswordTokenAsync(string email)
+    public async Task<Result<string, object>> GenerateResetPasswordTokenAsync(string email)
     {
         try
         {
             var searchResult = await FindUserAsync(new(email));
             if (!searchResult.Succeeded)
-                return Result<string>.Failed(searchResult.Errors.ToArray());
+                return Result<string, object>.Failed(searchResult.Errors.ToArray());
 
             var token = await _userManager
-                .GeneratePasswordResetTokenAsync(searchResult.Body)
+                .GeneratePasswordResetTokenAsync(searchResult.Data)
                 .ConfigureAwait(false);
 
             var result = Convert.ToBase64String(Encoding.UTF8.GetBytes(token));
 
-            return Result<string>.Success(result);
+            return Result<string, object>.Success(result);
         }
         catch (Exception ex)
         {
@@ -161,24 +161,24 @@ public sealed class IdentityService : IIdentityService
         }
     }
 
-    public async Task<Result<object>> ResetPasswordAsync(ResetPasswordRequest request)
+    public async Task<Result<object, object>> ResetPasswordAsync(ResetPasswordRequest request)
     {
         try
         {
             var searchResult = await FindUserAsync(new(request.Email));
             if (!searchResult.Succeeded)
-                return Result<object>.Failed(searchResult.Errors.ToArray());
+                return Result<object, object>.Failed(searchResult.Errors.ToArray());
 
             var token = Encoding.UTF8.GetString(Convert.FromBase64String(request.Token));
 
             var result = await _userManager
-                .ResetPasswordAsync(searchResult.Body, token, request.Password)
+                .ResetPasswordAsync(searchResult.Data, token, request.Password)
                 .ConfigureAwait(false);
 
             if (!result.Succeeded)
-                return Result<object>.Failed(result.ToErrors());
+                return Result<object, object>.Failed(result.ToErrors());
 
-            return Result<object>.Success();
+            return Result<object, object>.Success();
         }
         catch (Exception ex)
         {
@@ -187,32 +187,32 @@ public sealed class IdentityService : IIdentityService
         }
     }
 
-    public async Task<Result<object>> ChangePasswordAsync(ChangePasswordRequest request)
+    public async Task<Result<object, object>> ChangePasswordAsync(ChangePasswordRequest request)
     {
         try
         {
             var searchResult = await FindUserAsync(new(request.Email));
             if (!searchResult.Succeeded)
-                return Result<object>.Failed(searchResult.Errors.ToArray());
+                return Result<object, object>.Failed(searchResult.Errors.ToArray());
 
             var isOldPasswordCorrect = await _userManager
-                .CheckPasswordAsync(searchResult.Body, request.OldPassword)
+                .CheckPasswordAsync(searchResult.Data, request.OldPassword)
                 .ConfigureAwait(false);
 
             if (!isOldPasswordCorrect)
-                return Result<object>.Failed(
+                return Result<object, object>.Failed(
                     ErrorCode.InvalidPassword,
                     ErrorMessage.InvalidPassword
                 );
 
-            var user = searchResult.Body;
+            var user = searchResult.Data;
             user.PasswordHash = _passwordHasher.HashPassword(user, request.NewPassword);
 
             var result = await _userManager.UpdateAsync(user).ConfigureAwait(false);
             if (!result.Succeeded)
-                return Result<object>.Failed(result.ToErrors());
+                return Result<object, object>.Failed(result.ToErrors());
 
-            return Result<object>.Success();
+            return Result<object, object>.Success();
         }
         catch (Exception ex)
         {
@@ -221,21 +221,21 @@ public sealed class IdentityService : IIdentityService
         }
     }
 
-    public async Task<Result<object>> DeleteUserAsync(FindUserDto request)
+    public async Task<Result<object, object>> DeleteUserAsync(FindUserDto request)
     {
         try
         {
             var userSearchResult = await FindUserAsync(new(request.Email));
             if (!userSearchResult.Succeeded)
-                return Result<object>.Failed(userSearchResult.Errors.ToArray());
+                return Result<object, object>.Failed(userSearchResult.Errors.ToArray());
 
-            var user = userSearchResult.Body;
+            var user = userSearchResult.Data;
 
             var result = await _userManager.DeleteAsync(user).ConfigureAwait(false);
             if (!result.Succeeded)
-                return Result<object>.Failed(result.ToErrors());
+                return Result<object, object>.Failed(result.ToErrors());
 
-            return Result<object>.Success();
+            return Result<object, object>.Success();
         }
         catch (Exception ex)
         {
@@ -244,7 +244,7 @@ public sealed class IdentityService : IIdentityService
         }
     }
 
-    public async Task<Result<object>> RegisterExternalAsync(AuthenticateResult result)
+    public async Task<Result<object, object>> RegisterExternalAsync(AuthenticateResult result)
     {
         try
         {
@@ -259,14 +259,14 @@ public sealed class IdentityService : IIdentityService
                 var userResult = await _userManager.CreateAsync(user).ConfigureAwait(false);
 
                 if (!userResult.Succeeded)
-                    return Result<object>.Failed(userResult.ToErrors());
+                    return Result<object, object>.Failed(userResult.ToErrors());
 
                 var claimsResult = await _userManager
                     .AddClaimsAsync(user, user.SelectClaims(provider))
                     .ConfigureAwait(false);
 
                 if (!claimsResult.Succeeded)
-                    return Result<object>.Failed(claimsResult.ToErrors());
+                    return Result<object, object>.Failed(claimsResult.ToErrors());
             }
 
             var info = new UserLoginInfo(provider, userId, provider);
@@ -274,7 +274,7 @@ public sealed class IdentityService : IIdentityService
             await _userManager.AddLoginAsync(user, info);
             await _signInManager.SignInAsync(user, isPersistent: false);
 
-            return Result<object>.Success();
+            return Result<object, object>.Success();
         }
         catch (Exception ex)
         {

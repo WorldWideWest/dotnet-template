@@ -8,7 +8,7 @@ public interface IExternalProvider
 {
     bool Classify(string returnUrl);
 
-    Result<AuthenticationPropertiesResponse> GetAuthenticationProperties(
+    Result<AuthenticationPropertiesResponse, object> GetAuthenticationProperties(
         string returnUrl,
         HttpRequest request
     );

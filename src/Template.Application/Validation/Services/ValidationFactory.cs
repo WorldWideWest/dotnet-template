@@ -1,34 +1,31 @@
 using FluentValidation;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
 using Template.Application.Validation.Extensions;
 using Template.Application.Validation.Interfaces;
 using Template.Domain.Common.Models;
 
 namespace Template.Application.Validation.Services;
 
-public class ValidationFactory(ILogger<ValidationFactory> logger, IServiceProvider provider)
-    : IValidationFactory
+public class ValidationFactory : IValidationFactory
 {
-    private readonly ILogger<ValidationFactory> _logger = logger;
-    private readonly IServiceProvider _provider = provider;
+    private readonly IServiceProvider _provider;
 
-    public async Task<Result<object>> ValidateAsync<T>(T request)
+    public ValidationFactory(IServiceProvider provider)
     {
-        try
-        {
-            var validator = _provider.GetService<IValidator<T>>();
+        _provider = provider;
+    }
 
-            var result = await validator.ValidateAsync(request);
-            if (!result.IsValid)
-                return Result<object>.Failed(result.ToErrors());
+    public async Task<Result<object, object>> ValidateAsync<T>(T request)
+    {
+        var validator = _provider.GetService<IValidator<T>>();
 
-            return Result<object>.Success();
-        }
-        catch (Exception ex)
-        {
-            _logger.LogError(ex, ex.Message, nameof(ValidateAsync));
-            throw;
-        }
+        if (validator is null)
+            return Result<object, object>.Success();
+
+        var result = await validator.ValidateAsync(request);
+        if (!result.IsValid)
+            return Result<object, object>.Failed(result.ToErrors());
+
+        return Result<object, object>.Success();
     }
 }

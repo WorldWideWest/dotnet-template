@@ -1,46 +1,32 @@
 using MediatR;
-using Microsoft.Extensions.Logging;
 using Template.Application.Identity.Interfaces;
-using Template.Application.Validation.Interfaces;
 using Template.Domain.Common.Models;
 
 namespace Template.Application.Identity.Commands.ResetPassword;
 
-public class ResetPasswordCommandHandler(
-    ILogger<ResetPasswordCommandHandler> logger,
-    IIdentityService identityService,
-    IValidationFactory validationFactory
-) : IRequestHandler<ResetPasswordCommand, Result<object>>
+public class ResetPasswordCommandHandler
+    : IRequestHandler<ResetPasswordCommand, Result<object, object>>
 {
-    private readonly ILogger<ResetPasswordCommandHandler> _logger = logger;
-    private readonly IIdentityService _identityService = identityService;
-    private readonly IValidationFactory _validationFactory = validationFactory;
+    private readonly IIdentityService _identityService;
 
-    public async Task<Result<object>> Handle(
+    public ResetPasswordCommandHandler(IIdentityService identityService)
+    {
+        _identityService = identityService;
+    }
+
+    public async Task<Result<object, object>> Handle(
         ResetPasswordCommand request,
         CancellationToken cancellationToken
     )
     {
-        try
-        {
-            var validationResult = await _validationFactory.ValidateAsync(request);
-            if (!validationResult.Succeeded)
-                return validationResult;
+        var searchResult = await _identityService.FindUserAsync(new(request.Email));
+        if (!searchResult.Succeeded)
+            return Result<object, object>.Failed(searchResult.Errors.ToArray());
 
-            var searchResult = await _identityService.FindUserAsync(new(request.Email));
-            if (!searchResult.Succeeded)
-                return Result<object>.Failed(searchResult.Errors.ToArray());
+        var result = await _identityService.ResetPasswordAsync(request.ToDto());
+        if (!result.Succeeded)
+            return result;
 
-            var result = await _identityService.ResetPasswordAsync(request.ToDto());
-            if (!result.Succeeded)
-                return result;
-
-            return Result<object>.Success();
-        }
-        catch (Exception ex)
-        {
-            _logger.LogError(ex, ex.Message, nameof(Handle));
-            throw;
-        }
+        return Result<object, object>.Success();
     }
 }
