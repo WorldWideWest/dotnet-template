@@ -26,7 +26,7 @@ namespace Template.Domain.Common.Models
         public TData Data { get; init; }
 
         /// <summary>
-        /// Gets the additional info related to the operation, if any.
+        /// Gets the additional info related to the operation, example: pagination info.
         /// </summary>
         public TInfo? Info { get; init; }
 

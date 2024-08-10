@@ -43,7 +43,7 @@ public sealed class ProfileService : IProfileService
             var sub = context.Subject.GetSubjectId();
             var user = await _userManager.FindByIdAsync(sub);
 
-            context.IsActive = user != null;
+            context.IsActive = user is not null;
         }
         catch (Exception ex)
         {
